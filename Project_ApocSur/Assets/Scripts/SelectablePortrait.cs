@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,6 +7,8 @@ public class SelectablePortrait : MonoBehaviour, ISelectHandler, IDeselectHandle
     [SerializeField]
     private Image frameOutline;
 
+    public Character Character { get; set; }
+
     public void OnSelect(BaseEventData eventData)
     {
         Debug.Log($" {this.name} portrait selected");
@@ -16,7 +16,7 @@ public class SelectablePortrait : MonoBehaviour, ISelectHandler, IDeselectHandle
         if (frameOutline != null)
         {
             frameOutline.color = Color.white;
-        } 
+        }
     }
 
     public void OnDeselect(BaseEventData eventData)
