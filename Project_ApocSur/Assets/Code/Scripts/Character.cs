@@ -7,12 +7,12 @@ namespace Projapocsur
         private bool isSelected = false;
 
         [SerializeField]
-        private SelectablePortrait portrait;
+        private CharacterPortraitUIElement portrait;
 
         [SerializeField]
         private SpriteRenderer characterOutline;
 
-        public SelectablePortrait Portrait
+        public CharacterPortraitUIElement Portrait
         {
             get { return this.portrait; }
             private set { this.portrait = value; }

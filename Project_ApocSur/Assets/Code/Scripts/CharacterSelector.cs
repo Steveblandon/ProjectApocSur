@@ -6,7 +6,7 @@ namespace Projapocsur
 
     /// <summary>
     /// The purpose of this class is to make sure that both <see cref="Character"/> and it's assigned 
-    /// <see cref="SelectablePortrait"/> get selected and deselected together.
+    /// <see cref="CharacterPortraitUIElement"/> get selected and deselected together.
     /// </summary>
     public class CharacterSelector : MonoBehaviour
     {
@@ -16,7 +16,7 @@ namespace Projapocsur
         {
             if (Input.GetMouseButtonUp(0))
             {
-                if (EventSystem.current.currentSelectedGameObject == null)
+                if (UIElementSelector.Current.CurrentSelectedUIElement == null)
                 {
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
@@ -30,7 +30,7 @@ namespace Projapocsur
 
                             if (character.Portrait != null)
                             {
-                                EventSystem.current.SetSelectedGameObject(character.Portrait.gameObject);
+                                UIElementSelector.Current.SetSelectedUIElement(character.Portrait);
                             }
                             else
                             {
@@ -46,7 +46,7 @@ namespace Projapocsur
                         }
                     }
                 }
-                else if (EventSystem.current.currentSelectedGameObject.TryGetComponent(out SelectablePortrait portrait)
+                else if (UIElementSelector.Current.CurrentSelectedUIElement.TryGetComponent(out CharacterPortraitUIElement portrait)
                     && portrait.Character != null)
                 {
                     this.Select(portrait.Character);
