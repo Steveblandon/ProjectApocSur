@@ -11,7 +11,7 @@ namespace Projapocsur
     /// This disambiguation is carried out via notifications instead of constantly polling the EventSystem.
     /// 
     /// Additionally, this class handles basic toggling of the element's outline so as to indicate visually its been selected.
-    /// The toggling is optional, and is handled by adding a <see cref="ImageColorToggle"/> component to a 
+    /// The toggling is optional, and is handled by adding a <see cref="ImageColorSwitch"/> component to a 
     /// <see cref="Constants.PANEL_OUTLINE_GAMEOBJECT_NAME"/> prefab. So just adding the prefab to an UI element is all that's needed.
     /// 
     /// This class also detaches what is selected from the overseer system (in this case <see cref="UIElementSelector"/>) so that
@@ -20,7 +20,7 @@ namespace Projapocsur
     /// </summary>
     public class SelectableUIElement : MonoBehaviour, ISelectHandler
     {
-        protected ImageColorToggle PanelOutline { get; private set; }
+        protected ImageColorSwitch PanelOutline { get; private set; }
 
         /// <summary>
         /// Whether the GameObject representing this UIElement has been selected.
@@ -31,7 +31,7 @@ namespace Projapocsur
 
         public void Start()
         {
-            ImageColorToggle[] toggles = this.GetComponentsInChildren<ImageColorToggle>();
+            ImageColorSwitch[] toggles = this.GetComponentsInChildren<ImageColorSwitch>();
 
             foreach(var toggle in toggles)
             {
@@ -54,7 +54,7 @@ namespace Projapocsur
             {
                 callback = OnDeselect;
                 this.Selected = true;
-                this.PanelOutline.ToggleColor();
+                this.PanelOutline.TurnOn();
                 Debug.Log($"{CompName}: {this.name} selected");
             }
             else
@@ -68,7 +68,7 @@ namespace Projapocsur
             if (this.Selected)
             {
                 this.Selected = false;
-                this.PanelOutline.ToggleColor();
+                this.PanelOutline.TurnOff();
                 Debug.Log($"{CompName}: {this.name} deselected");
             }
         }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2608716993862702595}
   - component: {fileID: 2608716993862702597}
   - component: {fileID: 2608716993862702596}
-  - component: {fileID: 4645171813807508101}
+  - component: {fileID: -1242211877538601006}
   m_Layer: 5
   m_Name: Panel-outline
   m_TagString: Untagged
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4645171813807508101
+--- !u!114 &-1242211877538601006
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2608716993862702594}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b61b30e21902454aabbfbcb50ba32b0, type: 3}
+  m_Script: {fileID: 11500000, guid: a288e899ade290a4591aef5015602af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alternateColor: {r: 1, g: 1, b: 1, a: 1}
+  switchedOnStateColor: {r: 1, g: 1, b: 1, a: 1}
