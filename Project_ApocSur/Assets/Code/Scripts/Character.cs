@@ -1,67 +1,34 @@
 namespace Projapocsur
 {
-    using UnityEngine;
-
-    public class Character : MonoBehaviour
+    public class Character : SimpleSelectable
     {
-        private bool isSelected = false;
+        public static readonly new string CompName = nameof(Character);
 
-        [SerializeField]
-        private CharacterPortraitUIElement portrait;
+        private SpriteRendererColorSwitch spriteRendererColorSwitch;
 
-        [SerializeField]
-        private SpriteRenderer characterOutline;
-
-        public CharacterPortraitUIElement Portrait
+        public void Start()
         {
-            get { return this.portrait; }
-            private set { this.portrait = value; }
+            this.spriteRendererColorSwitch = Utils.GetSingleComponentInChildrenAndLogOnFailure<SpriteRendererColorSwitch>(this, CompName);
         }
 
-        public void OnEnable()
+        protected override void OnSelectInternal()
         {
-            if (this.portrait != null)
-            {
-                this.portrait.Character = this;
-            }
-            else
-            {
-                Debug.LogWarning($"Missing portrait assignment for {this.name}:{this.GetInstanceID()}");
-            }
+            base.OnSelectInternal();
 
-            if (this.characterOutline == null)
+            if (spriteRendererColorSwitch != null)
             {
-                Debug.LogWarning($"Missing outline assignment for {this.name}:{this.GetInstanceID()}");
+                spriteRendererColorSwitch.TurnOn();
             }
         }
 
-        public void OnSelect()
+        protected override void OnDeselectInternal()
         {
-            if (!this.isSelected)
+            base.OnDeselectInternal();
+
+            if (spriteRendererColorSwitch != null)
             {
-                Debug.Log($"{this.name} selected.");
-                this.isSelected = true;
-
-                if (this.characterOutline != null)
-                {
-                    this.characterOutline.gameObject.SetActive(true);
-                }
-            }
-        }
-
-        public void OnDeselect()
-        {
-            if (this.isSelected)
-            {
-                Debug.Log($"{this.name} de-selected.");
-                this.isSelected = false;
-
-                if (this.characterOutline != null)
-                {
-                    this.characterOutline.gameObject.SetActive(false);
-                }
+                spriteRendererColorSwitch.TurnOff();
             }
         }
     }
-
 }

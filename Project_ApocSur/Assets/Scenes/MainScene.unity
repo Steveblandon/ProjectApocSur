@@ -571,10 +571,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4645171813807508101, guid: 65dc2d945e214264eb0c6ef9565e3756, type: 3}
-      propertyPath: alternateColor.a
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65dc2d945e214264eb0c6ef9565e3756, type: 3}
 --- !u!1 &712165466
@@ -665,7 +661,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 712165466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48430765336e5e54fb60d89bfd4067e5, type: 3}
+  m_Script: {fileID: 11500000, guid: ad6fa59ede3ff8e48a62b3c5bae162e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &805859502
@@ -776,7 +772,6 @@ GameObject:
   - component: {fileID: 840371265}
   - component: {fileID: 840371267}
   - component: {fileID: 840371266}
-  - component: {fileID: 840371268}
   m_Layer: 5
   m_Name: Action-panel
   m_TagString: Untagged
@@ -843,18 +838,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 840371264}
   m_CullTransparentMesh: 1
---- !u!114 &840371268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 840371264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad6fa59ede3ff8e48a62b3c5bae162e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &851669068
 GameObject:
   m_ObjectHideFlags: 0
@@ -944,13 +927,14 @@ GameObject:
   m_Component:
   - component: {fileID: 935969473}
   - component: {fileID: 935969474}
+  - component: {fileID: 935969475}
   m_Layer: 0
   m_Name: Character-outline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &935969473
 Transform:
   m_ObjectHideFlags: 0
@@ -1006,7 +990,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1016,6 +1000,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &935969475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 935969472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b61b30e21902454aabbfbcb50ba32b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onStateColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1414128224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1388,8 +1385,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ffd11db00427364fb64801b4c288f82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portrait: {fileID: 712165470}
-  characterOutline: {fileID: 935969474}
 --- !u!58 &2125548876
 CircleCollider2D:
   m_ObjectHideFlags: 0

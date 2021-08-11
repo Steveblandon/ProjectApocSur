@@ -2,7 +2,6 @@ namespace Projapocsur
 {
     using System.Collections.Concurrent;
     using UnityEngine;
-    using UnityEngine.EventSystems;
 
     /// <summary>
     /// The purpose of this class is to make sure that both <see cref="Character"/> and it's assigned 
@@ -27,15 +26,6 @@ namespace Projapocsur
                         if (character != null)
                         {
                             this.Select(character);
-
-                            if (character.Portrait != null)
-                            {
-                                UIElementSelector.Current.SetSelectedUIElement(character.Portrait);
-                            }
-                            else
-                            {
-                                Debug.Log($"unable to select portrait for {character}:{character.GetInstanceID()}. Missing portrait assignment");
-                            }
                         }
                     }
                     else
@@ -45,11 +35,6 @@ namespace Projapocsur
                             this.Deselect(entry.Value);
                         }
                     }
-                }
-                else if (UIElementSelector.Current.CurrentSelectedUIElement.TryGetComponent(out CharacterPortraitUIElement portrait)
-                    && portrait.Character != null)
-                {
-                    this.Select(portrait.Character);
                 }
             }
         }

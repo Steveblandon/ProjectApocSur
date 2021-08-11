@@ -88,4 +88,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a288e899ade290a4591aef5015602af0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  switchedOnStateColor: {r: 1, g: 1, b: 1, a: 1}
+  onStateColor: {r: 1, g: 1, b: 1, a: 1}
