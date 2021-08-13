@@ -1,5 +1,7 @@
-namespace Projapocsur
+namespace Projapocsur.Scripts
 {
+    using Projapocsur.Common;
+
     public class Character : SimpleSelectable
     {
         public static readonly new string CompName = nameof(Character);
@@ -19,6 +21,8 @@ namespace Projapocsur
             {
                 spriteRendererColorSwitch.TurnOn();
             }
+
+            EventManager.Instance.RegisterListener(EventType.WO_NothingClicked, this.OnDeselect);
         }
 
         protected override void OnDeselectInternal()
@@ -29,6 +33,13 @@ namespace Projapocsur
             {
                 spriteRendererColorSwitch.TurnOff();
             }
+
+            EventManager.Instance.UnregisterListener(EventType.WO_NothingClicked, this.OnDeselect);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.Instance.UnregisterListener(EventType.WO_NothingClicked, this.OnDeselect);
         }
     }
 }

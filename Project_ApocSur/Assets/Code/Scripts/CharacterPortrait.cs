@@ -1,6 +1,9 @@
-namespace Projapocsur
+namespace Projapocsur.Scripts
 {
-    public class CharacterPortrait : SimpleSelectable
+    using Projapocsur.Common;
+    using UnityEngine.EventSystems;
+
+    public class CharacterPortrait : SimpleSelectable, ISelectHandler
     {
         public static readonly new string CompName = nameof(CharacterPortrait);
 
@@ -11,6 +14,11 @@ namespace Projapocsur
             this.imageColorSwitch = Utils.GetSingleComponentInChildrenAndLogOnFailure<ImageColorSwitch>(this, CompName);
         }
 
+        public void OnSelect(BaseEventData eventData)
+        {
+            this.OnSelect();
+        }
+
         protected override void OnSelectInternal()
         {
             base.OnSelectInternal();
@@ -19,6 +27,8 @@ namespace Projapocsur
             {
                 imageColorSwitch.TurnOn();
             }
+
+            EventManager.Instance.RegisterListener(EventType.UI_NothingClicked, this.OnDeselect);
         }
 
         protected override void OnDeselectInternal()
@@ -29,6 +39,13 @@ namespace Projapocsur
             {
                 imageColorSwitch.TurnOff();
             }
+
+            EventManager.Instance.UnregisterListener(EventType.UI_NothingClicked, this.OnDeselect);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.Instance.UnregisterListener(EventType.UI_NothingClicked, this.OnDeselect);
         }
     }
 }

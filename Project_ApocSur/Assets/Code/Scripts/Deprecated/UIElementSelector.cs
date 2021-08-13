@@ -1,8 +1,8 @@
-namespace Projapocsur
+namespace Projapocsur.Scripts
 {
     using System;
     using System.Collections.Generic;
-    using Projapocsur.UI;
+    using Projapocsur.Common;
     using UnityEngine;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
