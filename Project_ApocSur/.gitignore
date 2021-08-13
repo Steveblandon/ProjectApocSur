@@ -4,7 +4,7 @@
 /Concept/
 *.png
 *.png.meta
-
+/Assets/Experimental/
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #
