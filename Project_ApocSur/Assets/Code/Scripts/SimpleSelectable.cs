@@ -1,4 +1,4 @@
-namespace Projapocsur
+namespace Projapocsur.Scripts
 {
     using UnityEngine;
 
@@ -30,8 +30,20 @@ namespace Projapocsur
             }
         }
 
+        /// <summary>
+        /// Called internally when onSelect is called, only executed if instance is not already selected.
+        /// </summary>
+        /// <remarks>
+        /// descendant override expected.
+        /// </remarks>
         protected virtual void OnSelectInternal() { }
 
+        /// <summary>
+        /// Called internally when onDeselect is called, only executed if instance is not already deselected.
+        /// </summary>
+        /// <remarks>
+        /// descendant override expected.
+        /// </remarks>
         protected virtual void OnDeselectInternal() { }
     }
 }

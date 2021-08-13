@@ -1,4 +1,4 @@
-namespace Projapocsur
+namespace Projapocsur.Scripts
 {
     using UnityEngine;
 

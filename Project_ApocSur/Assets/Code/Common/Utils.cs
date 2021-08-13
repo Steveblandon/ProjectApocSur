@@ -1,4 +1,4 @@
-﻿namespace Projapocsur
+﻿namespace Projapocsur.Common
 {
     using System;
     using UnityEngine;
