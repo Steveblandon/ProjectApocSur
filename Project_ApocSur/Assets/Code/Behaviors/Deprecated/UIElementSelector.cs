@@ -1,4 +1,4 @@
-namespace Projapocsur.Scripts
+namespace Projapocsur.Behaviors
 {
     using System;
     using System.Collections.Generic;

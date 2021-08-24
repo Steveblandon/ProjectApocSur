@@ -1,4 +1,4 @@
-namespace Projapocsur.Scripts
+namespace Projapocsur.Behaviors
 {
     using Projapocsur.Common;
 
@@ -22,7 +22,7 @@ namespace Projapocsur.Scripts
                 spriteRendererColorSwitch.TurnOn();
             }
 
-            EventManager.Instance.RegisterListener(EventType.WO_NothingClicked, this.OnDeselect);
+            CharacterManager.Instance.RegisterSelection(this);
         }
 
         protected override void OnDeselectInternal()
@@ -33,13 +33,6 @@ namespace Projapocsur.Scripts
             {
                 spriteRendererColorSwitch.TurnOff();
             }
-
-            EventManager.Instance.UnregisterListener(EventType.WO_NothingClicked, this.OnDeselect);
-        }
-
-        private void OnDisable()
-        {
-            EventManager.Instance.UnregisterListener(EventType.WO_NothingClicked, this.OnDeselect);
         }
     }
 }

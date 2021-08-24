@@ -1,4 +1,4 @@
-namespace Projapocsur.Scripts
+namespace Projapocsur.Behaviors
 {
     using UnityEngine;
 
@@ -12,9 +12,9 @@ namespace Projapocsur.Scripts
         {
             if (!this.IsSelected)
             {
-                this.OnSelectInternal();
-
                 this.IsSelected = true;
+                this.OnSelectInternal();
+                
                 Debug.Log($"{CompName}: {this.name} selected.");
             }
         }
@@ -23,9 +23,9 @@ namespace Projapocsur.Scripts
         {
             if (this.IsSelected)
             {
+                this.IsSelected = false;
                 this.OnDeselectInternal();
 
-                this.IsSelected = false;
                 Debug.Log($"{CompName}: {this.name} deselected.");
             }
         }

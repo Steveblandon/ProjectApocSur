@@ -1,4 +1,4 @@
-namespace Projapocsur.Scripts
+namespace Projapocsur.Behaviors
 {
     using Projapocsur.Common;
     using UnityEngine.EventSystems;
@@ -28,7 +28,7 @@ namespace Projapocsur.Scripts
                 imageColorSwitch.TurnOn();
             }
 
-            EventManager.Instance.RegisterListener(EventType.UI_NothingClicked, this.OnDeselect);
+            CharacterManager.Instance.RegisterSelection(this);
         }
 
         protected override void OnDeselectInternal()
@@ -39,13 +39,6 @@ namespace Projapocsur.Scripts
             {
                 imageColorSwitch.TurnOff();
             }
-
-            EventManager.Instance.UnregisterListener(EventType.UI_NothingClicked, this.OnDeselect);
-        }
-
-        private void OnDisable()
-        {
-            EventManager.Instance.UnregisterListener(EventType.UI_NothingClicked, this.OnDeselect);
         }
     }
 }

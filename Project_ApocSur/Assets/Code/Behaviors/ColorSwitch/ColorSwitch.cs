@@ -1,5 +1,5 @@
 
-namespace Projapocsur.Scripts
+namespace Projapocsur.Behaviors
 {
     using UnityEngine;
 
