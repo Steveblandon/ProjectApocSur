@@ -6,6 +6,8 @@ namespace Projapocsur.Behaviors
     {
         public static readonly new string CompName = nameof(Character);
 
+        public bool IsDrafted { get; set; }
+
         private SpriteRendererColorSwitch spriteRendererColorSwitch;
 
         public void Start()

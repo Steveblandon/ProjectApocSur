@@ -10,7 +10,7 @@ namespace Projapocsur.Behaviors
 
         public void Update()
         {
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(MouseKey.Left))
             {
                 if (this.IsNotBlockedByUI())
                 {
@@ -25,7 +25,21 @@ namespace Projapocsur.Behaviors
                     }
                     else
                     {
-                        EventManager.Instance.TriggerEvent(EventType.WO_NothingClicked);
+                        EventManager.Instance.TriggerEvent(EventType.WO_NothingClicked_Left);
+                    }
+                }
+            }
+            else if (Input.GetMouseButtonUp(MouseKey.Right))
+            {
+                if (this.IsNotBlockedByUI())
+                {
+                    if (this.RayCast(out Collider2D collider))
+                    {
+                        // TBD, expected usage as trigger for floating menus
+                    }
+                    else
+                    {
+                        EventManager.Instance.TriggerEvent(EventType.WO_NothingClicked_Right);
                     }
                 }
             }
@@ -45,4 +59,10 @@ namespace Projapocsur.Behaviors
         }
     }
 
+    public class MouseKey
+    {
+        public static int Left { get; } = 0;
+
+        public static int Right { get; } = 1;
+    }
 }

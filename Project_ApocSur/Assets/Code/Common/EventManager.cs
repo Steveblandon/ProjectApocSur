@@ -37,7 +37,7 @@ namespace Projapocsur.Common
         /// </summary>
         /// <param name="eventType">Event Type, see <see cref="EventType"/></param>
         /// <param name="callback"></param>
-        /// <remarks> Make sure to unregister listener in Component.OnDisable and when no longer needed.</remarks>
+        /// <remarks> Make sure to unregister listener in Component.OnDisable or Component.OnDestroy when no longer needed.</remarks>
         public void RegisterListener(string eventType, Action callback)
         {
             ValidationUtils.ThrowIfStringEmptyNullOrWhitespace(nameof(eventType), eventType);
