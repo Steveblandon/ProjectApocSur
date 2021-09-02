@@ -1,4 +1,4 @@
-namespace Projapocsur.Behaviors
+/*namespace Projapocsur.Behaviors
 {
     using System;
     using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace Projapocsur.Behaviors
         /// stacked at the same location, each gets selected and deselected until the last element is reached. Furthermore, 
         /// if no UI element is clicked, then this value will be null.
         /// </summary>
-        public CharacterPortrait CurrentSelectedUIElement { get; private set; }
+        public SelectableUI CurrentSelectedUIElement { get; private set; }
 
         public void OnEnable()
         {
@@ -81,7 +81,7 @@ namespace Projapocsur.Behaviors
                 {
                     foreach (RaycastResult result in hitResults)
                     {
-                        if (result.gameObject.TryGetComponent(out CharacterPortrait element))
+                        if (result.gameObject.TryGetComponent(out SelectableUI element))
                         {
                             this.SetSelectedUIElement(element);
                         }
@@ -90,7 +90,7 @@ namespace Projapocsur.Behaviors
             }
         }
 
-        public void SetSelectedUIElement(CharacterPortrait selected)
+        public void SetSelectedUIElement(SelectableUI selected)
         {
             this.CurrentSelectedUIElement = selected;
             selected.OnSelect();
@@ -98,3 +98,4 @@ namespace Projapocsur.Behaviors
         }
     }
 }
+*/

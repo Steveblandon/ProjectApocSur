@@ -1,8 +1,8 @@
 namespace Projapocsur.Behaviors
 {
-    using System.Collections;
-    using System.Collections.Generic;
+    using Projapocsur.Behaviors.UI;
     using Projapocsur.Common;
+    using Projapocsur.Entities;
     using UnityEngine;
 
     /// <summary>
@@ -14,21 +14,27 @@ namespace Projapocsur.Behaviors
 
         [Tooltip("will be linked to portrait below, in the future this will be managed by an instance that deals with character creation.")]
         [SerializeField]
-        private Character character;
+        private SelectableWorldObject characterAvatar;
 
         [Tooltip("will be linked to character above, in the future this will be managed by an instance that deals with character creation.")]
         [SerializeField]
-        private CharacterPortrait portrait;
+        private SelectableUI characterPortrait;
 
-        public void Start()
+        void Start()
         {
-            if (this.character == null || this.portrait == null)
+            if (this.characterAvatar == null || this.characterPortrait == null)
             {
                 Debug.LogError($"{className}: missing character reference(s) in {this.gameObject.name}.");
             }
             else
             {
-                CharacterManager.Instance.Add(this.character, this.portrait);
+                PlayerCharacter playerCharacter = new PlayerCharacter(characterAvatar, characterPortrait);
+                DraftTracker.Instance.Add(playerCharacter);
+
+                if (this.characterAvatar.TryGetComponent(out PlayerCharacterMovement playerCharacterMovement))
+                {
+                    playerCharacterMovement.character = playerCharacter;
+                }
             }
         }
     }

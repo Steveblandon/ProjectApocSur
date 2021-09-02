@@ -1,49 +1,50 @@
 namespace Projapocsur.Behaviors
 {
+    using Projapocsur.Common;
     using UnityEngine;
 
-    public class SimpleSelectable : MonoBehaviour
+    public abstract class SimpleSelectable : MonoBehaviour, IPointerLeftClickHandler
     {
         public static readonly string CompName = nameof(SimpleSelectable);
+
+        public delegate void OnSelectStateChangeEventHandler(SimpleSelectable simpleSelectable);
+        public event OnSelectStateChangeEventHandler OnSelectStateChangeEvent;
+
+        protected ColorSwitch colorSwitch;
 
         public bool IsSelected { get; private set; }
 
         public void OnSelect()
         {
-            if (!this.IsSelected)
+            if (this.IsSelected)
             {
-                this.IsSelected = true;
-                this.OnSelectInternal();
-                
-                Debug.Log($"{CompName}: {this.name} selected.");
+                return;
             }
+
+            this.IsSelected = true;
+            this.colorSwitch?.TurnOn();
+            this.OnSelectStateChangeEvent?.Invoke(this);
+
+            Debug.Log($"{CompName}: {this.name} selected.");
         }
 
         public void OnDeselect()
         {
-            if (this.IsSelected)
+            if (!this.IsSelected)
             {
-                this.IsSelected = false;
-                this.OnDeselectInternal();
-
-                Debug.Log($"{CompName}: {this.name} deselected.");
+                return;
             }
+
+            this.IsSelected = false;
+            this.colorSwitch?.TurnOff();
+            this.OnSelectStateChangeEvent?.Invoke(this);
+
+            Debug.Log($"{CompName}: {this.name} deselected.");
         }
 
-        /// <summary>
-        /// Called internally when onSelect is called, only executed if instance is not already selected.
-        /// </summary>
-        /// <remarks>
-        /// descendant override expected.
-        /// </remarks>
-        protected virtual void OnSelectInternal() { }
-
-        /// <summary>
-        /// Called internally when onDeselect is called, only executed if instance is not already deselected.
-        /// </summary>
-        /// <remarks>
-        /// descendant override expected.
-        /// </remarks>
-        protected virtual void OnDeselectInternal() { }
+        public virtual void OnPointerLeftClick()
+        {
+            this.OnSelect();
+        }
     }
 }

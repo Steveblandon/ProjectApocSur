@@ -12,6 +12,7 @@
 
         // Character Management
         public static string CM_CharacterSelected { get; } = nameof(CM_CharacterSelected);
+        public static string CM_CharacterDraftStateChanged { get; } = nameof(CM_CharacterDraftStateChanged);
     }
 
 }

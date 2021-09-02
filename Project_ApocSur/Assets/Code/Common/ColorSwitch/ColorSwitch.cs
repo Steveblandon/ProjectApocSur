@@ -1,16 +1,21 @@
 
-namespace Projapocsur.Behaviors
+namespace Projapocsur.Common
 {
     using UnityEngine;
 
     /// <summary>
-    /// A simple toggle to switch between colors.
+    /// A simple toggle to switch between two colors.
     /// </summary>
-    public class ColorSwitch : MonoBehaviour
+    public class ColorSwitch
     {
-        [Tooltip("The color for when switch is on.")]
-        [SerializeField]
-        private Color onStateColor;
+        public ColorSwitch(Color onStateColor, Color offStateColor)
+        {
+            ValidationUtils.ThrowIfNull(nameof(onStateColor), onStateColor);
+            ValidationUtils.ThrowIfNull(nameof(offStateColor), offStateColor);
+
+            this.OnStateColor = onStateColor;
+            this.OffStateColor = offStateColor;
+        }
 
         /// <summary>
         /// True if switch is on, false otherwise.
@@ -20,11 +25,7 @@ namespace Projapocsur.Behaviors
         /// <summary>
         /// Color representing the state of the switch being on.
         /// </summary>
-        public Color OnStateColor 
-        { 
-            get { return this.onStateColor; } 
-            set { this.onStateColor = value; } 
-        }
+        public Color OnStateColor { get; set; }
 
         /// <summary>
         /// Color representing the state of the switch being off.

@@ -1,31 +1,35 @@
 namespace Projapocsur.Behaviors
 {
     using Projapocsur.Common;
+    using Projapocsur.Entities;
     using UnityEngine;
     using EventType = Common.EventType;
 
-    public class CharacterMovement : MonoBehaviour
+    public class PlayerCharacterMovement : MonoBehaviour
     {
-        public static readonly string compName = nameof(CharacterMovement);
+        public static readonly string CompName = nameof(PlayerCharacterMovement);
+
+        // TODO: need to refactor this class so that we don't need to expose this field.
+        public PlayerCharacter character;
 
         [SerializeField]
         private float speed = 1;
         private Vector3 target;
-        private Character character;
+        
 
-        void Start()
+        private void Start()
         {
             target = this.transform.position;
 
-            if (!this.TryGetComponent(out character))
+            /*if (!this.TryGetComponent(out character))
             {
-                Debug.LogWarning($"{compName}: no {nameof(Character)} detected on {this.name}.");
-            }
+                Debug.LogWarning($"{CompName}: no {nameof(character)} detected on {this.name}.");
+            }*/
 
             EventManager.Instance.RegisterListener(EventType.WO_NothingClicked_Right, this.UpdateTargetToMousePosition);
         }
 
-        public void Update()
+        private void Update()
         {
             if (character != null
                 && character.IsDrafted
@@ -42,6 +46,11 @@ namespace Projapocsur.Behaviors
             }
         }
 
+        private void OnDestroy()
+        {
+            EventManager.Instance.UnregisterListener(EventType.WO_NothingClicked_Right, this.UpdateTargetToMousePosition);
+        }
+
         private void UpdateTargetToMousePosition()
         {
             if (character != null && character.IsSelected && character.IsDrafted)
@@ -51,11 +60,6 @@ namespace Projapocsur.Behaviors
                 this.enabled = true;
                 Debug.Log($"move click detected at {Input.mousePosition}, transformed to world space: {this.target}");
             }
-        }
-
-        public void OnDestroy()
-        {
-            EventManager.Instance.UnregisterListener(EventType.WO_NothingClicked_Right, this.UpdateTargetToMousePosition);
         }
     }
 

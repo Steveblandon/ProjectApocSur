@@ -7,8 +7,7 @@ namespace Projapocsur.Behaviors
 
     public class InputController : MonoBehaviour
     {
-
-        public void Update()
+        private void Update()
         {
             if (Input.GetMouseButtonUp(MouseKey.Left))
             {
@@ -18,9 +17,9 @@ namespace Projapocsur.Behaviors
 
                     if (this.RayCast(out Collider2D collider))
                     {
-                        if (collider.TryGetComponent(out SimpleSelectable selectable))
+                        if (collider.TryGetComponent(out IPointerLeftClickHandler handler))
                         {
-                            selectable.OnSelect();
+                            handler.OnPointerLeftClick();
                         }
                     }
                     else
