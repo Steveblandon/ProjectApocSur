@@ -80,6 +80,8 @@ namespace Projapocsur.Common
                     this.SelecteesDrafted = null;
                 }
             }
+
+            EventManager.Instance.TriggerEvent(EventType.CM_CharacterSelectionStateChanged);
         }
     }
 }

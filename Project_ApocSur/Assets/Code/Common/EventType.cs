@@ -11,8 +11,8 @@
         public static string WO_NothingClicked_Right { get; } = nameof(WO_NothingClicked_Right);
 
         // Character Management
-        public static string CM_CharacterSelected { get; } = nameof(CM_CharacterSelected);
         public static string CM_CharacterDraftStateChanged { get; } = nameof(CM_CharacterDraftStateChanged);
+        public static string CM_CharacterSelectionStateChanged { get; } = nameof(CM_CharacterSelectionStateChanged);
     }
 
 }

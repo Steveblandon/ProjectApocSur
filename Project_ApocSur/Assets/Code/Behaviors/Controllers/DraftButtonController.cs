@@ -1,4 +1,4 @@
-namespace Projapocsur.Behaviors
+namespace Projapocsur.Behaviors.Controllers
 {
     using Projapocsur.Behaviors.UI;
     using Projapocsur.Common;
