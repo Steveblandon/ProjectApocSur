@@ -19,7 +19,7 @@ namespace Projapocsur.Behaviors.Controllers
             EventManager.Instance.RegisterListener(EventType.CM_CharacterDraftStateChanged, this.OnDraftStateChangeEvent);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
             EventManager.Instance.UnregisterListener(EventType.CM_CharacterDraftStateChanged, this.OnDraftStateChangeEvent);

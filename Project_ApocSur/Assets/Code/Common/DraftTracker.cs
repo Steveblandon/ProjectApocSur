@@ -7,18 +7,8 @@ namespace Projapocsur.Common
     {
         public static readonly string className = nameof(DraftTracker);
 
-        public static DraftTracker Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new DraftTracker();
-                }
-                return _instance;
-            }
-            private set { _instance = value; }
-        }
+        public static DraftTracker Instance { get { return _instance; } }
+        private static DraftTracker _instance = new DraftTracker();
 
         public bool? SelecteesDrafted 
         { 
@@ -35,7 +25,6 @@ namespace Projapocsur.Common
             }
         }
 
-        private static DraftTracker _instance;
         private bool? _selecteesDrafted;
         private Action draftCallbacks;
         private Action undraftCallbacks;

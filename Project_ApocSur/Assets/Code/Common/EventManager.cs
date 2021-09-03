@@ -11,20 +11,9 @@ namespace Projapocsur.Common
     {
         public static readonly string className = nameof(EventManager);
 
-        public static EventManager Instance
-        {
-            get 
-            { 
-                if (instance == null)
-                {
-                    instance = new EventManager();
-                }
-                return instance;
-            }
-            private set { instance = value; }
-        }
-
-        private static EventManager instance;
+        public static EventManager Instance { get { return _instance; } }
+        private static EventManager _instance = new EventManager();
+        
         private Dictionary<string, Action> listeners;
 
         private EventManager()
