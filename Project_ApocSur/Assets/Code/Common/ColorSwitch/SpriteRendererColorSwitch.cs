@@ -1,5 +1,6 @@
 namespace Projapocsur.Common
 {
+    using Projapocsur.Common.Utility;
     using UnityEngine;
 
     /// <summary>
@@ -7,8 +8,6 @@ namespace Projapocsur.Common
     /// </summary>
     public class SpriteRendererColorSwitch : ColorSwitch
     {
-        public static readonly string CompName = nameof(SpriteRendererColorSwitch);
-
         private SpriteRenderer target;
 
         public SpriteRendererColorSwitch(SpriteRenderer renderer, Color onStateColor) : base(onStateColor, renderer.color)
@@ -22,14 +21,14 @@ namespace Projapocsur.Common
         {
             base.TurnOn();
 
-            target.color = this.CurrentColor;
+            this.target.color = this.CurrentColor;
         }
 
         public override void TurnOff()
         {
             base.TurnOff();
 
-            target.color = this.CurrentColor;
+            this.target.color = this.CurrentColor;
         }
     }
 }

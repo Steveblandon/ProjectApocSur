@@ -7,7 +7,7 @@ namespace Projapocsur.Behaviors.Controllers
 
     public class InputController : MonoBehaviour
     {
-        private void Update()
+        void Update()
         {
             if (Input.GetMouseButtonUp(MouseKey.Left))
             {

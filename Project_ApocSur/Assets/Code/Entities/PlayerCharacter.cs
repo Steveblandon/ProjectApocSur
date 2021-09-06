@@ -3,6 +3,7 @@ namespace Projapocsur.Entities
     using Projapocsur.Behaviors;
     using Projapocsur.Behaviors.UI;
     using Projapocsur.Common;
+    using Projapocsur.Common.Utility;
 
     public class PlayerCharacter
     {

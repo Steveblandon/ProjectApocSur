@@ -1,5 +1,6 @@
 namespace Projapocsur.Common
 {
+    using Projapocsur.Common.Utility;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -8,8 +9,6 @@ namespace Projapocsur.Common
     /// </summary>
     public class ImageColorSwitch : ColorSwitch
     {
-        public static readonly string CompName = nameof(ImageColorSwitch);
-
         private Image target;
 
         public ImageColorSwitch(Image image, Color onStateColor) : base(onStateColor, image.color)
@@ -23,20 +22,14 @@ namespace Projapocsur.Common
         {
             base.TurnOn();
 
-            if (target != null)
-            {
-                target.color = this.OnStateColor;
-            }
+            this.target.color = this.OnStateColor;
         }
 
         public override void TurnOff()
         {
             base.TurnOff();
 
-            if (target != null)
-            {
-                target.color = this.OffStateColor;
-            }
+            this.target.color = this.OffStateColor;
         }
     }
 }

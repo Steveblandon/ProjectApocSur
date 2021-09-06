@@ -12,14 +12,14 @@ namespace Projapocsur.Behaviors.Controllers
 
         private ToggleUI toggleButton;
 
-        private void Start()
+        void Start()
         {
             this.toggleButton = this.GetComponent<ToggleUI>();
             this.toggleButton.OnSelectStateChangeEvent += this.OnToggleStateChangeEvent;
             EventManager.Instance.RegisterListener(EventType.CM_CharacterDraftStateChanged, this.OnDraftStateChangeEvent);
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
             this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
             EventManager.Instance.UnregisterListener(EventType.CM_CharacterDraftStateChanged, this.OnDraftStateChangeEvent);

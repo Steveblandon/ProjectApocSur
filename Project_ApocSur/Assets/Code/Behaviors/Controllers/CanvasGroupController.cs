@@ -13,6 +13,7 @@ namespace Projapocsur.Behaviors.Controllers
     {
         public static readonly string CompName = nameof(CanvasGroupController);
 
+        [Tooltip("The view to display when gameobject is selected and hide when deselected.")]
         [SerializeField]
         private CanvasGroup targetView;
 
@@ -22,9 +23,9 @@ namespace Projapocsur.Behaviors.Controllers
 
         private SelectableUI triggerButton;
 
-        private void Start()
+        void Start()
         {
-            if (targetView == null)
+            if (this.targetView == null)
             {
                 Debug.LogWarning($"{CompName}: missing target view reference for {this.name}");
             }
@@ -34,18 +35,18 @@ namespace Projapocsur.Behaviors.Controllers
                 CanvasGroupViewer.Instance.Hide(this.targetView);
             }
 
-            triggerButton = this.GetComponent<SelectableUI>();
-            triggerButton.OnSelectStateChangeEvent += this.OnSelectStateChangeEvent;
+            this.triggerButton = this.GetComponent<SelectableUI>();
+            this.triggerButton.OnSelectStateChangeEvent += this.OnSelectStateChangeEvent;
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
-            triggerButton.OnSelectStateChangeEvent -= this.OnSelectStateChangeEvent;
+            this.triggerButton.OnSelectStateChangeEvent -= this.OnSelectStateChangeEvent;
         }
 
         private void OnSelectStateChangeEvent(SimpleSelectable selectable)
         {
-            if (triggerButton.IsSelected)
+            if (this.triggerButton.IsSelected)
             {
                 CanvasGroupViewer.Instance.Show(this.targetView);
             }

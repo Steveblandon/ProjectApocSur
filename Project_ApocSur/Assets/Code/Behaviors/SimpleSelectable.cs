@@ -1,14 +1,17 @@
 namespace Projapocsur.Behaviors
 {
+    using System;
     using Projapocsur.Common;
     using UnityEngine;
 
+    /// <summary>
+    /// Abstract representation of an object that can be selected. Used to make any gameobject selectable.
+    /// </summary>
     public abstract class SimpleSelectable : MonoBehaviour, IPointerLeftClickHandler
     {
         public static readonly string CompName = nameof(SimpleSelectable);
 
-        public delegate void OnSelectStateChangeEventHandler(SimpleSelectable simpleSelectable);
-        public event OnSelectStateChangeEventHandler OnSelectStateChangeEvent;
+        public event Action<SimpleSelectable> OnSelectStateChangeEvent;
 
         protected ColorSwitch colorSwitch;
 

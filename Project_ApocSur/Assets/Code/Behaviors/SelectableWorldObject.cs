@@ -3,6 +3,9 @@ namespace Projapocsur.Behaviors
     using Projapocsur.Common;
     using UnityEngine;
 
+    /// <summary>
+    /// For use with non-UI game objects. Primarily due to the difference of UIElement's Image component vs. world object's SpriteRenderer.
+    /// </summary>
     public class SelectableWorldObject : SimpleSelectable
     {
         public static readonly new string CompName = nameof(SelectableWorldObject);
@@ -15,11 +18,11 @@ namespace Projapocsur.Behaviors
         [SerializeField]
         private Color onSelectOutlineColor;
 
-        private void Start()
+        void Start()
         {
-            if (outline != null && onSelectOutlineColor != null)
+            if (this.outline != null && this.onSelectOutlineColor != null)
             {
-                this.colorSwitch = new SpriteRendererColorSwitch(outline, onSelectOutlineColor);
+                this.colorSwitch = new SpriteRendererColorSwitch(this.outline, this.onSelectOutlineColor);
             }
         }
     }
