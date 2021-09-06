@@ -44,7 +44,7 @@ namespace Projapocsur.Behaviors.Controllers
             this.triggerButton.OnSelectStateChangeEvent -= this.OnSelectStateChangeEvent;
         }
 
-        private void OnSelectStateChangeEvent(SimpleSelectable selectable)
+        private void OnSelectStateChangeEvent(Selectable selectable)
         {
             if (this.triggerButton.IsSelected)
             {

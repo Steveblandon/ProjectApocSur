@@ -7,8 +7,7 @@ namespace Projapocsur.Common
     {
         public static readonly string className = nameof(DraftTracker);
 
-        public static DraftTracker Instance { get { return _instance; } }
-        private static DraftTracker _instance = new DraftTracker();
+        public event Action<bool?> OnDraftStateChangeEvent;
 
         public bool? SelecteesDrafted 
         { 
@@ -20,57 +19,36 @@ namespace Projapocsur.Common
 
                 if (valueChanged)
                 {
-                    EventManager.Instance.TriggerEvent(EventType.CM_CharacterDraftStateChanged);
+                    this.OnDraftStateChangeEvent?.Invoke(value);
                 }
             }
         }
 
         private bool? _selecteesDrafted;
-        private Action draftCallbacks;
-        private Action undraftCallbacks;
 
-        public void Add(PlayerCharacter character)
+        public DraftTracker()
         {
-            this.OnCharacterSelectStateChangeEvent(character);
-            character.OnSelectStateChangeEvent += this.OnCharacterSelectStateChangeEvent;
+            Action<Character> onDraftStateChangeEvent = (Character character) => this.SelecteesDrafted = character.IsDrafted;
+            Character.OnDraftStateChangeEvent += onDraftStateChangeEvent;
+            Character.OnSelectStateChangeEvent += this.OnCharacterSelectStateChangeEvent;
         }
 
-        public void DraftSelectees()
+        private void OnCharacterSelectStateChangeEvent(Character character)
         {
-            this.draftCallbacks?.Invoke();
-            this.SelecteesDrafted = true;
-        }
-
-        public void UndraftSelectees()
-        {
-            this.undraftCallbacks?.Invoke();
-            this.SelecteesDrafted = false;
-        }
-
-        private void OnCharacterSelectStateChangeEvent(PlayerCharacter character)
-        {
-            if (character.IsSelected)
+            if (character.IsInPlayerFaction)
             {
-                this.draftCallbacks += character.OnDraft;
-                this.undraftCallbacks += character.OnUndraft;
-
-                if (this.SelecteesDrafted == null || (this.SelecteesDrafted != null && character.IsDrafted == false))
+                if (character.IsSelected)
                 {
-                    this.SelecteesDrafted = character.IsDrafted;
+                    if (this.SelecteesDrafted == null || (this.SelecteesDrafted != null && character.IsDrafted == false))
+                    {
+                        this.SelecteesDrafted = character.IsDrafted;
+                    }
                 }
-            }
-            else
-            {
-                this.draftCallbacks -= character.OnDraft;
-                this.undraftCallbacks -= character.OnUndraft;
-
-                if (this.draftCallbacks == null && this.undraftCallbacks == null)
+                else if (!character.IsSelected && GameManager.Instance.CharacterSelectionTracker.Selectees.Count == 0)
                 {
                     this.SelecteesDrafted = null;
                 }
             }
-
-            EventManager.Instance.TriggerEvent(EventType.CM_CharacterSelectionStateChanged);
         }
     }
 }

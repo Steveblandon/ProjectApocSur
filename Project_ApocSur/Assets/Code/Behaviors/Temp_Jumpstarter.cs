@@ -1,7 +1,6 @@
 namespace Projapocsur.Behaviors
 {
     using Projapocsur.Behaviors.UI;
-    using Projapocsur.Common;
     using Projapocsur.Entities;
     using UnityEngine;
 
@@ -14,11 +13,13 @@ namespace Projapocsur.Behaviors
 
         [Tooltip("will be linked to portrait below, in the future this will be managed by an instance that deals with character creation.")]
         [SerializeField]
-        private SelectableWorldObject characterAvatar;
+        private SimpleSelectable characterAvatar;
 
         [Tooltip("will be linked to character above, in the future this will be managed by an instance that deals with character creation.")]
         [SerializeField]
         private SelectableUI characterPortrait;
+
+        private Character testCharacter;
 
         void Start()
         {
@@ -28,13 +29,8 @@ namespace Projapocsur.Behaviors
             }
             else
             {
-                PlayerCharacter playerCharacter = new PlayerCharacter(characterAvatar, characterPortrait);
-                DraftTracker.Instance.Add(playerCharacter);
-
-                if (this.characterAvatar.TryGetComponent(out PlayerCharacterMovement playerCharacterMovement))
-                {
-                    playerCharacterMovement.character = playerCharacter;
-                }
+                testCharacter = new Character(characterAvatar, characterPortrait);
+                testCharacter.IsInPlayerFaction = true;
             }
         }
     }

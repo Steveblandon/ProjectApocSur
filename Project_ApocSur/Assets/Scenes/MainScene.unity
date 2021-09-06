@@ -330,7 +330,6 @@ GameObject:
   - component: {fileID: 301217024}
   - component: {fileID: 301217029}
   - component: {fileID: 301217028}
-  - component: {fileID: 301217027}
   - component: {fileID: 301217026}
   - component: {fileID: 301217025}
   m_Layer: 5
@@ -387,49 +386,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0312297186e2f5740931ecdbef1309f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 301217028}
   onSelectOutlineColor: {r: 0.39, g: 0.31296295, b: 0.21666665, a: 1}
---- !u!114 &301217027
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 301217023}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a98125502f715b4b83cfb77b434e436, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 301217028}
+  outline: {fileID: 301217028}
 --- !u!114 &301217028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,7 +833,6 @@ GameObject:
   - component: {fileID: 712165467}
   - component: {fileID: 712165469}
   - component: {fileID: 712165468}
-  - component: {fileID: 712165471}
   - component: {fileID: 712165470}
   - component: {fileID: 712165472}
   m_Layer: 5
@@ -957,49 +914,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42cdf27d4f6957a4194eb7e4ff9b162b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 805859503}
   onSelectOutlineColor: {r: 1, g: 1, b: 1, a: 1}
---- !u!114 &712165471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712165466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a98125502f715b4b83cfb77b434e436, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 712165468}
+  outline: {fileID: 805859503}
 --- !u!114 &712165472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1133,7 +1049,6 @@ GameObject:
   - component: {fileID: 840371265}
   - component: {fileID: 840371267}
   - component: {fileID: 840371266}
-  - component: {fileID: 840371269}
   - component: {fileID: 840371270}
   - component: {fileID: 840371268}
   m_Layer: 5
@@ -1214,47 +1129,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f73f53e238bae745bd4915db34c90a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &840371269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 840371264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a98125502f715b4b83cfb77b434e436, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 840371266}
 --- !u!114 &840371270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1267,8 +1141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0312297186e2f5740931ecdbef1309f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 686956511}
   onSelectOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outline: {fileID: 686956511}
 --- !u!1 &851669068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1866,11 +1740,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2125548871}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f9075f5a4a32f479cfbdc6a9775d73, type: 3}
+  m_Script: {fileID: 11500000, guid: 60e7cf0da55dd2e4897e603c9b3b08a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 935969474}
   onSelectOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outline: {fileID: 935969474}
 --- !u!114 &2125548875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1880,10 +1754,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2125548871}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a179e4d8ef2bc9740ad22726e0c45dc9, type: 3}
+  m_Script: {fileID: 11500000, guid: 51c06a18e13362a43bb1ec2457a365fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
+  destination: {x: 0, y: 0, z: 0}
 --- !u!58 &2125548876
 CircleCollider2D:
   m_ObjectHideFlags: 0

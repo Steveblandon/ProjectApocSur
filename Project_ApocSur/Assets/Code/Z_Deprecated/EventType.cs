@@ -1,5 +1,8 @@
 ﻿namespace Projapocsur.Common
 {
+    using System;
+
+    [Obsolete]
     public static class EventType
     {
         // UI Events

@@ -1,20 +1,20 @@
 namespace Projapocsur.Behaviors.Controllers
 {
+    using System;
     using Projapocsur.Common;
     using UnityEngine;
     using UnityEngine.EventSystems;
-    using EventType = Common.EventType;
 
     public class InputController : MonoBehaviour
     {
+        public static event Action<MouseInput> OnNothingClickedEvent;
+
         void Update()
         {
             if (Input.GetMouseButtonUp(MouseKey.Left))
             {
                 if (this.IsNotBlockedByUI())
                 {
-                    EventManager.Instance.TriggerEvent(EventType.UI_NothingClicked);
-
                     if (this.RayCast(out Collider2D collider))
                     {
                         if (collider.TryGetComponent(out IPointerLeftClickHandler handler))
@@ -24,7 +24,7 @@ namespace Projapocsur.Behaviors.Controllers
                     }
                     else
                     {
-                        EventManager.Instance.TriggerEvent(EventType.WO_NothingClicked_Left);
+                        OnNothingClickedEvent?.Invoke(MouseInput.Left);
                     }
                 }
             }
@@ -38,7 +38,7 @@ namespace Projapocsur.Behaviors.Controllers
                     }
                     else
                     {
-                        EventManager.Instance.TriggerEvent(EventType.WO_NothingClicked_Right);
+                        OnNothingClickedEvent?.Invoke(MouseInput.Right);
                     }
                 }
             }
@@ -56,12 +56,17 @@ namespace Projapocsur.Behaviors.Controllers
             colliderHit = hit.collider;
             return hit.collider != null;
         }
-    }
 
-    public class MouseKey
-    {
-        public static int Left { get; } = 0;
+        public enum MouseInput
+        {
+            Left = MouseKey.Left,
+            Right = MouseKey.Right,
+        }
 
-        public static int Right { get; } = 1;
+        private class MouseKey
+        {
+            public const int Left = 0;
+            public const int Right = 1;
+        }
     }
 }

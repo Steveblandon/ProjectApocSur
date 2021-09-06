@@ -8,6 +8,7 @@ namespace Projapocsur.Common
     /// <summary>
     /// A messaging system for decoupled communication between different objects.
     /// </summary>
+    [Obsolete]
     public class EventManager
     {
         public static readonly string className = nameof(EventManager);
@@ -21,7 +22,7 @@ namespace Projapocsur.Common
         {
             this.listeners = new Dictionary<string, Action>();
         }
-
+        
         /// <summary>
         /// Register a listener to execute a callback when the event is triggered.
         /// </summary>

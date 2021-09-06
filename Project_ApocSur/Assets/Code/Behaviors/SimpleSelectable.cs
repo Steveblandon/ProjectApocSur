@@ -1,53 +1,25 @@
 namespace Projapocsur.Behaviors
 {
-    using System;
     using Projapocsur.Common;
     using UnityEngine;
 
     /// <summary>
-    /// Abstract representation of an object that can be selected. Used to make any gameobject selectable.
+    /// For use with non-UI game objects. Primarily due to the difference of UIElement's Image component vs. world object's SpriteRenderer.
     /// </summary>
-    public abstract class SimpleSelectable : MonoBehaviour, IPointerLeftClickHandler
+    public class SimpleSelectable : Selectable
     {
-        public static readonly string CompName = nameof(SimpleSelectable);
+        public static readonly new string CompName = nameof(SimpleSelectable);
 
-        public event Action<SimpleSelectable> OnSelectStateChangeEvent;
+        [Tooltip("Select target outline.")]
+        [SerializeField]
+        private SpriteRenderer outline;
 
-        protected ColorSwitch colorSwitch;
-
-        public bool IsSelected { get; private set; }
-
-        public void OnSelect()
+        void Start()
         {
-            if (this.IsSelected)
+            if (this.outline != null && this.onSelectOutlineColor != null)
             {
-                return;
+                this.colorSwitch = new SpriteRendererColorSwitch(this.outline, this.onSelectOutlineColor);
             }
-
-            this.IsSelected = true;
-            this.colorSwitch?.TurnOn();
-            this.OnSelectStateChangeEvent?.Invoke(this);
-
-            Debug.Log($"{CompName}: {this.name} selected.");
-        }
-
-        public void OnDeselect()
-        {
-            if (!this.IsSelected)
-            {
-                return;
-            }
-
-            this.IsSelected = false;
-            this.colorSwitch?.TurnOff();
-            this.OnSelectStateChangeEvent?.Invoke(this);
-
-            Debug.Log($"{CompName}: {this.name} deselected.");
-        }
-
-        public virtual void OnPointerLeftClick()
-        {
-            this.OnSelect();
         }
     }
 }

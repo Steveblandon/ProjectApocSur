@@ -10,17 +10,13 @@ namespace Projapocsur.Behaviors.UI
     /// It serves as a simplified version of Unity's <see cref="Selectable"/> type that makes use of <see cref="ColorSwitch"/> to show
     /// an outline and avoids <see cref="Selectable"/>'s overhead.
     /// </summary>
-    public class SelectableUI : SimpleSelectable, IPointerClickHandler
+    public class SelectableUI : Behaviors.Selectable, IPointerClickHandler
     {
         public static readonly new string CompName = nameof(SelectableUI);
 
         [Tooltip("Select target outline.")]
         [SerializeField]
         private Image outline;
-
-        [Tooltip("This will be the target outline's color for when this gameobject is selected. It will revert back to the outline's original color when deselected.")]
-        [SerializeField]
-        private Color onSelectOutlineColor;
 
         void Start()
         {
