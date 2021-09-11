@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Common.Utility
+﻿namespace Projapocsur.Common.Utilities
 {
     using System.Collections;
     using System.Collections.Generic;

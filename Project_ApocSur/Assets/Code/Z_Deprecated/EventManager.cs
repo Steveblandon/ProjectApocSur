@@ -2,7 +2,7 @@ namespace Projapocsur.Common
 {
     using System;
     using System.Collections.Generic;
-    using Projapocsur.Common.Utility;
+    using Projapocsur.Common.Utilities;
     using UnityEngine;
 
     /// <summary>

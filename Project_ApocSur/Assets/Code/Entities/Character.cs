@@ -4,7 +4,7 @@ namespace Projapocsur.Entities
     using Projapocsur.Behaviors;
     using Projapocsur.Behaviors.Controllers;
     using Projapocsur.Behaviors.UI;
-    using Projapocsur.Common.Utility;
+    using Projapocsur.Common.Utilities;
     using UnityEngine;
 
     public class Character

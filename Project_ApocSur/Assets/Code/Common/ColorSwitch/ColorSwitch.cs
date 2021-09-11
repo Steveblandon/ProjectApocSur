@@ -1,7 +1,7 @@
 
 namespace Projapocsur.Common
 {
-    using Projapocsur.Common.Utility;
+    using Projapocsur.Common.Utilities;
     using UnityEngine;
 
     /// <summary>
