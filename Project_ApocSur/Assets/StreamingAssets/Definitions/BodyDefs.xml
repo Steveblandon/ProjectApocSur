@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Defs>
+  <BodyDef Name="Human">
+    <MaxHitPoints>100</MaxHitPoints>
+    <Blood>10</Blood>
+  </BodyDef>
+</Defs>

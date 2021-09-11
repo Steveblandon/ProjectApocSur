@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Defs>
+  <StatDef Name="HitPoints">
+    <Description>WIP</Description>
+  </StatDef>
+  <StatDef Name="Height">
+    <Description>The height</Description>
+  </StatDef>
+</Defs>
