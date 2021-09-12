@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <Defs>
-  <StatDef Name="HitPoints">
+  <StatDef Name="hurr">
     <Description>WIP</Description>
   </StatDef>
-  <StatDef Name="Height">
-    <Description>The height</Description>
+  <StatDef Name="Rak">
+    <Description>WIP</Description>
   </StatDef>
 </Defs>

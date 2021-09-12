@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<Defs>
+  <StatDef Name="HitPoints">
+    <Label />
+    <Description />
+    <DefaultValue>0</DefaultValue>
+  </StatDef>
+  <StatModifierDef Name="Bleed">
+    <Label />
+    <Description />
+    <AffectedStat RefDefName="HitPoints" />
+    <ValueChange>0</ValueChange>
+    <ValueMultiplier>1</ValueMultiplier>
+  </StatModifierDef>
+  <BodyDef Name="Human">
+    <Label />
+    <Description />
+    <HeightBase>0</HeightBase>
+    <HeightRange>0</HeightRange>
+    <MaxHitPointsBase>0</MaxHitPointsBase>
+    <BloodAmount>0</BloodAmount>
+    <BodyParts>
+      <BodyPart RefDefName="Torso" />
+      <BodyPart RefDefName="Head" />
+    </BodyParts>
+  </BodyDef>
+  <BodyPartDef Name="Torso">
+    <Label />
+    <Description />
+    <Size>0</Size>
+    <Height>0</Height>
+    <HeightOffset>0</HeightOffset>
+    <MaxHitpointsBase>0</MaxHitpointsBase>
+    <HealingRateBase>0</HealingRateBase>
+  </BodyPartDef>
+  <BodyPartDef Name="Head">
+    <Label />
+    <Description />
+    <Size>0</Size>
+    <Height>0</Height>
+    <HeightOffset>0</HeightOffset>
+    <MaxHitpointsBase>0</MaxHitpointsBase>
+    <HealingRateBase>0</HealingRateBase>
+  </BodyPartDef>
+  <InjuryDef Name="Laceration">
+    <Label />
+    <Description />
+    <Effects>
+      <StatModifier RefDefName="Bleed" Change="-0.5" Multiplier="1.2" />
+    </Effects>
+  </InjuryDef>
+</Defs>

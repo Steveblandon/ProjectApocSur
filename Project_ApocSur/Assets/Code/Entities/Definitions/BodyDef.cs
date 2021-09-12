@@ -1,16 +1,32 @@
 ﻿namespace Projapocsur.Entities.Definitions
 {
     using System;
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
 
     [Serializable]
     public class BodyDef : Def
     {
-        //public Stat Height;
+        public float HeightBase;
 
-        public float MaxHitPoints;
+        public float HeightRange;
 
-        public float Blood;
+        public float MaxHitPointsBase;
 
-        //public List<BodyPart> bodyParts;
+        public float BloodAmount;
+
+        [XmlArray]
+        [XmlArrayItem(ElementName = nameof(BodyPart))]
+        public List<DefRef<BodyPartDef>> BodyParts = new List<DefRef<BodyPartDef>>();
+
+        public override void PostLoad()
+        {
+            base.PostLoad();
+
+            foreach (var effect in this.BodyParts)
+            {
+                effect.PostLoad();
+            }
+        }
     }
 }

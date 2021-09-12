@@ -14,13 +14,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   save: 0
   load: 0
-  uri: Definitions/StatDefs.xml
+  uri: Definitions/AllDefsTest.xml
   useDefaultPath: 1
   defaultPath: D:/Workshop/Project ApocSur/Project_ApocSur/Assets/StreamingAssets
   root:
     statDefs:
     - Name: HitPoints
-      Description: The hitpointsss
-    - Name: Height
-      Description: The height
-    bodyDefs: []
+      Label: 
+      Description: 
+      DefaultValue: 0
+    statModDefs:
+    - Name: Bleed
+      Label: 
+      Description: 
+      AffectedStat:
+        RefDefName: HitPoints
+      ValueChange: 0
+      ValueMultiplier: 1
+    injuryDefs:
+    - Name: Laceration
+      Label: 
+      Description: 
+      Effects:
+      - RefDefName: Bleed
+        Change: -0.5
+        Multiplier: 1.2
+    bodyDefs:
+    - Name: Human
+      Label: 
+      Description: 
+      HeightBase: 0
+      HeightRange: 0
+      MaxHitPointsBase: 0
+      BloodAmount: 0
+      BodyParts:
+      - RefDefName: Torso
+      - RefDefName: Head
+    bodyPartDefs:
+    - Name: Torso
+      Label: 
+      Description: 
+      Size: 0
+      Height: 0
+      HeightOffset: 0
+      MaxHitpointsBase: 0
+      HealingRateBase: 0
+    - Name: Head
+      Label: 
+      Description: 
+      Size: 0
+      Height: 0
+      HeightOffset: 0
+      MaxHitpointsBase: 0
+      HealingRateBase: 0

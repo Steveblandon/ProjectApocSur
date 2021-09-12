@@ -33,7 +33,11 @@ namespace Projapocsur.ScriptableObjects
             DefinitionFinder.TryFind("HitPoints", out StatDef def);
             Debug.Log($"{def?.Name}: {def?.Description} found");
             DefinitionFinder.TryFind("Human", out BodyDef bodyDef);
-            Debug.Log($"{bodyDef?.Name}: {bodyDef?.MaxHitPoints} found");
+            Debug.Log($"{bodyDef?.Name}: {bodyDef?.MaxHitPointsBase} found");
+            DefinitionFinder.TryFind("Torso", out BodyPartDef bodyPartDef);
+            Debug.Log($"{bodyPartDef?.Name}: {bodyPartDef?.MaxHitpointsBase} found");
+            DefinitionFinder.TryFind("Laceration", out InjuryDef injuryDef);
+            Debug.Log($"{injuryDef?.Name}: {injuryDef?.Description} found");
         }
     }
 }

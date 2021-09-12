@@ -4,13 +4,12 @@
     using System.Xml.Serialization;
 
     [Serializable]
-    public abstract class Def : Entity
+    public class StatModifierDefRef : DefRef<StatModifierDef>
     {
         [XmlAttribute]
-        public string Name;
+        public float Change;
 
-        public string Label;
-
-        public string Description;
+        [XmlAttribute]
+        public float Multiplier = 1;
     }
 }
