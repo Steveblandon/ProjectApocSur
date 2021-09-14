@@ -12,6 +12,13 @@
     <ValueChange>0</ValueChange>
     <ValueMultiplier>1</ValueMultiplier>
   </StatModifierDef>
+  <InjuryDef Name="Laceration">
+    <Label />
+    <Description />
+    <Effects>
+      <StatModifier RefDefName="Bleed" Change="-0.5" Multiplier="1.2" />
+    </Effects>
+  </InjuryDef>
   <BodyDef Name="Human">
     <Label />
     <Description />
@@ -42,11 +49,4 @@
     <MaxHitpointsBase>0</MaxHitpointsBase>
     <HealingRateBase>0</HealingRateBase>
   </BodyPartDef>
-  <InjuryDef Name="Laceration">
-    <Label />
-    <Description />
-    <Effects>
-      <StatModifier RefDefName="Bleed" Change="-0.5" Multiplier="1.2" />
-    </Effects>
-  </InjuryDef>
 </Defs>

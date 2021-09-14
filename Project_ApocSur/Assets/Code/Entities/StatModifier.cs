@@ -1,27 +1,30 @@
 ﻿namespace Projapocsur.Entities
 {
     using System;
-    using System.Xml.Serialization;
-    using Projapocsur.Common;
     using Projapocsur.Entities.Definitions;
 
     [Serializable]
     public class StatModifier : Entity
     {
-        [XmlAttribute]
-        public string RefDefName;
+        public StatModifierDefRef DefRef;
+        public string ChangeLabel;
 
-        [XmlText]
-        public float Value;
+        public StatModifier() { }
 
-        public StatModifierDef Def { get; private set; }
+        public StatModifier(StatModifierDefRef defRef)
+        {
+            this.DefRef = defRef;
+        }
+
+        public void Process(Stat stat)
+        {
+
+        }
 
         public override void PostLoad()
         {
             base.PostLoad();
-
-            DefinitionFinder.TryFind(RefDefName, out StatModifierDef def);
-            this.Def = def;
+            DefRef.PostLoad();
         }
     }
 }

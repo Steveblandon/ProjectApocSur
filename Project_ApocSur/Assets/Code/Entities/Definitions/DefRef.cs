@@ -1,6 +1,7 @@
 ﻿namespace Projapocsur.Entities.Definitions
 {
     using System;
+    using System.Collections.Generic;
     using System.Xml.Serialization;
     using Projapocsur.Common;
 
@@ -21,8 +22,18 @@
 
         public void PostLoad()
         {
+            this.Link();
+        }
+
+        public void Link()
+        {
             DefinitionFinder.TryFind(RefDefName, out T def);
             this.Def = def;
         }
+    }
+
+    public static class DefRefExtensions
+    {
+        public static void PostLoad<T>(this List<DefRef<T>> defRefs) where T : Def => defRefs.ForEach((defRef) => defRef.PostLoad());
     }
 }

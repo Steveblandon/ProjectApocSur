@@ -8,7 +8,6 @@
     [Serializable]
     public class Stat : Entity
     {
-        [XmlText]
         public float Value;
 
         public StatDef Def { get; private set; }

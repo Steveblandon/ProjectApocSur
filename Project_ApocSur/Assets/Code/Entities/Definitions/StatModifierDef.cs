@@ -7,14 +7,9 @@
     {
         public DefRef<StatDef> AffectedStat;
 
-        public float ValueChange;
-
-        public float ValueMultiplier = 1;
-
         public override void PostLoad()
         {
             base.PostLoad();
-
             AffectedStat.PostLoad();
         }
     }

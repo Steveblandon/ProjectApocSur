@@ -14,11 +14,7 @@
         public override void PostLoad()
         {
             base.PostLoad();
-
-            foreach (var effect in this.Effects)
-            {
-                effect.PostLoad();
-            }
+            Effects.PostLoad();
         }
     }
 }

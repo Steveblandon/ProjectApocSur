@@ -1,5 +1,6 @@
-﻿namespace Projapocsur.Common.Utilities
+﻿namespace Projapocsur.Common.Collections
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -27,6 +28,14 @@
                 }
             }
             return true;
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> process)
+        {
+            foreach (var item in source)
+            {
+                process(item);
+            }
         }
     }
 }

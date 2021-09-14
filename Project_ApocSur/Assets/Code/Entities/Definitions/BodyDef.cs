@@ -22,11 +22,7 @@
         public override void PostLoad()
         {
             base.PostLoad();
-
-            foreach (var effect in this.BodyParts)
-            {
-                effect.PostLoad();
-            }
+            BodyParts.PostLoad();
         }
     }
 }
