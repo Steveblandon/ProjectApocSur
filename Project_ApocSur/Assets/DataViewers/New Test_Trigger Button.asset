@@ -15,5 +15,5 @@ MonoBehaviour:
   testDefinitionFinder: 0
   fileToSerialize: customSerializerTest.xml
   testCustomSerializer_Serialize: 0
-  fileToDeserialize: customSerializerTest_ReadReady.xml
+  fileToDeserialize: customSerializerTest.xml
   testCustomSerializer_Deserialize: 0

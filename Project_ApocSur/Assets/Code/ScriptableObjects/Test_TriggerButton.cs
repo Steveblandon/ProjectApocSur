@@ -49,8 +49,7 @@ namespace Projapocsur.ScriptableObjects
 
             using (var stream = File.Open(uri, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
             {
-                var serializer = new XmlProcessor();
-                serializer.Serialize(stream, data);
+                XmlSerializer.Serialize(stream, data);
             }
         }
 
@@ -72,8 +71,7 @@ namespace Projapocsur.ScriptableObjects
 
             using (var stream = File.Open(uri, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                var serializer = new XmlProcessor();
-                serializer.Deserialize(stream, out TestSerializableObject data);
+                XmlDeserializer.Deserialize(stream, out TestSerializableObject data);
                 Debug.Log(data);
             }
         }
@@ -98,7 +96,7 @@ namespace Projapocsur.ScriptableObjects
             [XmlMember(isAttribute: true)]
             public float valuePropPub_float { get; set; }
 
-            [XmlMember]
+            [XmlMember(preferredName:"miniNest")]
             public Mini NestedObject { get; private set; } = new Mini();
 
             /*[XmlMember]
@@ -118,7 +116,7 @@ namespace Projapocsur.ScriptableObjects
         [XmlSerializable]
         public class Mini
         {
-            [XmlMember(preferredName: "supremeValue")]
+            [XmlMember(preferredName: "supremeValue", isAttribute: true)]
             float value = 5;
 
             /*[XmlMember]

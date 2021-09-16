@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestSerializableObject valuePropPub_float="0" valueFieldPri_str="" valueFieldPri_bool="false" valueFieldPri_int="0">
   <valueFieldPub_int>0</valueFieldPub_int>
-  <NestedObject>
-    <supremeValue>5</supremeValue>
-  </NestedObject>
+  <miniNest supremeValue="51" />
 </TestSerializableObject>
