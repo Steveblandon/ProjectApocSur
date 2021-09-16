@@ -5,7 +5,7 @@ namespace Projapocsur.Common.Utilities
 
     public enum LogLevel
     {
-        Normal,
+        Info,
         Warning,
         Error
     }
@@ -27,7 +27,7 @@ namespace Projapocsur.Common.Utilities
 
             switch(logLevel)
             {
-                case LogLevel.Normal:
+                case LogLevel.Info:
                     Debug.Log(message);
                     break;
                 case LogLevel.Warning:

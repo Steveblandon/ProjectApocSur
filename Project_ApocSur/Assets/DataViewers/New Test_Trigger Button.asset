@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac294b3371aa954599cef18dc2752a2, type: 3}
   m_Name: New Test_Trigger Button
   m_EditorClassIdentifier: 
-  triggerAction: 0
+  testDefinitionFinder: 0
+  fileToSerialize: customSerializerTest.xml
+  testCustomSerializer_Serialize: 0
+  fileToDeserialize: customSerializerTest_ReadReady.xml
+  testCustomSerializer_Deserialize: 0

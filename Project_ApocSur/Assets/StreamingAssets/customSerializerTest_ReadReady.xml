@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestSerializableObject valuePropPub_float="0.13" valueFieldPri_str="test" valueFieldPri_bool="true" valueFieldPri_int="6">
+  <valueFieldPub_int>10</valueFieldPub_int>
+  <NestedObject>
+    <supremeValue>50</supremeValue>
+  </NestedObject>
+</TestSerializableObject>
