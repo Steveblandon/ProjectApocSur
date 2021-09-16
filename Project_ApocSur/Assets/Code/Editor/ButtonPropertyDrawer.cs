@@ -3,7 +3,7 @@
     using UnityEngine;
     using UnityEditor;
     using System.Reflection;
-    using Projapocsur.CustomAttributes;
+    using Projapocsur.EditorAttributes;
 
     [CustomPropertyDrawer(typeof(ButtonAttribute))]
     public class ButtonPropertyDrawer : PropertyDrawer

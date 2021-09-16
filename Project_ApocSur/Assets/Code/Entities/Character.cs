@@ -1,9 +1,7 @@
 namespace Projapocsur.Entities
 {
     using System;
-    using Projapocsur.Behaviors;
-    using Projapocsur.Behaviors.Controllers;
-    using Projapocsur.Behaviors.UI;
+    using Projapocsur.Scripts;
     using Projapocsur.Common.Utilities;
     using UnityEngine;
 
@@ -18,8 +16,8 @@ namespace Projapocsur.Entities
 
         public Character(SimpleSelectable avatar, SelectableUI portrait)
         {
-            ValidationUtils.ThrowIfNull(nameof(avatar), avatar);
-            ValidationUtils.ThrowIfNull(nameof(portrait), portrait);
+            ValidationUtility.ThrowIfNull(nameof(avatar), avatar);
+            ValidationUtility.ThrowIfNull(nameof(portrait), portrait);
 
             this.mover = avatar.GetComponent<Moveable>();
             this.avatar = avatar;

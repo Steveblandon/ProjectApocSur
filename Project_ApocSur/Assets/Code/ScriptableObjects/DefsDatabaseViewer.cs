@@ -1,6 +1,6 @@
 namespace Projapocsur.ScriptableObjects
 {
-    using Projapocsur.Common;
+    using Projapocsur.Core;
     using UnityEngine;
 
     [CreateAssetMenu]

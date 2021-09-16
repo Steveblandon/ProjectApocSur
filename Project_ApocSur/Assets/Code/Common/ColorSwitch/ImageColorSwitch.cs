@@ -13,7 +13,7 @@ namespace Projapocsur.Common
 
         public ImageColorSwitch(Image image, Color onStateColor) : base(onStateColor, image.color)
         {
-            ValidationUtils.ThrowIfNull(nameof(image), image);
+            ValidationUtility.ThrowIfNull(nameof(image), image);
 
             this.target = image;
         }

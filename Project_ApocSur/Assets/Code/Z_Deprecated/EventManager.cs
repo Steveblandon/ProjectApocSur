@@ -1,4 +1,4 @@
-namespace Projapocsur.Common
+namespace Projapocsur.Deprecated
 {
     using System;
     using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Projapocsur.Common
         /// <remarks> Make sure to unregister listener in Component.OnDisable or Component.OnDestroy when no longer needed.</remarks>
         public void RegisterListener(string eventType, Action callback)
         {
-            ValidationUtils.ThrowIfStringEmptyNullOrWhitespace(nameof(eventType), eventType);
+            ValidationUtility.ThrowIfStringEmptyNullOrWhitespace(nameof(eventType), eventType);
 
             if (callback == null)
             {
@@ -49,7 +49,7 @@ namespace Projapocsur.Common
 
         public void UnregisterListener(string eventType, Action callback)
         {
-            ValidationUtils.ThrowIfStringEmptyNullOrWhitespace(nameof(eventType), eventType);
+            ValidationUtility.ThrowIfStringEmptyNullOrWhitespace(nameof(eventType), eventType);
 
             if (callback == null)
             {
@@ -71,7 +71,7 @@ namespace Projapocsur.Common
 
         public void TriggerEvent(string eventType)
         {
-            ValidationUtils.ThrowIfStringEmptyNullOrWhitespace(nameof(eventType), eventType);
+            ValidationUtility.ThrowIfStringEmptyNullOrWhitespace(nameof(eventType), eventType);
 
             if (listeners.ContainsKey(eventType))
             {

@@ -1,10 +1,9 @@
 namespace Projapocsur.ScriptableObjects
 {
-    using System;
     using System.IO;
-    using Projapocsur.Common;
-    using Projapocsur.Common.Utilities;
-    using Projapocsur.CustomAttributes;
+    using Projapocsur.Common.Serialization;
+    using Projapocsur.Core;
+    using Projapocsur.EditorAttributes;
     using Projapocsur.Entities.Definitions;
     using UnityEngine;
 
@@ -79,7 +78,7 @@ namespace Projapocsur.ScriptableObjects
             }
         }
 
-        [XmlSerializable(type:typeof(TestSerializableObject))]
+        [XmlSerializable]
         public class TestSerializableObject
         {
             private float nonSerializedField;
@@ -116,7 +115,7 @@ namespace Projapocsur.ScriptableObjects
             }*/
         }
 
-        [XmlSerializable(type: typeof(Mini))]
+        [XmlSerializable]
         public class Mini
         {
             [XmlMember(preferredName: "supremeValue")]

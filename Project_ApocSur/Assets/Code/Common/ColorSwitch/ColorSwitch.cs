@@ -11,8 +11,8 @@ namespace Projapocsur.Common
     {
         public ColorSwitch(Color onStateColor, Color offStateColor)
         {
-            ValidationUtils.ThrowIfNull(nameof(onStateColor), onStateColor);
-            ValidationUtils.ThrowIfNull(nameof(offStateColor), offStateColor);
+            ValidationUtility.ThrowIfNull(nameof(onStateColor), onStateColor);
+            ValidationUtility.ThrowIfNull(nameof(offStateColor), offStateColor);
 
             this.OnStateColor = onStateColor;
             this.OffStateColor = offStateColor;

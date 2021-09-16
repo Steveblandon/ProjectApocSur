@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
-    using Projapocsur.Common;
+    using Projapocsur.Core;
 
     /// <summary>
     /// To avoid having Defs that fully define other defs they reference, this object should be used instead.

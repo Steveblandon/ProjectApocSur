@@ -12,7 +12,7 @@ namespace Projapocsur.Common
 
         public SpriteRendererColorSwitch(SpriteRenderer renderer, Color onStateColor) : base(onStateColor, renderer.color)
         {
-            ValidationUtils.ThrowIfNull(nameof(renderer), renderer);
+            ValidationUtility.ThrowIfNull(nameof(renderer), renderer);
 
             this.target = renderer;
         }

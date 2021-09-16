@@ -1,7 +1,7 @@
 ﻿namespace Projapocsur.Entities
 {
     using System.Xml.Serialization;
-    using Projapocsur.Common;
+    using Projapocsur.Core;
     using Projapocsur.Entities.Definitions;
 
     public class BodyPart : Entity

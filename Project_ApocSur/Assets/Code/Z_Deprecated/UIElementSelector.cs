@@ -1,4 +1,4 @@
-/*namespace Projapocsur.Behaviors
+/*namespace Projapocsur.Deprecated
 {
     using System;
     using System.Collections.Generic;

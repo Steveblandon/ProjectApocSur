@@ -3,7 +3,7 @@
     using UnityEngine;
     using UnityEditor;
     using System;
-    using Projapocsur.CustomAttributes;
+    using Projapocsur.EditorAttributes;
 
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer

@@ -1,7 +1,7 @@
 namespace Projapocsur.ScriptableObjects
 {
     using Projapocsur.Common.Utilities;
-    using Projapocsur.CustomAttributes;
+    using Projapocsur.EditorAttributes;
     using UnityEngine;
 
     public abstract class XMLViewer : ScriptableObject
