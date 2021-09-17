@@ -107,6 +107,9 @@ namespace Projapocsur.ScriptableObjects
             [XmlMember]
             public IEnumerable enumerable { get; private set; } = new List<int>() { 4, 2 };
 
+            [XmlMember]
+            public IEnumerable<Mini> minis { get; set; } = new List<Mini>() { new Mini() };
+
             /*[XmlMember]
             public DateTime Timestamp { get; private set; } = DateTime.UtcNow;*/
 
@@ -124,7 +127,7 @@ namespace Projapocsur.ScriptableObjects
         [XmlSerializable]
         public class Mini
         {
-            [XmlMember(preferredName: "supremeValue", isAttribute: true)]
+            [XmlMember(preferredName: "supremeValue"/*, isAttribute: true*/)]
             float value = 5;
 
             /*[XmlMember]

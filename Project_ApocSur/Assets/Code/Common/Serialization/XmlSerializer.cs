@@ -89,7 +89,7 @@
 
         private void Serialize(
             XmlWriter writer, 
-            BasicMemberInfo member, 
+            XmlSerializableMember member, 
             string finalName, 
             string parentTypeName,
             bool validateNestedType = true)
@@ -102,8 +102,7 @@
             {
                 this.SerializeNestedObject(writer, member, name: finalName, parentTypeName: parentTypeName, validateNestedType);
             }
-            else if (ReflectionUtility.IsList(member.ValueType, out Type innerType)
-                && XmlDeserializer.CanDeserialize(innerType))
+            else if (ReflectionUtility.IsList(member.ValueType, out Type innerType) && XmlDeserializer.CanDeserialize(innerType))
             {
                 this.SerializeList(writer, member, innerType, name: finalName ?? member.ValueType.Name, parentTypeName: parentTypeName);
             }
@@ -113,22 +112,23 @@
             }
         }
 
-        private void SerializeList(XmlWriter writer, BasicMemberInfo member, Type innerType, string name, string parentTypeName)
+        private void SerializeList(XmlWriter writer, XmlSerializableMember member, Type innerType, string name, string parentTypeName)
         {
             dynamic list = member.Value;
 
             writer.WriteStartElement(name);
             foreach (var item in list)
             {
-                var memberInfo = new BasicMemberInfo("li", item, innerType);
-                Serialize(writer, memberInfo, finalName: memberInfo.Name, parentTypeName: parentTypeName, validateNestedType: false);
+                string itemName = innerType.IsPrimitive() ? XmlTags.listItem : innerType.Name;
+                var memberInfo = new XmlSerializableMember(itemName, item, null);
+                Serialize(writer, memberInfo, finalName: memberInfo.Name, parentTypeName: parentTypeName);
             }
             writer.WriteEndElement();
         }
 
         private void SerializeNestedObject(
             XmlWriter writer,
-            BasicMemberInfo member,
+            XmlSerializableMember member,
             string name, 
             string parentTypeName,
             bool validateNestedTypes = true)
@@ -148,6 +148,7 @@
             }
             
             Serialize(writer, member.Value, name);
+            nestedTypes.Remove(member.ValueType);
         }
 
         private void SerializeAsElement(XmlWriter writer, string name, object value)

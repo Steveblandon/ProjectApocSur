@@ -6,16 +6,16 @@
     using System.Reflection;
     using System.Xml;
     using Projapocsur.Common.Extensions;
+    using Projapocsur.Common.Utilities;
 
     /// <summary>
     /// Deserializes XML written by <see cref="XmlSerializer"/>.
     /// </summary>
     public class XmlDeserializer
     {
-        private static IReadOnlyDictionary<Type, Func<string, dynamic>> DeserializationStrategies =
+        private static IReadOnlyDictionary<Type, Func<string, dynamic>> SimpleDeserializationStrategies =
             new Dictionary<Type, Func<string, dynamic>>()
         {
-            // primitives
             { typeof(bool), (value) => bool.Parse(value) },
             { typeof(byte), (value) => byte.Parse(value) },
             { typeof(sbyte), (value) => sbyte.Parse(value) },
@@ -28,22 +28,18 @@
             { typeof(ulong), (value) => ulong.Parse(value) },
             { typeof(float), (value) => float.Parse(value) },
             { typeof(double), (value) => double.Parse(value) },
-
-            //NOTE: current commented out entries need to be tested, should be tested once we start to add support for built-in complex types
-
-            // complex objects
             { typeof(object), (value) => new object() },
-            /*{ typeof(decimal), (value) => decimal.Parse(value) },*/
+            { typeof(decimal), (value) => decimal.Parse(value) },
             { typeof(string), (value) => value },
-            /*{ typeof(DateTimeOffset), (value) => DateTimeOffset.Parse(value) },
-            { typeof(DateTime), (value) => DateTime.Parse(value) },*/
         };
 
         private XmlDeserializer() { }
 
         public static bool CanDeserialize(Type type)
         {
-            return DeserializationStrategies.ContainsKey(type) || type.GetCustomAttribute<XmlSerializableAttribute>() != null;
+            return SimpleDeserializationStrategies.ContainsKey(type)
+                || type.GetCustomAttribute<XmlSerializableAttribute>() != null
+                || (ReflectionUtility.IsList(type, out Type innerType) && CanDeserialize(innerType));
         }
 
         public static void Deserialize<T>(Stream stream, out T data) where T : new()
@@ -63,14 +59,18 @@
         }
 
         private void Deserialize(XmlReader reader, object data)
-        {
-            string dataTypeName = data.GetType().Name;
-            string currentElementName = string.Empty;
-            string parentElementName = null;
+        {  
             var memberByName = new Dictionary<string, XmlSerializableMember>();
             IEnumerable<XmlSerializableMember> serializableMembers = XmlSerializableMemberFactory.GetSerializableMembers(data);
 
             serializableMembers.ForEach((member) => memberByName[member.XmlMemberAttribute.PreferredName ?? member.Name] = member);
+            Deserialize(reader, data.GetType().Name, memberByName);
+        }
+
+        private void Deserialize(XmlReader reader, string parentTypeName, Dictionary<string, XmlSerializableMember> memberByName)
+        {
+            string currentElementName = string.Empty;
+            string parentElementName = null;
 
             do
             {
@@ -80,15 +80,16 @@
                         currentElementName = reader.Name;
                         parentElementName ??= reader.Name;
                         bool isEmptyRootElement = currentElementName == parentElementName && reader.IsEmptyElement;    // empty flag captured here before pivot gets moved to attributes, if there are any
-                        DeserializeNestedObject(parentTypeName: dataTypeName, currentElementName: currentElementName, parentElementName: parentElementName, memberByName, reader);
-                        DeserializeAttributes(parentTypeName: dataTypeName, currentElementName: currentElementName, parentElementName: parentElementName, memberByName, reader);
+                        DeserializeNestedObject(parentTypeName: parentTypeName, currentElementName: currentElementName, memberByNameLookup: memberByName, reader: reader);
+                        DeserializeAttributes(parentTypeName: parentTypeName, currentElementName: currentElementName, parentElementName: parentElementName, memberByName, reader);
                         if (isEmptyRootElement) { return; }
+                        if (reader.NodeType == XmlNodeType.EndElement && reader.Name == parentElementName) { return; } // incase a nested object list pushes to the end element 
                         break;
                     case XmlNodeType.Text:
-                        DeserializeNode(parentTypeName: dataTypeName, name: currentElementName, value: reader.Value, memberByName);
+                        DeserializeNode(parentTypeName: parentTypeName, name: currentElementName, value: reader.Value, memberByName);
                         break;
                     case XmlNodeType.EndElement:
-                        if (reader.Name == parentElementName) { return; }
+                        if (reader.Name == parentElementName || parentElementName == null) { return; }
                         break;
                 }
             } while (reader.Read());
@@ -96,21 +97,64 @@
 
         private void DeserializeNestedObject(
             string parentTypeName,
-            string currentElementName, 
-            string parentElementName, 
-            Dictionary<string, XmlSerializableMember> memberByNameLookup, 
+            string currentElementName,
+            Dictionary<string, XmlSerializableMember> memberByNameLookup,
             XmlReader reader)
         {
-            if (currentElementName != parentElementName
-                && memberByNameLookup.TryGetValue(reader.Name, out XmlSerializableMember member)
-                && (!DeserializationStrategies.ContainsKey(member.ValueType)))
+            if (memberByNameLookup.TryGetValue(reader.Name, out XmlSerializableMember member)
+                && (!SimpleDeserializationStrategies.ContainsKey(member.ValueType)))
             {
-                if (!member.HasXmlSerializableAttribute)
+                if (member.HasXmlSerializableAttribute)
+                {
+                    Deserialize(reader, member.Value);
+                }
+                else if (ReflectionUtility.IsList(member.ValueType, out Type innerType) && CanDeserialize(innerType))
+                {
+                    DeserializeList(reader, member.Value, innerType, currentElementName);
+                }
+                else
                 {
                     throw new XmlUnsupportedTypeException(member.ValueType, member.Name, parentTypeName);
                 }
+            }
+        }
 
-                Deserialize(reader, member.Value);
+        private void DeserializeList(XmlReader reader, object target, Type innerType, string currentElementName)
+        {
+            if (reader.IsEmptyElement)
+            {
+                return;
+            }
+
+            string targetTypeName = target.GetType().Name;
+            dynamic list = target;
+            list.Clear();
+            var memberByName = new Dictionary<string, XmlSerializableMember>();
+
+            while (!(reader.Name == currentElementName && reader.NodeType == XmlNodeType.EndElement) 
+                && reader.NodeType != XmlNodeType.None)
+            {
+                // move to first element in list
+                reader.Read(); 
+                while (reader.NodeType != XmlNodeType.Element) 
+                { 
+                    reader.Read(); 
+                    if (reader.Name == currentElementName)  //exit on end tag of list
+                    {
+                        break;
+                    }
+                }
+
+                // deserialize element
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    dynamic value = Activator.CreateInstance(innerType);
+                    var member = new XmlSerializableMember(reader.Name, value, null);
+                    memberByName[reader.Name] = member;
+                    Deserialize(reader, targetTypeName, memberByName);
+                    value = member.Value;
+                    list.Add(value);
+                }
             }
         }
 
@@ -138,7 +182,7 @@
         {
             if (memberByNameLookup.TryGetValue(name, out XmlSerializableMember member))
             {
-                if (DeserializationStrategies.TryGetValue(member.ValueType, out Func<string, dynamic> deserializeString))
+                if (SimpleDeserializationStrategies.TryGetValue(member.ValueType, out Func<string, dynamic> deserializeString))
                 {
                     member.Value = deserializeString(value);
                 }
