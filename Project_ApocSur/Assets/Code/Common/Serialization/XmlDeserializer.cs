@@ -79,8 +79,10 @@
                     case XmlNodeType.Element:
                         currentElementName = reader.Name;
                         parentElementName ??= reader.Name;
+                        bool isEmptyRootElement = currentElementName == parentElementName && reader.IsEmptyElement;    // empty flag captured here before pivot gets moved to attributes, if there are any
                         DeserializeNestedObject(parentTypeName: dataTypeName, currentElementName: currentElementName, parentElementName: parentElementName, memberByName, reader);
                         DeserializeAttributes(parentTypeName: dataTypeName, currentElementName: currentElementName, parentElementName: parentElementName, memberByName, reader);
+                        if (isEmptyRootElement) { return; }
                         break;
                     case XmlNodeType.Text:
                         DeserializeNode(parentTypeName: dataTypeName, name: currentElementName, value: reader.Value, memberByName);
