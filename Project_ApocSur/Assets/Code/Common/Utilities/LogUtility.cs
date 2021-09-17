@@ -9,6 +9,7 @@ namespace Projapocsur.Common.Utilities
         Warning,
         Error
     }
+
     public static class LogUtility
     {
         public static readonly string ClassName = nameof(LogUtility);

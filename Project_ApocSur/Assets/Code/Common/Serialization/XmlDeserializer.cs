@@ -12,7 +12,7 @@
     /// </summary>
     public class XmlDeserializer
     {
-        private IReadOnlyDictionary<Type, Func<string, dynamic>> deserializationStrategies =
+        private static IReadOnlyDictionary<Type, Func<string, dynamic>> DeserializationStrategies =
             new Dictionary<Type, Func<string, dynamic>>()
         {
             // primitives
@@ -40,6 +40,11 @@
         };
 
         private XmlDeserializer() { }
+
+        public static bool CanDeserialize(Type type)
+        {
+            return DeserializationStrategies.ContainsKey(type) || type.GetCustomAttribute<XmlSerializableAttribute>() != null;
+        }
 
         public static void Deserialize<T>(Stream stream, out T data) where T : new()
         {
@@ -96,7 +101,7 @@
         {
             if (currentElementName != parentElementName
                 && memberByNameLookup.TryGetValue(reader.Name, out XmlSerializableMember member)
-                && (!this.deserializationStrategies.ContainsKey(member.ValueType)))
+                && (!DeserializationStrategies.ContainsKey(member.ValueType)))
             {
                 if (!member.HasXmlSerializableAttribute)
                 {
@@ -131,7 +136,7 @@
         {
             if (memberByNameLookup.TryGetValue(name, out XmlSerializableMember member))
             {
-                if (this.deserializationStrategies.TryGetValue(member.ValueType, out Func<string, dynamic> deserializeString))
+                if (DeserializationStrategies.TryGetValue(member.ValueType, out Func<string, dynamic> deserializeString))
                 {
                     member.Value = deserializeString(value);
                 }

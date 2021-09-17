@@ -6,13 +6,20 @@
     using System.Reflection;
     using System.Xml;
     using Projapocsur.Common.Extensions;
+    using Projapocsur.Common.Utilities;
 
     /// <summary>
-    /// Custom XMLSerializer that unlike the .NET serializers allows for the serialization of any field/property marked 
+    /// <para>Custom XMLSerializer that unlike the .NET serializers allows for the serialization of any field/property marked 
     /// with <see cref="XmlMemberAttribute"/>, no matter what it's access level is.
-    /// Other than primitive types, the only complex types supported at the moment are custom classes marked with the
-    /// <see cref="XmlSerializableAttribute"/>.
+    /// </para>
+    /// 
+    /// NOTE: for serialization/deserialization simplicity, all fields/properties meant to be serialized, must also have a
+    /// default non-null value.
     /// </summary>
+    /// <remarks>
+    /// Supported types: primitives, lists, and custom classes marked with the <see cref="XmlSerializableAttribute"/>
+    /// </remarks>
+    /// <seealso cref="XmlDeserializer"/>
     public class XmlSerializer
     {
         /// <summary>
@@ -69,36 +76,77 @@
             {
                 string finalName = member.XmlMemberAttribute.PreferredName ?? member.Name;
 
-                if (member.HasXmlSerializableAttribute)
+                if (member.ValueType.IsPrimitive() && member.XmlMemberAttribute.IsAttribute)
                 {
-                    SerializeNestedObject(writer, member, name: finalName, parentTypeName: objType.Name);
-                }
-                else if (member.ValueType.IsPrimitive())
-                {
-                    if (member.XmlMemberAttribute.IsAttribute)
-                    {
-                        this.SerializeAsAttribute(writer, finalName, member.Value);
-                    }
-                    else
-                    {
-                        this.SerializeAsElement(writer, finalName, member.Value);
-                    }
+                    this.SerializeAsAttribute(writer, finalName, member.Value);
                 }
                 else
                 {
-                    throw new XmlUnsupportedTypeException(member.ValueType, member.Name, source: objType.Name);
+                    Serialize(writer, member, finalName: finalName, parentTypeName: objType.Name);
                 }
             }
         }
 
-        private void SerializeNestedObject(XmlWriter writer, XmlSerializableMember member, string name, string parentTypeName)
+        private void Serialize(
+            XmlWriter writer, 
+            BasicMemberInfo member, 
+            string finalName, 
+            string parentTypeName,
+            bool validateNestedType = true)
         {
-            if (nestedTypes.Contains(member.ValueType))
+            if (member.ValueType.IsPrimitive())
             {
-                throw new XmlInvalidException("circular dependency detected", member.ValueType, member.Name, source: parentTypeName);
+                this.SerializeAsElement(writer, finalName, member.Value);
             }
+            else if (member.HasXmlSerializableAttribute)
+            {
+                this.SerializeNestedObject(writer, member, name: finalName, parentTypeName: parentTypeName, validateNestedType);
+            }
+            else if (ReflectionUtility.IsList(member.ValueType, out Type innerType)
+                && XmlDeserializer.CanDeserialize(innerType))
+            {
+                this.SerializeList(writer, member, innerType, name: finalName ?? member.ValueType.Name, parentTypeName: parentTypeName);
+            }
+            else
+            {
+                throw new XmlUnsupportedTypeException(member.ValueType, member.Name, source: parentTypeName);
+            }
+        }
 
-            nestedTypes.Add(member.ValueType);
+        private void SerializeList(XmlWriter writer, BasicMemberInfo member, Type innerType, string name, string parentTypeName)
+        {
+            dynamic list = member.Value;
+
+            writer.WriteStartElement(name);
+            foreach (var item in list)
+            {
+                var memberInfo = new BasicMemberInfo("li", item, innerType);
+                Serialize(writer, memberInfo, finalName: memberInfo.Name, parentTypeName: parentTypeName, validateNestedType: false);
+            }
+            writer.WriteEndElement();
+        }
+
+        private void SerializeNestedObject(
+            XmlWriter writer,
+            BasicMemberInfo member,
+            string name, 
+            string parentTypeName,
+            bool validateNestedTypes = true)
+        {
+            if (validateNestedTypes)
+            {
+                if (nestedTypes.Contains(member.ValueType))
+                {
+                    throw new XmlInvalidException(
+                        "circular dependency detected", 
+                        member.ValueType, 
+                        member.Name, 
+                        source: parentTypeName);
+                }
+
+                nestedTypes.Add(member.ValueType);
+            }
+            
             Serialize(writer, member.Value, name);
         }
 
@@ -115,5 +163,7 @@
             writer.WriteValue(value);
             writer.WriteEndAttribute();
         }
+
+        
     }
 }

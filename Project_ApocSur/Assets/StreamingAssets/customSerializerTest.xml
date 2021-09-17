@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestSerializableObject valuePropPub_float="0" valueFieldPri_str="" valueFieldPri_bool="false" valueFieldPri_int="0">
   <valueFieldPub_int>0</valueFieldPub_int>
-  <miniNest supremeValue="51" />
+  <miniNest supremeValue="5" />
+  <enumerable_generic_int>
+    <li>5</li>
+    <li>6</li>
+  </enumerable_generic_int>
+  <enumerable>
+    <li>4</li>
+    <li>2</li>
+  </enumerable>
 </TestSerializableObject>

@@ -1,5 +1,7 @@
 namespace Projapocsur.ScriptableObjects
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.IO;
     using Projapocsur.Common.Serialization;
     using Projapocsur.Core;
@@ -98,6 +100,12 @@ namespace Projapocsur.ScriptableObjects
 
             [XmlMember(preferredName:"miniNest")]
             public Mini NestedObject { get; private set; } = new Mini();
+
+            [XmlMember]
+            public IEnumerable<int> enumerable_generic_int { get; private set; } = new List<int>() { 5, 6 };
+
+            [XmlMember]
+            public IEnumerable enumerable { get; private set; } = new List<int>() { 4, 2 };
 
             /*[XmlMember]
             public DateTime Timestamp { get; private set; } = DateTime.UtcNow;*/
