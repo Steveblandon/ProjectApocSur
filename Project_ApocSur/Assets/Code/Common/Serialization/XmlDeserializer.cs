@@ -148,8 +148,8 @@
                 // deserialize element
                 if (reader.NodeType == XmlNodeType.Element)
                 {
-                    dynamic value = Activator.CreateInstance(innerType);
-                    var member = new XmlSerializableMember(reader.Name, value, null);
+                    var member = new XmlSerializableMember(reader.Name, innerType, null);
+                    dynamic value = member.Value;
                     memberByName[reader.Name] = member;
                     Deserialize(reader, targetTypeName, memberByName);
                     value = member.Value;

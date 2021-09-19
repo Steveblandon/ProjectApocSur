@@ -51,7 +51,7 @@
         {
             if (member.XmlMemberAttribute.IsAttribute && !member.ValueType.IsPrimitive())
             {
-                throw new XmlInvalidException("attribute must be a primitive", member.ValueType, member.Name);
+                throw new XmlInvalidException("attribute can not be a complex type", member.ValueType, paramName: member.Name, source: parent.GetType().Name);
             }
 
             if (member.XmlMemberAttribute.IsAttribute)  // attributes need to be processed first otherwise the XmlWriter will flip out.

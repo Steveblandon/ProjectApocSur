@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reflection;
+    using ProjApocSur.Common.Utilities;
 
     /// <summary>
     /// Contains all the information needed of a serializable class's member for the <see cref="XmlSerializer"/> to work with.
@@ -12,42 +13,44 @@
         private Action<object, object> setValue;
         private Func<object, object> getValue;
         private object parent;
+        private Type memberType;
 
-        private XmlSerializableMember(object parent, XmlMemberAttribute xmlMemberAttribute)
+        private XmlSerializableMember(string name, Type refType, object parent, XmlMemberAttribute xmlMemberAttribute)
         {
+            this.memberType = refType;
+            this.Name = name;
             this.parent = parent;
             this.XmlMemberAttribute = xmlMemberAttribute ?? new XmlMemberAttribute();
         }
 
         public XmlSerializableMember(string name, object value, object parent)
-            : this(parent, null)
+            : this(name, value.GetType(), parent, null)
         {
-            this.Name = name;
-            this.defaultValue = value;
-            this.setValue = (parent, val) => this.defaultValue = val;
-            this.getValue = (parent) => this.defaultValue;
+            UseDefaultValue(value);
             this.PostConstruct();
         }
 
-        public XmlSerializableMember(
-            PropertyInfo propertyInfo,
-            object parent,
-            XmlMemberAttribute xmlMemberAttribute = null) : this(parent, xmlMemberAttribute)
+        public XmlSerializableMember(string name, Type type, object parent)
+            : this(name, type, parent, null)
+        {
+            object value = AttemptToInstantiateValueFromType(type);
+            UseDefaultValue(value);
+            this.PostConstruct();
+        }
+
+        public XmlSerializableMember(PropertyInfo propertyInfo, object parent, XmlMemberAttribute xmlMemberAttribute = null) 
+            : this(propertyInfo.Name, propertyInfo.PropertyType, parent, xmlMemberAttribute)
         {
             this.setValue = propertyInfo.SetValue;
             this.getValue = propertyInfo.GetValue;
-            this.Name = propertyInfo.Name;
             this.PostConstruct();
         }
 
-        public XmlSerializableMember(
-            FieldInfo fieldInfo,
-            object parent,
-            XmlMemberAttribute xmlMemberAttribute = null) : this(parent, xmlMemberAttribute)
+        public XmlSerializableMember(FieldInfo fieldInfo, object parent, XmlMemberAttribute xmlMemberAttribute = null) 
+            : this(fieldInfo.Name, fieldInfo.FieldType, parent, xmlMemberAttribute)
         {
             this.setValue = fieldInfo.SetValue;
             this.getValue = fieldInfo.GetValue;
-            this.Name = fieldInfo.Name;
             this.PostConstruct();
         }
 
@@ -78,11 +81,49 @@
         {
             if (this.Value == null)
             {
-                throw new XmlInvalidException("cannot be null", null, this.Name, "null", source: this.parent.GetType().Name);
+                this.Value = AttemptToInstantiateValueFromType(this.memberType);
             }
 
             this.ValueType = this.Value.GetType();
             this.HasXmlSerializableAttribute = this.ValueType.GetCustomAttribute<XmlSerializableAttribute>() != null;
+        }
+
+        private object AttemptToInstantiateValueFromType(Type type)
+        {
+            object value = null;
+            bool throwException = false;
+            MissingMethodException ex = null;
+
+            if (type == typeof(string))
+            {
+                value = string.Empty;
+            }
+            else if (!type.IsAbstract && !type.IsInterface)
+            {
+                ExceptionUtility.TryCatch(
+                    () => value = Activator.CreateInstance(type),
+                    out ex);
+                throwException = ex != null;
+            }
+            else
+            {
+                throwException = true;
+            }
+
+            if (throwException)
+            {
+                throw new XmlInvalidException("reference type must be instantiatable if value is null", type, this.Name, "null", this.parent.GetType().Name, ex);
+            }
+
+            return value;
+        }
+
+        private void UseDefaultValue(object value)
+        {
+            this.defaultValue = value;
+            this.setValue = (parent, val) => this.defaultValue = val;
+            this.getValue = (parent) => this.defaultValue;
+            this.memberType = value.GetType();
         }
     }
 }

@@ -54,8 +54,8 @@
 
         private void Serialize(XmlWriter writer, object obj, string rootName = null)
         {
-            Type objType = obj.GetType();
-            string currentNodeName = rootName ?? objType.Name;
+            string objTypeName = obj.GetType().Name;
+            string currentNodeName = rootName ?? objTypeName;
 
             if (obj.GetType().IsPrimitive())
             {
@@ -66,23 +66,23 @@
             LinkedList<XmlSerializableMember> serializableMembers = XmlSerializableMemberFactory.GetSerializableMembers(obj);
 
             writer.WriteStartElement(currentNodeName);
-            SerializeMembers(writer, objType, serializableMembers);
+            SerializeMembers(writer, objTypeName, serializableMembers);
             writer.WriteEndElement();
         }
 
-        private void SerializeMembers(XmlWriter writer, Type objType, LinkedList<XmlSerializableMember> serializableMembers)
+        private void SerializeMembers(XmlWriter writer, string parentTypeName, LinkedList<XmlSerializableMember> serializableMembers)
         {
             foreach (var member in serializableMembers)
             {
                 string finalName = member.XmlMemberAttribute.PreferredName ?? member.Name;
 
-                if (member.ValueType.IsPrimitive() && member.XmlMemberAttribute.IsAttribute)
+                if (member.XmlMemberAttribute.IsAttribute)
                 {
                     this.SerializeAsAttribute(writer, finalName, member.Value);
                 }
                 else
                 {
-                    Serialize(writer, member, finalName: finalName, parentTypeName: objType.Name);
+                    Serialize(writer, member, finalName: finalName, parentTypeName: parentTypeName);
                 }
             }
         }
@@ -104,7 +104,7 @@
             }
             else if (ReflectionUtility.IsList(member.ValueType, out Type innerType) && XmlDeserializer.CanDeserialize(innerType))
             {
-                this.SerializeList(writer, member, innerType, name: finalName ?? member.ValueType.Name, parentTypeName: parentTypeName);
+                this.SerializeList(writer, member, innerType, name: finalName, parentTypeName: parentTypeName);
             }
             else
             {
@@ -114,6 +114,13 @@
 
         private void SerializeList(XmlWriter writer, XmlSerializableMember member, Type innerType, string name, string parentTypeName)
         {
+            if (name.Contains("`"))
+            {
+                // since in some cases we use the type name as the tag name, we want to avoid that for lists
+                // because for lists (or any collection), the type has a single quote in it that is considered illegal in xml names
+                name = XmlTags.list;
+            }
+
             dynamic list = member.Value;
 
             writer.WriteStartElement(name);
