@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using System.Xml.Serialization;
+    using Projapocsur.Common.Serialization;
     using Projapocsur.Common.Utilities;
     using Projapocsur.Entities.Definitions;
 
@@ -13,16 +13,13 @@
     public static class DefinitionFinder
     {
         public static readonly string ClassName = nameof(DefinitionFinder);
-
+        private static bool isInitialized;
+        private static Action postLoadCallbacks;
         private const string directoryName = "Definitions";
 
-        private static bool isInitialized;
-
-        private static Action PostLoadCallbacks;
-
-        public static void Init(bool reset = false)
+        public static void Init()
         {
-            if (isInitialized && !reset)
+            if (isInitialized)
             {
                 return;
             }
@@ -50,14 +47,14 @@
                 }
             }
 
-            PostLoadCallbacks?.Invoke();
+            postLoadCallbacks?.Invoke();
             isInitialized = true;
         }
 
         private static void Add<T>(IEnumerable<T> defs, int count) where T : Def
         {
             DefinitionIndex<T>.Init(count).Add(defs);
-            PostLoadCallbacks += DefinitionIndex<T>.Instance.PostLoadCallbacks;
+            postLoadCallbacks += DefinitionIndex<T>.Instance.postLoadCallbacks;
         }
 
         public static bool TryFind<T>(string defName, out T def)
@@ -79,7 +76,7 @@
             public static readonly string ClassName = nameof(DefinitionIndex<T>);
             public static DefinitionIndex<T> Instance = new DefinitionIndex<T>();
             private static Dictionary<string, T> index = new Dictionary<string, T>();
-            public Action PostLoadCallbacks;
+            public Action postLoadCallbacks;
 
             private DefinitionIndex() { }
 
@@ -109,41 +106,32 @@
                         continue;
                     }
 
-                    /*// this is currently disabled so that cache can be overwritten via Unity inspector calls since 
-                     * as long as Unity is running and this class hasn't been recompiled the cache stays untouched. In 
-                     * general though it might be good to have this check in place to avoid unexpected behavior of what
-                     * defs get uploaded... At the same time allowing duplicates would be useful for modding purposes.
-                     * 
                     if (index.ContainsKey(def.Name))
                     {
-                        LogUtility.Log(LogLevel.Warning, $"{ClassName}:<{typeof(T)}>.{nameof(def.Name)}='{def.Name}' duplicate found. Skipping.");
+                        LogUtility.Log(LogLevel.Warning, $"{ClassName}:<{typeof(T)}>.{nameof(def.Name)}='{def.Name}' duplicate detected. Skipping.");
                         continue;
-                    }*/
+                    }
 
                     index[def.Name] = def;
-                    PostLoadCallbacks += def.PostLoad;
+                    postLoadCallbacks += def.PostLoad;
                 }
             }
         }
 
-        [Serializable]
-        [XmlRoot(ElementName = nameof(Defs))]
+        [XmlSerializable]
         public class Defs
         {
-            [XmlElement(ElementName = nameof(StatDef))]
-            public List<StatDef> statDefs = new List<StatDef>();
+            [XmlMember]
+            public List<StatDef> statDefs;
 
-            [XmlElement(ElementName = nameof(StatModifierDef))]
-            public List<StatModifierDef> statModDefs = new List<StatModifierDef>();
+            [XmlMember]
+            public List<InjuryDef> injuryDefs;
 
-            [XmlElement(ElementName = nameof(InjuryDef))]
-            public List<InjuryDef> injuryDefs = new List<InjuryDef>();
+            [XmlMember]
+            public List<BodyDef> bodyDefs;
 
-            [XmlElement(ElementName = nameof(BodyDef))]
-            public List<BodyDef> bodyDefs = new List<BodyDef>();
-
-            [XmlElement(ElementName = nameof(BodyPartDef))]
-            public List<BodyPartDef> bodyPartDefs = new List<BodyPartDef>();
+            [XmlMember]
+            public List<BodyPartDef> bodyPartDefs;
         }
     }
 }

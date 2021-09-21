@@ -1,11 +1,10 @@
 namespace Projapocsur.Tests
 {
-    using System.Collections;
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using NUnit.Framework;
     using Projapocsur.Common.Serialization;
-    using System.IO;
-    using System;
     using ProjApocSur.Common.Utilities;
 
     public class XmlSerializationTests : TestsBase

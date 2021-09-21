@@ -65,7 +65,7 @@
 
             LinkedList<XmlSerializableMember> serializableMembers = XmlSerializableMemberFactory.GetSerializableMembers(obj);
 
-            writer.WriteStartElement(currentNodeName);
+            writer.WriteStartElement(XmlValidName(currentNodeName));
             SerializeMembers(writer, objTypeName, serializableMembers);
             writer.WriteEndElement();
         }
@@ -114,16 +114,9 @@
 
         private void SerializeList(XmlWriter writer, XmlSerializableMember member, Type innerType, string name, string parentTypeName)
         {
-            if (name.Contains("`"))
-            {
-                // since in some cases we use the type name as the tag name, we want to avoid that for lists
-                // because for lists (or any collection), the type has a single quote in it that is considered illegal in xml names
-                name = XmlTags.list;
-            }
-
             dynamic list = member.Value;
 
-            writer.WriteStartElement(name);
+            writer.WriteStartElement(XmlValidName(name));
             foreach (var item in list)
             {
                 string itemName = innerType.IsPrimitive() ? XmlTags.listItem : innerType.Name;
@@ -153,25 +146,41 @@
 
                 nestedTypes.Add(member.ValueType);
             }
-            
+
             Serialize(writer, member.Value, name);
             nestedTypes.Remove(member.ValueType);
         }
 
         private void SerializeAsElement(XmlWriter writer, string name, object value)
         {
-            writer.WriteStartElement(name);
+            writer.WriteStartElement(XmlValidName(name));
             writer.WriteValue(value);
             writer.WriteEndElement();
         }
 
         private void SerializeAsAttribute(XmlWriter writer, string name, object value)
         {
-            writer.WriteStartAttribute(name);
+            writer.WriteStartAttribute(XmlValidName(name));
             writer.WriteValue(value);
             writer.WriteEndAttribute();
         }
 
-        
+        /// <summary>
+        /// Since in some cases we use the type name as the tag name, we need to make sure it's a valid xml name.
+        /// In the case of generics for example there is an invalid character that must be omitted.
+        /// </summary>
+        /// <param name="name"> The string to parse.</param>
+        /// <returns>The scrubbed string or original string.</returns>
+        private string XmlValidName(string name)
+        {
+            int foundInvalidChar = name.IndexOf('`');
+
+            if (foundInvalidChar > 0)
+            {
+                return name.Substring(0, foundInvalidChar);
+            }
+
+            return name;
+        }
     }
 }

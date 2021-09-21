@@ -9,7 +9,7 @@
     {
         public static readonly string TestDataPath = Path.Combine(Application.dataPath, "Tests", "Data");
 
-        public void Setup()
+        public virtual void Setup()
         {
             if (!Directory.Exists(TestDataPath))
             {

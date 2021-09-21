@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <statDefs>
+    <StatDef Name="">
+      <Format></Format>
+      <Label></Label>
+      <Description></Description>
+    </StatDef>
+  </statDefs>
+  <injuryDefs>
+    <InjuryDef Name="">
+      <BleedingRate>0</BleedingRate>
+      <Pain>0</Pain>
+      <HealThreshold>0</HealThreshold>
+      <Label></Label>
+      <Description></Description>
+    </InjuryDef>
+  </injuryDefs>
+  <bodyDefs>
+    <BodyDef Name="">
+      <Height>0</Height>
+      <HeightRange>0</HeightRange>
+      <MaxHitPoints>0</MaxHitPoints>
+      <BodyParts>
+        <DefRef RefDefName="Human_Leg" />
+      </BodyParts>
+      <Label></Label>
+      <Description></Description>
+    </BodyDef>
+  </bodyDefs>
+  <bodyPartDefs>
+    <BodyPartDef Name="">
+      <Size>0</Size>
+      <Height>0</Height>
+      <FloorOffset>0</FloorOffset>
+      <MaxHitpoints>0</MaxHitpoints>
+      <HealingRate>0</HealingRate>
+      <Label></Label>
+      <Description></Description>
+    </BodyPartDef>
+  </bodyPartDefs>
+</Defs>

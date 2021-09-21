@@ -1,12 +1,12 @@
 ﻿namespace Projapocsur.Common.Utilities
 {
     using System.IO;
-    using System.Xml;
-    using System.Xml.Serialization;
+    using Projapocsur.Common.Serialization;
     using UnityEngine;
 
     public enum StorageMode
     {
+        DataPath,
         StreamingAssets,
         Absolute
     }
@@ -18,44 +18,35 @@
     {
         public static readonly string ClassName = nameof(StorageUtility);
 
-        public static void SaveData<T>(T data, string filename, StorageMode storageMode = StorageMode.StreamingAssets)
+        public static void SaveData(object data, string filename, StorageMode storageMode = StorageMode.DataPath)
         {
             SaveData(data, filename, GetFilePath(storageMode));
         }
 
-        public static void SaveData<T>(T data, string fileName, string filePath)
+        public static void SaveData(object data, string fileName, string filePath)
         {
             if (fileName.Contains(".meta") || !fileName.Contains(".xml"))
             {
-                Debug.LogWarning($"{ClassName}: attemped to save non-xml file '{fileName}'. aborted.");
+                Debug.LogWarning($"{ClassName}: attempted to save non-xml file '{fileName}'. aborted.");
                 return;
             }
 
             string uri = Path.Combine(filePath, fileName);
 
-            if (File.Exists(uri))
+            using (var stream = File.Open(uri, FileMode.Create, FileAccess.Write, FileShare.Write))
             {
-                File.Delete(uri);
-            }
-            if (!Directory.Exists(filePath))
-            {
-                Directory.CreateDirectory(filePath);
-            }
-
-            using (var stream = File.Open(uri, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
-            {
-                var serializer = new XmlSerializer(typeof(T));
-
-                serializer.Serialize(stream, data, new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }));
+                XmlSerializer.Serialize(stream, data);
             }
         }
 
-        public static void LoadData<T>(out T data, string fileName, StorageMode storageMode = StorageMode.StreamingAssets)
+        public static void LoadData<T>(out T data, string fileName, StorageMode storageMode = StorageMode.DataPath)
+            where T : new()
         {
             LoadData(out data, fileName, GetFilePath(storageMode));
         }
 
-        public static void LoadData<T>(out T data, string fileName, string filePath)
+        public static void LoadData<T>(out T data, string fileName, string filePath) 
+            where T : new()
         {
             data = default(T);
 
@@ -80,13 +71,11 @@
 
             using (var stream = File.Open(uri, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                var serializer = new XmlSerializer(typeof(T));
-
-                data = (T)serializer.Deserialize(stream);
+                XmlDeserializer.Deserialize(stream, out data);
             }
         }
 
-        public static string[] GetDirectoryFiles(string directoryName, StorageMode storageMode = StorageMode.StreamingAssets)
+        public static string[] GetDirectoryFiles(string directoryName, StorageMode storageMode = StorageMode.DataPath)
         {
             string uri = Path.Combine(GetFilePath(storageMode), directoryName);
 
@@ -106,6 +95,14 @@
                 case StorageMode.StreamingAssets:
                     filePath = Application.streamingAssetsPath;
                     break;
+                case StorageMode.DataPath:
+                    filePath = Path.Combine(Application.dataPath, "Code", "_data");
+                    break;
+            }
+
+            if (!string.IsNullOrWhiteSpace(filePath) && !Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
             }
 
             return filePath;

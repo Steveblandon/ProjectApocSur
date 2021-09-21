@@ -1,8 +1,7 @@
 ﻿namespace Projapocsur.Entities.Definitions
 {
-    using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Projapocsur.Common.Serialization;
     using Projapocsur.Core;
 
     /// <summary>
@@ -11,21 +10,22 @@
     /// and helps with linking to those instances.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    [Serializable]
+    [XmlSerializable]
     public class DefRef<T> where T : Def
     {
-        [XmlAttribute]
-        public string RefDefName;
+        public DefRef() { }
 
-        [XmlIgnore]
-        public T Def { get; private set; }
-
-        public void PostLoad()
+        public DefRef(string refDefName)
         {
-            this.Link();
+            this.RefDefName = refDefName;
         }
 
-        public void Link()
+        [XmlMember(isAttribute:true)]
+        public string RefDefName { get; private set; }
+
+        public T Def { get; private set; }
+
+        public void LinkToDef()
         {
             DefinitionFinder.TryFind(RefDefName, out T def);
             this.Def = def;
@@ -34,6 +34,6 @@
 
     public static class DefRefExtensions
     {
-        public static void PostLoad<T>(this List<DefRef<T>> defRefs) where T : Def => defRefs.ForEach((defRef) => defRef.PostLoad());
+        public static void LinkDef<T>(this List<DefRef<T>> defRefs) where T : Def => defRefs.ForEach((defRef) => defRef.LinkToDef());
     }
 }

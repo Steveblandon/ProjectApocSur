@@ -1,18 +1,23 @@
 ﻿namespace Projapocsur.Entities.Definitions
 {
-    using System;
+    using Projapocsur.Common.Serialization;
 
-    [Serializable]
+    [XmlSerializable]
     public class BodyPartDef : Def
     {
-        public int Size;
+        [XmlMember]
+        public int Size { get; private set; }
 
-        public float Height;
+        [XmlMember]
+        public float Height { get; private set; }
 
-        public float HeightOffset;
+        [XmlMember]
+        public float FloorOffset { get; private set; }
 
-        public float MaxHitpointsBase;
+        [XmlMember]
+        public float MaxHitpoints { get; private set; }
 
-        public float HealingRateBase;
+        [XmlMember]
+        public float HealingRate { get; private set; }
     }
 }

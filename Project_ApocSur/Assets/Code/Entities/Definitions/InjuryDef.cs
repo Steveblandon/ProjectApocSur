@@ -1,20 +1,17 @@
 ﻿namespace Projapocsur.Entities.Definitions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Projapocsur.Common.Serialization;
 
-    [Serializable]
+    [XmlSerializable]
     public class InjuryDef : Def
     {
-        [XmlArray]
-        [XmlArrayItem(ElementName = nameof(StatModifier))]
-        public List<StatModifierDefRef> Effects = new List<StatModifierDefRef>();
+        [XmlMember]
+        public float BleedingRate { get; private set; }
 
-        public override void PostLoad()
-        {
-            base.PostLoad();
-            Effects.PostLoad();
-        }
+        [XmlMember]
+        public float Pain { get; private set; }
+
+        [XmlMember]
+        public float HealThreshold { get; private set; }
     }
 }

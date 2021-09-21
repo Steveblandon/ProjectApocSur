@@ -1,15 +1,26 @@
 ﻿namespace Projapocsur.Entities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using Projapocsur.Common;
+    using Projapocsur.Common.Serialization;
+    using Projapocsur.Entities.Definitions;
 
-    [Serializable]
-    public abstract class Entity
+    public abstract class Entity : ILoadable
     {
-        // Override this to complete any construction of the entity once it has been loaded and deserialized
-        public virtual void PostLoad() { }
+        [XmlMember]
+        private DefRef<Def> defRef;
+
+        public Entity() { }
+
+        public Entity(string defRefName)
+        {
+            defRef = new DefRef<Def>(defRefName);
+        }
+
+        public Def Def { get; private set; }
+
+        public virtual void PostLoad() 
+        {
+            defRef?.LinkToDef();
+        }
     }
 }

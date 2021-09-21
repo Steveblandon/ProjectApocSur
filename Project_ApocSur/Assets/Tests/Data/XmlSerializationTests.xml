@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SerializableChild>
-  <mainVal>5.3</mainVal>
-  <inherritedVal>100</inherritedVal>
-  <inherritedVal_protected>1000</inherritedVal_protected>
-</SerializableChild>
+<SerializableWithFieldsAndProperties>
+  <valField>5</valField>
+  <ValProp>burr</ValProp>
+</SerializableWithFieldsAndProperties>

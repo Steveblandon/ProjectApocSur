@@ -1,24 +1,28 @@
 ﻿namespace Projapocsur.Entities
 {
-    using System.Xml.Serialization;
-    using Projapocsur.Core;
+    using System.Collections.Generic;
+    using Projapocsur.Common.Serialization;
     using Projapocsur.Entities.Definitions;
 
+    [XmlSerializable]
     public class BodyPart : Entity
     {
-        [XmlAttribute]
-        public string RefDefName;
-
-        public BodyPartDef Def { get; private set; }
-
+        [XmlMember]
         public Stat HitPoints { get; private set; }
 
-        public override void PostLoad()
-        {
-            base.PostLoad();
+        [XmlMember]
+        public LinkedList<Injury> Injuries { get; private set; }
 
-            DefinitionFinder.TryFind(RefDefName, out BodyPartDef def);
-            this.Def = def;
+        public BodyPart() { }
+
+        public BodyPart(BodyPartDef def) : base(def.Name)
+        {
+            // instantiate class using def
+        }
+
+        public void OnUpdate(InjuryProcessingContext context)
+        {
+
         }
     }
 }

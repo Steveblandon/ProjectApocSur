@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <statDefs>
+    <StatDef  Name="Height">
+      <Label>Height</Label>
+      <Description>How tall someone or something is when in an upright posture.</Description>
+      <Format>{0}m</Format>
+    </StatDef>
+  </statDefs>
+  <injuryDefs>
+    <InjuryDef  Name="Bruise">
+      <Label>Bruise</Label>
+      <Description>Swollen body part from blunt trauma.</Description>
+      <BleedingRate>0</BleedingRate>
+      <Pain>3</Pain>
+      <HealThreshold>0</HealThreshold>
+    </InjuryDef>
+  </injuryDefs>
+  <bodyDefs>
+    <BodyDef Name="Human">
+      <Label>Human</Label>
+      <Description>Just a human.</Description>
+      <Height>1.7</Height>
+      <HeightRange>0.21</HeightRange>
+      <MaxHitPoints>100</MaxHitPoints>
+      <BodyParts>
+        <DefRef RefDefName="Human_Leg" />
+      </BodyParts>
+    </BodyDef>
+  </bodyDefs>
+  <bodyPartDefs>
+    <BodyPartDef  Name="Human_Leg">
+      <Label>Leg</Label>
+      <Description></Description>
+      <Size>2</Size>
+      <Height>0.85</Height>
+      <FloorOffset>0</FloorOffset>
+      <MaxHitpoints>0</MaxHitpoints>
+      <HealingRate>0</HealingRate>      
+    </BodyPartDef>
+    <BodyPartDef  Name="Human_Arm">
+      <Label>Arm</Label>
+      <Description></Description>
+      <Size>1</Size>
+      <Height>0.56</Height>
+      <FloorOffset>0.93</FloorOffset>
+      <MaxHitpoints>0</MaxHitpoints>
+      <HealingRate>0</HealingRate>
+    </BodyPartDef>
+    <BodyPartDef  Name="Human_Torso">
+      <Label>Torso</Label>
+      <Description></Description>
+      <Size>5</Size>
+      <Height>0.64</Height>
+      <FloorOffset>0.85</FloorOffset>
+      <MaxHitpoints>0</MaxHitpoints>
+      <HealingRate>0</HealingRate>
+    </BodyPartDef>
+    <BodyPartDef  Name="Human_Head">
+      <Label>Head</Label>
+      <Description></Description>
+      <Size>2</Size>
+      <Height>0.21</Height>
+      <FloorOffset>1.52</FloorOffset>
+      <MaxHitpoints>0</MaxHitpoints>
+      <HealingRate>0</HealingRate>
+    </BodyPartDef>
+  </bodyPartDefs>
+</Defs>

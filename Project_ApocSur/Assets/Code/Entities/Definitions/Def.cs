@@ -1,16 +1,22 @@
 ﻿namespace Projapocsur.Entities.Definitions
 {
-    using System;
-    using System.Xml.Serialization;
+    using Projapocsur.Common;
+    using Projapocsur.Common.Serialization;
 
-    [Serializable]
-    public abstract class Def : Entity
+    // NOTE: the properties of this class have a protected-access setter instead of private so that derive classes
+    // can serialize these values. Otherwise they don't have access to the setter and serialization will fail.
+
+    public abstract class Def : ILoadable
     {
-        [XmlAttribute]
-        public string Name;
+        [XmlMember(isAttribute:true)]
+        public string Name { get; protected set; }
 
-        public string Label;
+        [XmlMember]
+        public string Label { get; protected set; }
 
-        public string Description;
+        [XmlMember]
+        public string Description { get; protected set; }
+
+        public virtual void PostLoad() { }
     }
 }

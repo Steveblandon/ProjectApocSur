@@ -1,15 +1,29 @@
 ﻿namespace Projapocsur.Entities
 {
     using System;
-    using System.Xml.Serialization;
-    using Projapocsur.Common;
+    using Projapocsur.Common.Serialization;
     using Projapocsur.Entities.Definitions;
 
-    [Serializable]
+    [XmlSerializable]
     public class Stat : Entity
     {
-        public float Value;
+        public event Action OnStateChangeEvent;
 
-        public StatDef Def { get; private set; }
+        [XmlMember]
+        public float Value { get; private set; }
+
+        [XmlMember]
+        public float MinValue { get; private set; }
+
+        [XmlMember]
+        public float MaxValue { get; private set; }
+
+        public Stat() { }
+
+        public Stat(StatDef def) : base(def.Name)
+        {
+            // instantiate class using def
+        }
+
     }
 }
