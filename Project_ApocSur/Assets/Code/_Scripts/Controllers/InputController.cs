@@ -13,9 +13,9 @@ namespace Projapocsur.Scripts
         {
             if (Input.GetMouseButtonUp(MouseKey.Left))
             {
-                if (IsNotBlockedByUI())
+                if (this.IsNotBlockedByUI())
                 {
-                    if (RayCast(out Collider2D collider))
+                    if (this.RayCast(out Collider2D collider))
                     {
                         if (collider.TryGetComponent(out IPointerLeftClickHandler handler))
                         {
@@ -30,9 +30,9 @@ namespace Projapocsur.Scripts
             }
             else if (Input.GetMouseButtonUp(MouseKey.Right))
             {
-                if (IsNotBlockedByUI())
+                if (this.IsNotBlockedByUI())
                 {
-                    if (RayCast(out Collider2D collider))
+                    if (this.RayCast(out Collider2D collider))
                     {
                         // TBD, expected usage as trigger for floating menus
                     }

@@ -13,14 +13,14 @@
 
         public Entity(string defRefName)
         {
-            defRef = new DefRef<Def>(defRefName);
+            this.defRef = new DefRef<Def>(defRefName);
         }
 
         public Def Def { get; private set; }
 
         public virtual void PostLoad() 
         {
-            defRef?.LinkToDef();
+            this.defRef?.LinkToDef();
         }
     }
 }

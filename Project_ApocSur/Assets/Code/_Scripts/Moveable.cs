@@ -13,15 +13,15 @@ namespace Projapocsur.Scripts
 
         void Start()
         {
-            destination = this.transform.position;
+            this.destination = this.transform.position;
         }
 
         void Update()
         {
-            if (this.transform.position != destination)
+            if (this.transform.position != this.destination)
             {
-                this.transform.position = Vector3.MoveTowards(this.transform.position, destination, speed * Time.fixedDeltaTime);
-                this.transform.rotation = Quaternion.LookRotation(Vector3.forward, destination - this.transform.position);
+                this.transform.position = Vector3.MoveTowards(this.transform.position, this.destination, this.speed * Time.fixedDeltaTime);
+                this.transform.rotation = Quaternion.LookRotation(Vector3.forward, this.destination - this.transform.position);
             }
             else
             {

@@ -20,9 +20,9 @@ namespace Projapocsur.Scripts
 
         void Start()
         {
-            if (outline != null && onSelectOutlineColor != null)
+            if (this.outline != null && this.onSelectOutlineColor != null)
             {
-                colorSwitch = new ImageColorSwitch(outline, onSelectOutlineColor);
+                this.colorSwitch = new ImageColorSwitch(this.outline, this.onSelectOutlineColor);
             }
         }
 
@@ -30,7 +30,7 @@ namespace Projapocsur.Scripts
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                OnPointerLeftClick();
+                this.OnPointerLeftClick();
             }
         }
     }

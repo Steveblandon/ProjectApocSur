@@ -18,7 +18,7 @@
             this.stack = new Stack<T>();
         }
 
-        public int Count => set.Count;
+        public int Count => this.set.Count;
 
         /// <summary>
         /// Add an element to the <see cref="StackSet{T}"/>

@@ -27,7 +27,7 @@
 
         public void LinkToDef()
         {
-            DefinitionFinder.TryFind(RefDefName, out T def);
+            DefinitionFinder.TryFind(this.RefDefName, out T def);
             this.Def = def;
         }
     }

@@ -13,28 +13,28 @@ namespace Projapocsur.Scripts
 
         void Start()
         {
-            toggleButton = GetComponent<ToggleUI>();
-            toggleButton.OnSelectStateChangeEvent += OnToggleStateChangeEvent;
-            GameManager.Instance.DraftTracker.OnDraftStateChangeEvent += OnDraftStateChangeEvent;
-            OnDraftStateChangeEvent(GameManager.Instance.DraftTracker.SelecteesDrafted);
+            this.toggleButton = this.GetComponent<ToggleUI>();
+            this.toggleButton.OnSelectStateChangeEvent += this.OnToggleStateChangeEvent;
+            GameManager.Instance.DraftTracker.OnDraftStateChangeEvent += this.OnDraftStateChangeEvent;
+            this.OnDraftStateChangeEvent(GameManager.Instance.DraftTracker.SelecteesDrafted);
         }
 
         void OnDisable()
         {
-            toggleButton.OnSelectStateChangeEvent -= OnToggleStateChangeEvent;
-            GameManager.Instance.DraftTracker.OnDraftStateChangeEvent -= OnDraftStateChangeEvent;
+            this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
+            GameManager.Instance.DraftTracker.OnDraftStateChangeEvent -= this.OnDraftStateChangeEvent;
         }
 
         private void OnToggleStateChangeEvent(Selectable simpleSelectable)
         {
-            if (toggleButton.IsSelected && GameManager.Instance.DraftTracker.SelecteesDrafted == false)
+            if (this.toggleButton.IsSelected && GameManager.Instance.DraftTracker.SelecteesDrafted == false)
             {
                 foreach (Character character in GameManager.Instance.CharacterSelectionTracker.Selectees)
                 {
                     character.IsDrafted = true;
                 }
             }
-            else if (!toggleButton.IsSelected && GameManager.Instance.DraftTracker.SelecteesDrafted == true)
+            else if (!this.toggleButton.IsSelected && GameManager.Instance.DraftTracker.SelecteesDrafted == true)
             {
                 foreach (Character character in GameManager.Instance.CharacterSelectionTracker.Selectees)
                 {
@@ -45,10 +45,10 @@ namespace Projapocsur.Scripts
 
         private void OnDraftStateChangeEvent(bool? state)
         {
-            if (toggleButton.IsSelected && (GameManager.Instance.DraftTracker.SelecteesDrafted == false || GameManager.Instance.DraftTracker.SelecteesDrafted == null)
-                || !toggleButton.IsSelected && GameManager.Instance.DraftTracker.SelecteesDrafted == true)
+            if (this.toggleButton.IsSelected && (GameManager.Instance.DraftTracker.SelecteesDrafted == false || GameManager.Instance.DraftTracker.SelecteesDrafted == null)
+                || !this.toggleButton.IsSelected && GameManager.Instance.DraftTracker.SelecteesDrafted == true)
             {
-                toggleButton.Toggle();
+                this.toggleButton.Toggle();
             }
         }
     }

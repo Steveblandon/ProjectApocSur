@@ -18,8 +18,8 @@
         private float _buttonWidth = kDefaultButtonWidth;
         public float ButtonWidth
         {
-            get { return _buttonWidth; }
-            set { _buttonWidth = value; }
+            get { return this._buttonWidth; }
+            set { this._buttonWidth = value; }
         }
 
         public ButtonAttribute(string MethodName)

@@ -14,12 +14,12 @@ namespace Projapocsur.Core
 
         public CharacterSelectionTracker()
         {
-            _selectees = new HashSet<Character>();
-            Character.OnSelectStateChangeEvent += OnCharacterSelectStateChangeEvent;
+            this._selectees = new HashSet<Character>();
+            Character.OnSelectStateChangeEvent += this.OnCharacterSelectStateChangeEvent;
         }
 
         public Character MainSelelectee { get; private set; }
-        public IReadOnlyCollection<Character> Selectees { get { return _selectees; } }
+        public IReadOnlyCollection<Character> Selectees { get { return this._selectees; } }
 
         private void OnCharacterSelectStateChangeEvent(Character character)
         {
@@ -27,19 +27,19 @@ namespace Projapocsur.Core
             {
                 if (character.IsSelected)
                 {
-                    MainSelelectee = _selectees.Count == 0 ? character : null;
-                    _selectees.Add(character);
-                    OnSelectionChangeEvent?.Invoke(MainSelelectee);
+                    this.MainSelelectee = this._selectees.Count == 0 ? character : null;
+                    this._selectees.Add(character);
+                    OnSelectionChangeEvent?.Invoke(this.MainSelelectee);
                 }
                 else if (!character.IsSelected)
                 {
-                    _selectees.Remove(character);
+                    this._selectees.Remove(character);
 
-                    if (_selectees.Count == 0)
+                    if (this._selectees.Count == 0)
                     {
-                        MainSelelectee = null;
+                        this.MainSelelectee = null;
                     }
-                    OnSelectionChangeEvent?.Invoke(MainSelelectee);
+                    OnSelectionChangeEvent?.Invoke(this.MainSelelectee);
                 }
             }
         }

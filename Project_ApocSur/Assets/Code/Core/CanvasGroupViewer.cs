@@ -15,23 +15,23 @@ namespace Projapocsur.Core
 
         public void Show(CanvasGroup target)
         {
-            if (target == currentActiveView)
+            if (target == this.currentActiveView)
             {
                 return;
             }
 
-            CanvasGroup targetTopParentGroup = GetTopParentGroup(target);
+            CanvasGroup targetTopParentGroup = this.GetTopParentGroup(target);
 
-            if (targetTopParentGroup != currentActiveViewTopParent)
+            if (targetTopParentGroup != this.currentActiveViewTopParent)
             {
-                Hide(currentActiveView);
+                this.Hide(this.currentActiveView);
             }
 
             target.alpha = 1;
             target.interactable = true;
             target.blocksRaycasts = true;
-            currentActiveView = target;
-            currentActiveViewTopParent = targetTopParentGroup;
+            this.currentActiveView = target;
+            this.currentActiveViewTopParent = targetTopParentGroup;
         }
 
         public void Hide(CanvasGroup target)
@@ -45,10 +45,10 @@ namespace Projapocsur.Core
             target.interactable = false;
             target.blocksRaycasts = false;
 
-            if (target == currentActiveView)
+            if (target == this.currentActiveView)
             {
-                currentActiveView = null;
-                currentActiveViewTopParent = null;
+                this.currentActiveView = null;
+                this.currentActiveViewTopParent = null;
             }
         }
 
@@ -67,7 +67,7 @@ namespace Projapocsur.Core
             }
             else
             {
-                return GetTopParentGroup(parentGroup);
+                return this.GetTopParentGroup(parentGroup);
             }
         }
     }

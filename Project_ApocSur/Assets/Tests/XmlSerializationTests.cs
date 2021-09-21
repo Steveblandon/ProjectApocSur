@@ -14,7 +14,7 @@ namespace Projapocsur.Tests
         [Test]
         public void TestXmlSerializer_Serialize_Exceptions()
         {
-            using (var stream = File.Open(uri, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
+            using (var stream = File.Open(this.uri, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
             {
                 ExceptionUtility.TryCatch(
                     () => XmlSerializer.Serialize(stream, new List<int>()),
@@ -71,11 +71,11 @@ namespace Projapocsur.Tests
             Assert.AreEqual(valueToSerialize, objWithData.ValueToSerialize);
             Assert.AreEqual(valueToNotSerialize, objWithData.ValueToNotSerialize);
 
-            ExceptionUtility.TryCatch(() => WriteToFile(objWithData), out Exception anyException);
+            ExceptionUtility.TryCatch(() => this.WriteToFile(objWithData), out Exception anyException);
             Assert.IsNull(anyException);
 
             var readObj = new SerializableWithPrivateMemberAndIgnoredField();
-            ExceptionUtility.TryCatch(() => ReadFromFile(out readObj), out anyException);
+            ExceptionUtility.TryCatch(() => this.ReadFromFile(out readObj), out anyException);
             Assert.IsNull(anyException);
 
             Assert.AreEqual(valueToSerialize, readObj.ValueToSerialize);
@@ -91,11 +91,11 @@ namespace Projapocsur.Tests
             Assert.AreEqual(expectedFieldValue, objWithData.ValField);
             Assert.AreEqual(expectedPropValue, objWithData.ValProp);
 
-            ExceptionUtility.TryCatch(() => WriteToFile(objWithData), out Exception anyException);
+            ExceptionUtility.TryCatch(() => this.WriteToFile(objWithData), out Exception anyException);
             Assert.IsNull(anyException);
 
             var readObj = new SerializableWithFieldsAndProperties();
-            ExceptionUtility.TryCatch(() => ReadFromFile(out readObj), out anyException);
+            ExceptionUtility.TryCatch(() => this.ReadFromFile(out readObj), out anyException);
             Assert.IsNull(anyException);
 
             Assert.AreEqual(expectedFieldValue, readObj.ValField);
@@ -113,11 +113,11 @@ namespace Projapocsur.Tests
             Assert.AreEqual(expectedInt, objWithData.ValProp_int);
             Assert.IsTrue(expectedStr == objWithData.ValProp_str);
 
-            ExceptionUtility.TryCatch(() => WriteToFile(objWithData), out Exception anyException);
+            ExceptionUtility.TryCatch(() => this.WriteToFile(objWithData), out Exception anyException);
             Assert.IsNull(anyException);
 
             var readObj = new SerializableWithValuesStoredAsAttribute();
-            ExceptionUtility.TryCatch(() => ReadFromFile(out readObj), out anyException);
+            ExceptionUtility.TryCatch(() => this.ReadFromFile(out readObj), out anyException);
             Assert.IsNull(anyException);
 
             Assert.AreEqual(expectedInt, readObj.ValProp_int);
@@ -135,11 +135,11 @@ namespace Projapocsur.Tests
             Assert.AreEqual(expectedFieldValue, objWithData.complexType.ValField);
             Assert.IsTrue(expectedPropValue == objWithData.ValProp_str);
 
-            ExceptionUtility.TryCatch(() => WriteToFile(objWithData), out Exception anyException);
+            ExceptionUtility.TryCatch(() => this.WriteToFile(objWithData), out Exception anyException);
             Assert.IsNull(anyException);
 
             var readObj = new SerializableWithValuesStoredWithPreferredNames();
-            ExceptionUtility.TryCatch(() => ReadFromFile(out readObj), out anyException);
+            ExceptionUtility.TryCatch(() => this.ReadFromFile(out readObj), out anyException);
             Assert.IsNull(anyException);
 
             Assert.AreEqual(expectedFieldValue, readObj.complexType.ValField);
@@ -158,11 +158,11 @@ namespace Projapocsur.Tests
             objWithData.refList = expectedComplexTypeWithList;
             objWithData.vals = expectedlistOfLists;
 
-            ExceptionUtility.TryCatch(() => WriteToFile(objWithData), out Exception anyException);
+            ExceptionUtility.TryCatch(() => this.WriteToFile(objWithData), out Exception anyException);
             Assert.IsNull(anyException);
 
             var readObj = new SerializableWithNestedLists();
-            ExceptionUtility.TryCatch(() => ReadFromFile(out readObj), out anyException);
+            ExceptionUtility.TryCatch(() => this.ReadFromFile(out readObj), out anyException);
             Assert.IsNull(anyException);
 
             Assert.IsNotNull(readObj.wellNested);
@@ -206,11 +206,11 @@ namespace Projapocsur.Tests
             Assert.AreEqual(expectedInherritedPriv, objWithData.NonInherritedSerializableField);
             Assert.AreEqual(expectedInherritedProt, objWithData.InherritedVal_protected);
 
-            ExceptionUtility.TryCatch(() => WriteToFile(objWithData), out Exception anyException);
+            ExceptionUtility.TryCatch(() => this.WriteToFile(objWithData), out Exception anyException);
             Assert.IsNull(anyException);
 
             var readObj = new SerializableChild();
-            ExceptionUtility.TryCatch(() => ReadFromFile(out readObj), out anyException);
+            ExceptionUtility.TryCatch(() => this.ReadFromFile(out readObj), out anyException);
             Assert.IsNull(anyException);
 
             Assert.AreEqual(objWithData.mainVal, readObj.mainVal);
@@ -222,7 +222,7 @@ namespace Projapocsur.Tests
 
         private void WriteToFile(object data)
         {
-            using (Stream stream = File.Open(uri, FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (Stream stream = File.Open(this.uri, FileMode.Create, FileAccess.Write, FileShare.Write))
             {
                 XmlSerializer.Serialize(stream, data);
             }
@@ -230,7 +230,7 @@ namespace Projapocsur.Tests
 
         private void ReadFromFile<T>(out T data) where T : new()
         {
-            using (var stream = File.Open(uri, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = File.Open(this.uri, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 XmlDeserializer.Deserialize(stream, out data);
             }
@@ -281,7 +281,7 @@ namespace Projapocsur.Tests
 
         public SerializableWithCircularDependencySelf()
         {
-            objRef = this;
+            this.objRef = this;
         }
     }
 
@@ -336,9 +336,9 @@ namespace Projapocsur.Tests
             this.value2 = valueToNotSerialize;
         }
 
-        public int ValueToSerialize { get => value; }
+        public int ValueToSerialize { get => this.value; }
 
-        public int ValueToNotSerialize { get => value2; }
+        public int ValueToNotSerialize { get => this.value2; }
     }
 
     [XmlSerializable]
@@ -350,7 +350,7 @@ namespace Projapocsur.Tests
         [XmlMember]
         public string ValProp { get; private set; }
 
-        public float ValField { get => valField; }
+        public float ValField { get => this.valField; }
 
         public SerializableWithFieldsAndProperties() { }
 

@@ -79,9 +79,9 @@ namespace Projapocsur.Entities
                 }
                 else if (mouseInput == InputController.MouseInput.Right && this.IsDrafted)
                 {
-                    if (mover != null)
+                    if (this.mover != null)
                     {
-                        mover.MoveToMousePosition();
+                        this.mover.MoveToMousePosition();
                     }
                     else
                     {

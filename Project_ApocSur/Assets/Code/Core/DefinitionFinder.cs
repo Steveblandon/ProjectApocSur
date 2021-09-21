@@ -113,7 +113,7 @@
                     }
 
                     index[def.Name] = def;
-                    postLoadCallbacks += def.PostLoad;
+                    this.postLoadCallbacks += def.PostLoad;
                 }
             }
         }

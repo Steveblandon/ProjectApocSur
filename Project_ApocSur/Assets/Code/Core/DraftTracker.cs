@@ -11,11 +11,11 @@ namespace Projapocsur.Core
 
         public bool? SelecteesDrafted
         {
-            get { return _selecteesDrafted; }
+            get { return this._selecteesDrafted; }
             private set
             {
-                bool valueChanged = _selecteesDrafted != value;
-                _selecteesDrafted = value;
+                bool valueChanged = this._selecteesDrafted != value;
+                this._selecteesDrafted = value;
 
                 if (valueChanged)
                 {
@@ -28,9 +28,9 @@ namespace Projapocsur.Core
 
         public DraftTracker()
         {
-            Action<Character> onDraftStateChangeEvent = (character) => SelecteesDrafted = character.IsDrafted;
+            Action<Character> onDraftStateChangeEvent = (character) => this.SelecteesDrafted = character.IsDrafted;
             Character.OnDraftStateChangeEvent += onDraftStateChangeEvent;
-            Character.OnSelectStateChangeEvent += OnCharacterSelectStateChangeEvent;
+            Character.OnSelectStateChangeEvent += this.OnCharacterSelectStateChangeEvent;
         }
 
         private void OnCharacterSelectStateChangeEvent(Character character)
@@ -39,14 +39,14 @@ namespace Projapocsur.Core
             {
                 if (character.IsSelected)
                 {
-                    if (SelecteesDrafted == null || SelecteesDrafted != null && character.IsDrafted == false)
+                    if (this.SelecteesDrafted == null || this.SelecteesDrafted != null && character.IsDrafted == false)
                     {
-                        SelecteesDrafted = character.IsDrafted;
+                        this.SelecteesDrafted = character.IsDrafted;
                     }
                 }
                 else if (!character.IsSelected && GameManager.Instance.CharacterSelectionTracker.Selectees.Count == 0)
                 {
-                    SelecteesDrafted = null;
+                    this.SelecteesDrafted = null;
                 }
             }
         }

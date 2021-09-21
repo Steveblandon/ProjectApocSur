@@ -21,7 +21,7 @@
         public override void PostLoad()
         {
             base.PostLoad();
-            BodyParts.LinkDef();
+            this.BodyParts.LinkDef();
         }
     }
 }

@@ -64,7 +64,7 @@
             IEnumerable<XmlSerializableMember> serializableMembers = XmlSerializableMemberFactory.GetSerializableMembers(data);
 
             serializableMembers.ForEach((member) => memberByName[member.XmlMemberAttribute.PreferredName ?? member.Name] = member);
-            Deserialize(reader, data.GetType().Name, memberByName);
+            this.Deserialize(reader, data.GetType().Name, memberByName);
         }
 
         private void Deserialize(XmlReader reader, string parentTypeName, Dictionary<string, XmlSerializableMember> memberByName)
@@ -80,13 +80,13 @@
                         currentElementName = reader.Name;
                         parentElementName ??= reader.Name;
                         bool isEmptyRootElement = currentElementName == parentElementName && reader.IsEmptyElement;    // empty flag captured here before pivot gets moved to attributes, if there are any
-                        DeserializeNestedObject(parentTypeName: parentTypeName, currentElementName: currentElementName, memberByNameLookup: memberByName, reader: reader);
-                        DeserializeAttributes(parentTypeName: parentTypeName, currentElementName: currentElementName, parentElementName: parentElementName, memberByName, reader);
+                        this.DeserializeNestedObject(parentTypeName: parentTypeName, currentElementName: currentElementName, memberByNameLookup: memberByName, reader: reader);
+                        this.DeserializeAttributes(parentTypeName: parentTypeName, currentElementName: currentElementName, parentElementName: parentElementName, memberByName, reader);
                         if (isEmptyRootElement) { return; }
                         if (reader.NodeType == XmlNodeType.EndElement && reader.Name == parentElementName) { return; } // incase a nested object list pushes to the end element 
                         break;
                     case XmlNodeType.Text:
-                        DeserializeNode(parentTypeName: parentTypeName, name: currentElementName, value: reader.Value, memberByName);
+                        this.DeserializeNode(parentTypeName: parentTypeName, name: currentElementName, value: reader.Value, memberByName);
                         break;
                     case XmlNodeType.EndElement:
                         if (reader.Name == parentElementName || parentElementName == null) { return; }
@@ -106,11 +106,11 @@
             {
                 if (member.HasXmlSerializableAttribute)
                 {
-                    Deserialize(reader, member.Value);
+                    this.Deserialize(reader, member.Value);
                 }
                 else if (ReflectionUtility.IsList(member.ValueType, out Type innerType) && CanDeserialize(innerType))
                 {
-                    DeserializeList(reader, member.Value, innerType, currentElementName);
+                    this.DeserializeList(reader, member.Value, innerType, currentElementName);
                 }
                 else
                 {
@@ -151,7 +151,7 @@
                     var member = new XmlSerializableMember(reader.Name, innerType, null);
                     dynamic value = member.Value;
                     memberByName[reader.Name] = member;
-                    Deserialize(reader, targetTypeName, memberByName);
+                    this.Deserialize(reader, targetTypeName, memberByName);
                     value = member.Value;
                     list.Add(value);
                 }
@@ -169,7 +169,7 @@
             {
                 while (reader.MoveToNextAttribute())
                 {
-                    DeserializeNode(parentTypeName: parentTypeName, name: reader.Name, value: reader.Value, memberByNameLookup);
+                    this.DeserializeNode(parentTypeName: parentTypeName, name: reader.Name, value: reader.Value, memberByNameLookup);
                 }
             }
         }

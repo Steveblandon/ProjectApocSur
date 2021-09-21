@@ -26,15 +26,15 @@
         public XmlSerializableMember(string name, object value, object parent)
             : this(name, value.GetType(), parent, null)
         {
-            UseDefaultValue(value);
+            this.UseDefaultValue(value);
             this.PostConstruct();
         }
 
         public XmlSerializableMember(string name, Type type, object parent)
             : this(name, type, parent, null)
         {
-            object value = AttemptToInstantiateValueFromType(type);
-            UseDefaultValue(value);
+            object value = this.AttemptToInstantiateValueFromType(type);
+            this.UseDefaultValue(value);
             this.PostConstruct();
         }
 
@@ -64,8 +64,8 @@
         /// </summary>
         public object Value
         {
-            get => getValue(parent);
-            set => setValue(parent, value);
+            get => this.getValue(this.parent);
+            set => this.setValue(this.parent, value);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@
         {
             if (this.Value == null)
             {
-                this.Value = AttemptToInstantiateValueFromType(this.memberType);
+                this.Value = this.AttemptToInstantiateValueFromType(this.memberType);
             }
 
             this.ValueType = this.Value.GetType();

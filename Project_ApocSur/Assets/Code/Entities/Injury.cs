@@ -44,7 +44,7 @@
         public override void PostLoad()
         {
             base.PostLoad();
-            defRefInternal?.LinkToDef();
+            this.defRefInternal?.LinkToDef();
         }
     }
 }

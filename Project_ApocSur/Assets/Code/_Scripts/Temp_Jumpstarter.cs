@@ -30,8 +30,8 @@ namespace Projapocsur.Scripts
             }
             else
             {
-                testCharacter = new Character(characterAvatar, characterPortrait);
-                testCharacter.IsInPlayerFaction = true;
+                this.testCharacter = new Character(this.characterAvatar, this.characterPortrait);
+                this.testCharacter.IsInPlayerFaction = true;
             }
         }
     }

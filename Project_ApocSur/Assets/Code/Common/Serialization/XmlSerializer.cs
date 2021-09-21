@@ -29,7 +29,7 @@
 
         private XmlSerializer() 
         {
-            nestedTypes = new HashSet<Type>();
+            this.nestedTypes = new HashSet<Type>();
         }
 
         public static void Serialize(Stream stream, object data)
@@ -65,8 +65,8 @@
 
             LinkedList<XmlSerializableMember> serializableMembers = XmlSerializableMemberFactory.GetSerializableMembers(obj);
 
-            writer.WriteStartElement(XmlValidName(currentNodeName));
-            SerializeMembers(writer, objTypeName, serializableMembers);
+            writer.WriteStartElement(this.XmlValidName(currentNodeName));
+            this.SerializeMembers(writer, objTypeName, serializableMembers);
             writer.WriteEndElement();
         }
 
@@ -82,7 +82,7 @@
                 }
                 else
                 {
-                    Serialize(writer, member, finalName: finalName, parentTypeName: parentTypeName);
+                    this.Serialize(writer, member, finalName: finalName, parentTypeName: parentTypeName);
                 }
             }
         }
@@ -116,12 +116,12 @@
         {
             dynamic list = member.Value;
 
-            writer.WriteStartElement(XmlValidName(name));
+            writer.WriteStartElement(this.XmlValidName(name));
             foreach (var item in list)
             {
                 string itemName = innerType.IsPrimitive() ? XmlTags.listItem : innerType.Name;
                 var memberInfo = new XmlSerializableMember(itemName, item, null);
-                Serialize(writer, memberInfo, finalName: memberInfo.Name, parentTypeName: parentTypeName);
+                this.Serialize(writer, memberInfo, finalName: memberInfo.Name, parentTypeName: parentTypeName);
             }
             writer.WriteEndElement();
         }
@@ -135,7 +135,7 @@
         {
             if (validateNestedTypes)
             {
-                if (nestedTypes.Contains(member.ValueType))
+                if (this.nestedTypes.Contains(member.ValueType))
                 {
                     throw new XmlInvalidException(
                         "circular dependency detected", 
@@ -144,23 +144,23 @@
                         source: parentTypeName);
                 }
 
-                nestedTypes.Add(member.ValueType);
+                this.nestedTypes.Add(member.ValueType);
             }
 
-            Serialize(writer, member.Value, name);
-            nestedTypes.Remove(member.ValueType);
+            this.Serialize(writer, member.Value, name);
+            this.nestedTypes.Remove(member.ValueType);
         }
 
         private void SerializeAsElement(XmlWriter writer, string name, object value)
         {
-            writer.WriteStartElement(XmlValidName(name));
+            writer.WriteStartElement(this.XmlValidName(name));
             writer.WriteValue(value);
             writer.WriteEndElement();
         }
 
         private void SerializeAsAttribute(XmlWriter writer, string name, object value)
         {
-            writer.WriteStartAttribute(XmlValidName(name));
+            writer.WriteStartAttribute(this.XmlValidName(name));
             writer.WriteValue(value);
             writer.WriteEndAttribute();
         }

@@ -6,18 +6,18 @@ namespace Projapocsur.Scripts
 
         public override void OnPointerLeftClick()
         {
-            Toggle();
+            this.Toggle();
         }
 
         public void Toggle()
         {
-            if (IsSelected)
+            if (this.IsSelected)
             {
-                OnDeselect();
+                this.OnDeselect();
             }
             else
             {
-                OnSelect();
+                this.OnSelect();
             }
         }
     }

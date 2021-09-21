@@ -24,34 +24,34 @@ namespace Projapocsur.Scripts
 
         void Start()
         {
-            if (targetView == null)
+            if (this.targetView == null)
             {
-                Debug.LogWarning($"{CompName}: missing target view reference for {name}");
+                Debug.LogWarning($"{CompName}: missing target view reference for {this.name}");
             }
 
-            if (hideOnStart)
+            if (this.hideOnStart)
             {
-                CanvasGroupViewer.Instance.Hide(targetView);
+                CanvasGroupViewer.Instance.Hide(this.targetView);
             }
 
-            triggerButton = GetComponent<SelectableUI>();
-            triggerButton.OnSelectStateChangeEvent += OnSelectStateChangeEvent;
+            this.triggerButton = this.GetComponent<SelectableUI>();
+            this.triggerButton.OnSelectStateChangeEvent += this.OnSelectStateChangeEvent;
         }
 
         void OnDisable()
         {
-            triggerButton.OnSelectStateChangeEvent -= OnSelectStateChangeEvent;
+            this.triggerButton.OnSelectStateChangeEvent -= this.OnSelectStateChangeEvent;
         }
 
         private void OnSelectStateChangeEvent(Selectable selectable)
         {
-            if (triggerButton.IsSelected)
+            if (this.triggerButton.IsSelected)
             {
-                CanvasGroupViewer.Instance.Show(targetView);
+                CanvasGroupViewer.Instance.Show(this.targetView);
             }
             else
             {
-                CanvasGroupViewer.Instance.Hide(targetView);
+                CanvasGroupViewer.Instance.Hide(this.targetView);
             }
         }
     }

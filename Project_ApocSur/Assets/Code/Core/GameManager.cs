@@ -4,8 +4,8 @@ namespace Projapocsur.Core
     {
         private GameManager()
         {
-            DraftTracker = new DraftTracker();
-            CharacterSelectionTracker = new CharacterSelectionTracker();
+            this.DraftTracker = new DraftTracker();
+            this.CharacterSelectionTracker = new CharacterSelectionTracker();
         }
 
         public static GameManager Instance { get { return _instance; } }
