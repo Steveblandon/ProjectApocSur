@@ -1,7 +1,7 @@
-namespace Projapocsur.Core
+namespace Projapocsur
 {
     using System;
-    using Projapocsur.Entities;
+    using Projapocsur.Things;
 
     public class DraftTracker
     {

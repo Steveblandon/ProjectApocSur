@@ -2,7 +2,6 @@ namespace Projapocsur.Scripts
 {
     using System;
     using Projapocsur.Common;
-    using Projapocsur.Core;
     using UnityEngine;
 
     /// <summary>

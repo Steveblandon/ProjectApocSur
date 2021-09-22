@@ -5,8 +5,7 @@
     using System.IO;
     using System.Reflection;
     using System.Xml;
-    using Projapocsur.Common.Extensions;
-    using Projapocsur.Common.Utilities;
+    using Projapocsur.Common;
 
     /// <summary>
     /// Deserializes XML written by <see cref="XmlSerializer"/>.
@@ -83,13 +82,16 @@
                         this.DeserializeNestedObject(parentTypeName: parentTypeName, currentElementName: currentElementName, memberByNameLookup: memberByName, reader: reader);
                         this.DeserializeAttributes(parentTypeName: parentTypeName, currentElementName: currentElementName, parentElementName: parentElementName, memberByName, reader);
                         if (isEmptyRootElement) { return; }
+
                         if (reader.NodeType == XmlNodeType.EndElement && reader.Name == parentElementName) { return; } // incase a nested object list pushes to the end element 
+
                         break;
                     case XmlNodeType.Text:
                         this.DeserializeNode(parentTypeName: parentTypeName, name: currentElementName, value: reader.Value, memberByName);
                         break;
                     case XmlNodeType.EndElement:
                         if (reader.Name == parentElementName || parentElementName == null) { return; }
+
                         break;
                 }
             } while (reader.Read());

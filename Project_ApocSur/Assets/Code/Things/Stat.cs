@@ -1,11 +1,10 @@
-﻿namespace Projapocsur.Entities
+﻿namespace Projapocsur.Things
 {
     using System;
     using Projapocsur.Common.Serialization;
-    using Projapocsur.Entities.Definitions;
 
     [XmlSerializable]
-    public class Stat : Entity
+    public class Stat : Thing
     {
         public event Action OnStateChangeEvent;
 
@@ -24,6 +23,5 @@
         {
             // instantiate class using def
         }
-
     }
 }

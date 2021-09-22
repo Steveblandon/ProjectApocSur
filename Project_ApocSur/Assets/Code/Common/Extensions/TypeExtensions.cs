@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Common.Extensions
+﻿namespace Projapocsur.Common
 {
     using System;
 

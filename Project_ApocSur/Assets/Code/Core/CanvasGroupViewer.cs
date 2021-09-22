@@ -1,4 +1,4 @@
-namespace Projapocsur.Core
+namespace Projapocsur
 {
     using UnityEngine;
 

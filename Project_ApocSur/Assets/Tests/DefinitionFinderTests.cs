@@ -1,10 +1,10 @@
 ﻿namespace Projapocsur.Tests
 {
     using NUnit.Framework;
-    using Projapocsur.Common.Utilities;
-    using Projapocsur.Core;
-    using Projapocsur.Entities.Definitions;
-    using ProjApocSur.Common.Utilities;
+    using Projapocsur.Common;
+    using Projapocsur;
+    using Projapocsur.Things;
+    using ProjApocSur.Common;
     using System;
     using System.Collections.Generic;
     using System.IO;

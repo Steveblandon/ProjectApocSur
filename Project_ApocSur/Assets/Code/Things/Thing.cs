@@ -1,17 +1,16 @@
-﻿namespace Projapocsur.Entities
+﻿namespace Projapocsur.Things
 {
     using Projapocsur.Common;
     using Projapocsur.Common.Serialization;
-    using Projapocsur.Entities.Definitions;
 
-    public abstract class Entity : ILoadable
+    public abstract class Thing : ILoadable
     {
         [XmlMember]
         private DefRef<Def> defRef;
 
-        public Entity() { }
+        public Thing() { }
 
-        public Entity(string defRefName)
+        public Thing(string defRefName)
         {
             this.defRef = new DefRef<Def>(defRefName);
         }

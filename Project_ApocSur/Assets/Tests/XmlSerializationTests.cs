@@ -5,7 +5,7 @@ namespace Projapocsur.Tests
     using System.IO;
     using NUnit.Framework;
     using Projapocsur.Common.Serialization;
-    using ProjApocSur.Common.Utilities;
+    using ProjApocSur.Common;
 
     public class XmlSerializationTests : TestsBase
     {
@@ -269,8 +269,6 @@ namespace Projapocsur.Tests
     public class SerializableWithoutParameterlessPublicConstructor
     {
         private SerializableWithoutParameterlessPublicConstructor() { }
-
-        public SerializableWithoutParameterlessPublicConstructor(int val) { }
     }
 
     [XmlSerializable]

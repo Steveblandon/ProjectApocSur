@@ -1,8 +1,8 @@
-﻿namespace Projapocsur.Entities.Definitions
+﻿namespace Projapocsur.Things
 {
     using System.Collections.Generic;
     using Projapocsur.Common.Serialization;
-    using Projapocsur.Core;
+    using Projapocsur;
 
     /// <summary>
     /// To avoid having Defs that fully define other defs they reference, this object should be used instead.

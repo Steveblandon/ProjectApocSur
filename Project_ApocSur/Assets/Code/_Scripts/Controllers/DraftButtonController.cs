@@ -1,7 +1,7 @@
 namespace Projapocsur.Scripts
 {
-    using Projapocsur.Core;
-    using Projapocsur.Entities;
+    using Projapocsur;
+    using Projapocsur.Things;
     using UnityEngine;
 
     [RequireComponent(typeof(ToggleUI))]

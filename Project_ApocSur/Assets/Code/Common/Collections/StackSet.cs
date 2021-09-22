@@ -33,6 +33,7 @@
                 this.set.Add(element);
                 return true;
             }
+
             return false;
         }
 
@@ -66,5 +67,4 @@
             return this.set.GetEnumerator();
         }
     }
-
 }

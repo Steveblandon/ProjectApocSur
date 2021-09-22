@@ -22,6 +22,5 @@
     {
         public XmlInvalidException(string message, Type type, string paramName, string paramValue = null, string source = null, Exception innerException = null)
             : base($"{message ?? string.Empty} [parentClass:{source ?? "<unknown>"} [param: name={paramName}, value={paramValue ?? "<omitted>"}, type={type?.Name ?? "<unknown>"}]]", innerException) { }
-
     }
 }

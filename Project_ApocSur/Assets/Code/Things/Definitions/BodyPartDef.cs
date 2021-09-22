@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Entities.Definitions
+﻿namespace Projapocsur.Things
 {
     using Projapocsur.Common.Serialization;
 

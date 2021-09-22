@@ -5,8 +5,7 @@
     using System.IO;
     using System.Reflection;
     using System.Xml;
-    using Projapocsur.Common.Extensions;
-    using Projapocsur.Common.Utilities;
+    using Projapocsur.Common;
 
     /// <summary>
     /// <para>Custom XMLSerializer that unlike the .NET serializers allows for the serialization of any field/property marked 
@@ -123,6 +122,7 @@
                 var memberInfo = new XmlSerializableMember(itemName, item, null);
                 this.Serialize(writer, memberInfo, finalName: memberInfo.Name, parentTypeName: parentTypeName);
             }
+
             writer.WriteEndElement();
         }
 

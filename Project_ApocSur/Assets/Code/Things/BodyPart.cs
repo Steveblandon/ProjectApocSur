@@ -1,11 +1,10 @@
-﻿namespace Projapocsur.Entities
+﻿namespace Projapocsur.Things
 {
     using System.Collections.Generic;
     using Projapocsur.Common.Serialization;
-    using Projapocsur.Entities.Definitions;
 
     [XmlSerializable]
-    public class BodyPart : Entity
+    public class BodyPart : Thing
     {
         [XmlMember]
         public Stat HitPoints { get; private set; }

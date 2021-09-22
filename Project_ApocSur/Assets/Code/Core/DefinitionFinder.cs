@@ -1,11 +1,11 @@
-﻿namespace Projapocsur.Core
+﻿namespace Projapocsur
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
     using Projapocsur.Common.Serialization;
-    using Projapocsur.Common.Utilities;
-    using Projapocsur.Entities.Definitions;
+    using Projapocsur.Common;
+    using Projapocsur.Things;
 
     /// <summary>
     /// Utility for finding definitions loaded into memory.
@@ -86,6 +86,7 @@
                 {
                     index = new Dictionary<string, T>(initialSize);
                 }
+
                 return Instance;
             }
 

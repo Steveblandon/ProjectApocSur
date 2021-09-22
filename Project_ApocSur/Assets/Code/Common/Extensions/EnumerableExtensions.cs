@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Common.Extensions
+﻿namespace Projapocsur.Common
 {
     using System;
     using System.Collections;
@@ -15,6 +15,7 @@
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -27,6 +28,7 @@
                     return false;
                 }
             }
+
             return true;
         }
 

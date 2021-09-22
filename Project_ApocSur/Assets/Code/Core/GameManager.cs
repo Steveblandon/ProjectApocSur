@@ -1,4 +1,4 @@
-namespace Projapocsur.Core
+namespace Projapocsur
 {
     public class GameManager
     {
@@ -13,6 +13,5 @@ namespace Projapocsur.Core
 
         public DraftTracker DraftTracker { get; private set; }
         public CharacterSelectionTracker CharacterSelectionTracker { get; private set; }
-
     }
 }

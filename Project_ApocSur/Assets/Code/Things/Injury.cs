@@ -1,10 +1,6 @@
-﻿namespace Projapocsur.Entities
+﻿namespace Projapocsur.Things
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
     using Projapocsur.Common.Serialization;
-    using Projapocsur.Entities.Definitions;
 
     public enum SeverityLevel
     {
@@ -14,7 +10,7 @@
     }
 
     [XmlSerializable]
-    public class Injury : Entity
+    public class Injury : Thing
     {
         [XmlMember]
         public float BleedingRate { get; private set; }

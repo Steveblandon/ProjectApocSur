@@ -1,8 +1,8 @@
-namespace Projapocsur.Core
+namespace Projapocsur
 {
     using System;
     using System.Collections.Generic;
-    using Projapocsur.Entities;
+    using Projapocsur.Things;
 
     public class CharacterSelectionTracker
     {
@@ -39,6 +39,7 @@ namespace Projapocsur.Core
                     {
                         this.MainSelelectee = null;
                     }
+
                     OnSelectionChangeEvent?.Invoke(this.MainSelelectee);
                 }
             }

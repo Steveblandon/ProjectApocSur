@@ -3,7 +3,6 @@
     using UnityEngine;
     using UnityEngine.TestTools;
     using System.IO;
-    using System;
 
     public class TestsBase : IPrebuildSetup
     {

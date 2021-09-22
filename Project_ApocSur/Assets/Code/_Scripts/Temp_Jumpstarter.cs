@@ -2,7 +2,7 @@ namespace Projapocsur.Scripts
 
 
 {
-    using Projapocsur.Entities;
+    using Projapocsur.Things;
     using UnityEngine;
 
     /// <summary>
