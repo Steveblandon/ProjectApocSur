@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SerializableWithFieldsAndProperties>
-  <valField>5</valField>
-  <ValProp>burr</ValProp>
-</SerializableWithFieldsAndProperties>
+<SerializableWithUnsupportedType /><?xml version="1.0" encoding="utf-8"?>
+<SerializableWithNestedUnsupportedType>
+  <field />
+</SerializableWithNestedUnsupportedType><?xml version="1.0" encoding="utf-8"?>
+<SerializableWithCircularDependencySelf /><?xml version="1.0" encoding="utf-8"?>
+<SerializableWithCircularDependencyRef1>
+  <objRef>
+    <value>0</value>
+  </objRef>
+</SerializableWithCircularDependencyRef1>

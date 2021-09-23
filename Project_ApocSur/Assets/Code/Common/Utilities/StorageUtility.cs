@@ -77,7 +77,12 @@
 
         public static string[] GetDirectoryFiles(string directoryName, StorageMode storageMode = StorageMode.DataPath)
         {
-            string uri = Path.Combine(GetFilePath(storageMode), directoryName);
+            return GetDirectoryFiles(directoryName, GetFilePath(storageMode));
+        }
+
+        public static string[] GetDirectoryFiles(string directoryName, string filePath)
+        {
+            string uri = Path.Combine(filePath, directoryName);
 
             if (!Directory.Exists(uri))
             {

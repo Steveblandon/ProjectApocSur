@@ -1,21 +1,69 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
+  <!-- ======================= STATS ================ -->
   <statDefs>
     <StatDef  Name="Height">
       <Label>Height</Label>
       <Description>How tall someone or something is when in an upright posture.</Description>
       <Format>{0}m</Format>
     </StatDef>
+
+    <StatDef  Name="BleedingRate">
+      <Label>Bleeding</Label>
+      <Description>Amount of blood being lost from a wound.</Description>
+      <Format>{0:0}</Format>
+    </StatDef>
+
+    <StatDef  Name="PainIncrease">
+      <Label>Pain</Label>
+      <Description>Amount of pain being caused by an injury.</Description>
+      <Format>{0:0}</Format>
+    </StatDef>
+
+    <StatDef  Name="Pain">
+      <Label>Pain</Label>
+      <Description>Amount of pain a creature has.</Description>
+      <Format>{0:0}</Format>
+    </StatDef>
+
+    <StatDef  Name="BloodLoss">
+      <Label>Blood loss</Label>
+      <Description>Amount of blood lost.</Description>
+      <Format>{0:0}</Format>
+    </StatDef>
+
+    <StatDef  Name="HealingRate">
+      <Label>Healing rate</Label>
+      <Description>How quickly a body or body part is healing from its injuries.</Description>
+      <Format>{0:0}</Format>
+    </StatDef>
   </statDefs>
+
+  <!-- ======================= INJURIES ================ -->
   <injuryDefs>
     <InjuryDef  Name="Bruise">
       <Label>Bruise</Label>
       <Description>Swollen body part from blunt trauma.</Description>
-      <BleedingRate>0</BleedingRate>
       <Pain>3</Pain>
-      <HealThreshold>0</HealThreshold>
+    </InjuryDef>
+
+    <InjuryDef  Name="Fracture">
+      <Label>Fracture</Label>
+      <Description>broken bone. Takes a long time to heal.</Description>
+      <Pain>15</Pain>
+      <HealingRateMultiplier>0.05</HealingRateMultiplier>
+    </InjuryDef>
+
+    <InjuryDef  Name="Laceration">
+      <Label>Laceration</Label>
+      <Description>a deep cut.</Description>
+      <Pain>9</Pain>
+      <BleedingRate>5</BleedingRate>
+      <HealingRateMultiplier>0.8</HealingRateMultiplier>
     </InjuryDef>
   </injuryDefs>
+
+  <!-- ======================= BODIES ================ -->
   <bodyDefs>
     <BodyDef Name="Human">
       <Label>Human</Label>
@@ -28,6 +76,8 @@
       </BodyParts>
     </BodyDef>
   </bodyDefs>
+
+  <!-- ======================= BODY PARTS ================ -->
   <bodyPartDefs>
     <BodyPartDef  Name="Human_Leg">
       <Label>Leg</Label>
@@ -38,6 +88,7 @@
       <MaxHitpoints>0</MaxHitpoints>
       <HealingRate>0</HealingRate>      
     </BodyPartDef>
+    
     <BodyPartDef  Name="Human_Arm">
       <Label>Arm</Label>
       <Description></Description>
@@ -47,6 +98,7 @@
       <MaxHitpoints>0</MaxHitpoints>
       <HealingRate>0</HealingRate>
     </BodyPartDef>
+    
     <BodyPartDef  Name="Human_Torso">
       <Label>Torso</Label>
       <Description></Description>
@@ -56,6 +108,7 @@
       <MaxHitpoints>0</MaxHitpoints>
       <HealingRate>0</HealingRate>
     </BodyPartDef>
+    
     <BodyPartDef  Name="Human_Head">
       <Label>Head</Label>
       <Description></Description>

@@ -1,22 +1,19 @@
 ﻿namespace Projapocsur.Things
 {
+    using System;
+    using System.Collections.Generic;
     using Projapocsur.Common.Serialization;
 
-    public enum SeverityLevel
-    {
-        Minor,
-        Major,
-        Severe
-    }
-
     [XmlSerializable]
-    public class Injury : Thing
+    public class Injury : Thing<InjuryDef>
     {
-        [XmlMember]
-        public float BleedingRate { get; private set; }
-
-        [XmlMember]
-        public float Pain { get; private set; }
+        private static Dictionary<SeverityLevel, float> severityAmpliflier = new Dictionary<SeverityLevel, float>()
+        {
+            { SeverityLevel.Trivial, 1.0f },
+            { SeverityLevel.Minor, 1.25f },
+            { SeverityLevel.Major, 1.5f },
+            { SeverityLevel.Severe, 2.0f },
+        };
 
         [XmlMember]
         private float healThreshold;
@@ -24,23 +21,71 @@
         [XmlMember]
         private float healedAmount;
 
-        [XmlMember]
-        private bool isHealed;
-
-        private DefRef<InjuryDef> defRefInternal;
-
         public Injury() { }
 
-        public Injury(InjuryDef def, SeverityLevel severity) : base(def.Name)
+        public Injury(string defName, SeverityLevel severity) : base(defName)
         {
-            // instantiate class using def
-            // adjust bleeding rate and pain based on severity
+            float bleedingRate = this.Def.BleedingRate * severityAmpliflier[severity];
+            float pain = this.Def.Pain * severityAmpliflier[severity];
+
+            this.BleedingRate = new Stat(DefNameOf.Stat.BleedingRate, bleedingRate, bleedingRate);
+            this.PainIncrease = new Stat(DefNameOf.Stat.PainIncrease, pain, pain);
+            this.healThreshold = this.Def.HealThreshold;
+
+            this.HealingRateMultiplier = this.Def.HealingRateMultiplier / severityAmpliflier[severity];
         }
 
-        public override void PostLoad()
+        [XmlMember]
+        public Stat BleedingRate { get; private set; }
+
+        [XmlMember]
+        public Stat PainIncrease { get; private set; }
+
+        [XmlMember]
+        public bool IsHealed { get; private set; }
+
+        [XmlMember]
+        public float HealingRateMultiplier { get; private set; }
+
+        public void OnStart(InjuryProcessingContext context)
         {
-            base.PostLoad();
-            this.defRefInternal?.LinkToDef();
+            context.Pain += this.PainIncrease.Value;
         }
+
+        public void OnUpdate(InjuryProcessingContext context)
+        {
+            float healingRate = context.HealingRate.Value * this.HealingRateMultiplier;
+
+            if (healingRate > 0)
+            {
+                float newHealedAmount = this.healedAmount + healingRate;
+                this.healedAmount = Math.Min(newHealedAmount, this.healThreshold);
+                float healEffectMultiplier = 1f - (this.healedAmount / this.healThreshold);
+
+                float previousPain = this.PainIncrease.Value;
+                this.PainIncrease *= healEffectMultiplier;
+                float painDiff = previousPain - this.PainIncrease.Value;
+
+                this.BleedingRate *= healEffectMultiplier;
+                
+                context.Pain -= painDiff;
+                context.BloodLoss += this.BleedingRate.Value;
+
+                this.IsHealed = this.healedAmount == this.healThreshold;
+            }
+        }
+
+        public void OnDestroy(InjuryProcessingContext context)
+        {
+            context.Pain -= this.PainIncrease.Value;
+        }
+    }
+
+    public enum SeverityLevel
+    {
+        Trivial,
+        Minor,
+        Major,
+        Severe
     }
 }

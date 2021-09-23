@@ -5,9 +5,12 @@
     using Projapocsur;
 
     /// <summary>
-    /// To avoid having Defs that fully define other defs they reference, this object should be used instead.
-    /// It helps with making sure only one instance of each unique def exists in memory to avoid wasting space
-    /// and helps with linking to those instances.
+    /// <para>
+    /// this helps with linking between defs to avoid having Defs that fully define other referenced defs when serialized.
+    /// That way only one instance of each unique def exists in memory and storage to avoid wasting space.
+    /// </para>
+    /// Additionally, the <see cref="RefDefName"/> property facilitates refactoring def names with tooling by having a consistent
+    /// prefix.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [XmlSerializable]
@@ -27,8 +30,7 @@
 
         public void LinkToDef()
         {
-            DefinitionFinder.TryFind(this.RefDefName, out T def);
-            this.Def = def;
+            this.Def = DefinitionFinder.Find<T>(this.RefDefName);
         }
     }
 

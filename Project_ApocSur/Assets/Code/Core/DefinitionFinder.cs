@@ -17,14 +17,16 @@
         private static Action postLoadCallbacks;
         private const string directoryName = "Definitions";
 
-        public static void Init()
+        public static void Init(string rootFilePath = null)
         {
             if (isInitialized)
             {
                 return;
             }
 
-            string[] filePaths = StorageUtility.GetDirectoryFiles(directoryName);
+            string[] filePaths = string.IsNullOrWhiteSpace(rootFilePath) ? 
+                StorageUtility.GetDirectoryFiles(directoryName) : 
+                StorageUtility.GetDirectoryFiles(directoryName, rootFilePath);
 
             foreach (var filePath in filePaths)
             {
@@ -57,17 +59,16 @@
             postLoadCallbacks += DefinitionIndex<T>.Instance.postLoadCallbacks;
         }
 
-        public static bool TryFind<T>(string defName, out T def)
+        public static T Find<T>(string defName)
             where T : Def
         {
-            if (DefinitionIndex<T>.Instance.TryFind(defName, out def))
+            if (DefinitionIndex<T>.Instance.TryFind(defName, out T def))
             {
-                return true;
+                return def;
             }
             else
             {
-                LogUtility.Log(LogLevel.Warning, $"{ClassName}: failed to find '{defName}' of type [{typeof(T)}]");
-                return false;
+                throw new KeyNotFoundException($"{ClassName}: failed to find '{defName}' of type [{typeof(T)}]");
             }
         }
 

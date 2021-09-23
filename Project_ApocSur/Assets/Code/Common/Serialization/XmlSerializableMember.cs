@@ -2,7 +2,7 @@
 {
     using System;
     using System.Reflection;
-    using ProjApocSur.Common;
+    using Projapocsur.Common;
 
     /// <summary>
     /// Contains all the information needed of a serializable class's member for the <see cref="XmlSerializer"/> to work with.

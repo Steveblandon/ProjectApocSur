@@ -4,7 +4,6 @@
     using Projapocsur.Common;
     using Projapocsur;
     using Projapocsur.Things;
-    using ProjApocSur.Common;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -13,6 +12,7 @@
     {
         private static readonly string filename = "AllDefs.xml";
         private static readonly string extendedTestDataPath = Path.Combine(TestDataPath, "Definitions");
+        private static readonly string defTemplateTestDataPath = Path.Combine(TestDataPath, "DefsTemplate");
         private static readonly string uri = Path.Combine(extendedTestDataPath, filename);
 
         public override void Setup()
@@ -22,12 +22,17 @@
             {
                 Directory.CreateDirectory(extendedTestDataPath);
             }
+
+            if (!Directory.Exists(defTemplateTestDataPath))
+            {
+                Directory.CreateDirectory(defTemplateTestDataPath);
+            }
         }
 
         [Test]
         public void TestWriteAndRead_EmptyTemplate()
         {
-            string emptyUri = Path.Combine(extendedTestDataPath, "AllDefs_Empty.xml");
+            string emptyUri = Path.Combine(defTemplateTestDataPath, "AllDefs_Empty.xml");
             var defs = new DefinitionFinder.Defs();
 
             defs.bodyDefs = new List<BodyDef>();
@@ -43,26 +48,17 @@
             defs.bodyPartDefs.Add(new BodyPartDef());
             defs.injuryDefs.Add(new InjuryDef());
             defs.statDefs.Add(new StatDef());
-            
-            ExceptionUtility.TryCatch(
-                () => StorageUtility.SaveData(defs, emptyUri, StorageMode.Absolute),
-                out Exception exception);
-            Assert.IsNull(exception);
 
-            ExceptionUtility.TryCatch(
-                () => StorageUtility.LoadData(out defs, emptyUri, StorageMode.Absolute),
-                out exception);
-            Assert.IsNull(exception);
+            AssertNullExceptionTryCatch<Exception>(() => StorageUtility.SaveData(defs, emptyUri, StorageMode.Absolute));
+            AssertNullExceptionTryCatch<Exception>(() => StorageUtility.LoadData(out defs, emptyUri, StorageMode.Absolute));
         }
 
         [Test]
         public void TestRead_AllDefs()
         {
             var defs = new DefinitionFinder.Defs();
-            ExceptionUtility.TryCatch(
-                () => StorageUtility.LoadData(out defs, uri, StorageMode.Absolute),
-                out Exception exception);
-            Assert.IsNull(exception);
+
+            AssertNullExceptionTryCatch<Exception>(() => StorageUtility.LoadData(out defs, uri, StorageMode.Absolute));
         }
     }
 }

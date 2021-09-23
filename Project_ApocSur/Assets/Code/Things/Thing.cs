@@ -3,19 +3,20 @@
     using Projapocsur.Common;
     using Projapocsur.Common.Serialization;
 
-    public abstract class Thing : ILoadable
+    public abstract class Thing<T> : ILoadable where T : Def
     {
         [XmlMember]
-        private DefRef<Def> defRef;
+        private DefRef<T> defRef;
 
         public Thing() { }
 
         public Thing(string defRefName)
         {
-            this.defRef = new DefRef<Def>(defRefName);
+            this.defRef = new DefRef<T>(defRefName);
+            this.defRef.LinkToDef();
         }
 
-        public Def Def { get; private set; }
+        public T Def { get => this.defRef?.Def; }
 
         public virtual void PostLoad() 
         {

@@ -4,7 +4,7 @@
     using Projapocsur.Common.Serialization;
 
     [XmlSerializable]
-    public class Body : Thing
+    public class Body : Thing<BodyDef>
     {
         [XmlMember]
         public Stat Height { get; private set; }
@@ -13,7 +13,7 @@
         public Stat HitPoints { get; private set; }
 
         [XmlMember]
-        public Stat BloddLoss { get; private set; }
+        public Stat BloodLoss { get; private set; }
 
         [XmlMember]
         public Stat HealingRate { get; private set; }

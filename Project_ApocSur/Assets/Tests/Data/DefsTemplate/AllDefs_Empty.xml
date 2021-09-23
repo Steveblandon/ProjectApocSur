@@ -11,7 +11,8 @@
     <InjuryDef Name="">
       <BleedingRate>0</BleedingRate>
       <Pain>0</Pain>
-      <HealThreshold>0</HealThreshold>
+      <HealThreshold>100</HealThreshold>
+      <HealingRateMultiplier>1</HealingRateMultiplier>
       <Label></Label>
       <Description></Description>
     </InjuryDef>

@@ -1,4 +1,4 @@
-﻿namespace ProjApocSur.Common
+﻿namespace Projapocsur.Common
 {
     using System;
 
