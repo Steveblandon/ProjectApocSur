@@ -1,20 +1,12 @@
 ﻿namespace Projapocsur.Things
 {
     using System;
-    using System.Collections.Generic;
     using Projapocsur.Common.Serialization;
+    using static Projapocsur.Things.SeverityConfig;
 
     [XmlSerializable]
     public class Injury : Thing<InjuryDef>
     {
-        private static Dictionary<SeverityLevel, float> severityAmpliflier = new Dictionary<SeverityLevel, float>()
-        {
-            { SeverityLevel.Trivial, 1.0f },
-            { SeverityLevel.Minor, 1.25f },
-            { SeverityLevel.Major, 1.5f },
-            { SeverityLevel.Severe, 2.0f },
-        };
-
         [XmlMember]
         private float healThreshold;
 
@@ -25,15 +17,19 @@
 
         public Injury(string defName, SeverityLevel severity) : base(defName)
         {
-            float bleedingRate = this.Def.BleedingRate * severityAmpliflier[severity];
-            float pain = this.Def.Pain * severityAmpliflier[severity];
+            float bleedingRate = this.Def.BleedingRate * SeverityAmpliflier[severity];
+            float pain = this.Def.Pain * SeverityAmpliflier[severity];
 
             this.BleedingRate = new Stat(DefNameOf.Stat.BleedingRate, bleedingRate, bleedingRate);
             this.PainIncrease = new Stat(DefNameOf.Stat.PainIncrease, pain, pain);
             this.healThreshold = this.Def.HealThreshold;
 
-            this.HealingRateMultiplier = this.Def.HealingRateMultiplier / severityAmpliflier[severity];
+            this.HealingRateMultiplier = this.Def.HealingRateMultiplier / SeverityAmpliflier[severity];
+            this.Severity = severity;
         }
+
+        [XmlMember]
+        public SeverityLevel Severity { get; private set; }
 
         [XmlMember]
         public Stat BleedingRate { get; private set; }
@@ -79,13 +75,5 @@
         {
             context.Pain -= this.PainIncrease.Value;
         }
-    }
-
-    public enum SeverityLevel
-    {
-        Trivial,
-        Minor,
-        Major,
-        Severe
     }
 }

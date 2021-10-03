@@ -19,6 +19,11 @@
             }
         }
 
+        public static void AssertNullExceptionTryCatch(Action codeToRun)
+        {
+            AssertNullExceptionTryCatch<Exception>(codeToRun);
+        }
+
         public static void AssertNullExceptionTryCatch<T>(Action codeToRun) where T : Exception
         {
             TryCatch(codeToRun, out T thrownException);

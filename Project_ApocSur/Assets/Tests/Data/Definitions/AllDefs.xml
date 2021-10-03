@@ -8,6 +8,12 @@
       <Format>{0}m</Format>
     </StatDef>
 
+    <StatDef  Name="HitPoints">
+      <Label>HP</Label>
+      <Description>Hit points left before permanant body part loss and/or death.</Description>
+      <Format>{0:0}</Format>
+    </StatDef>
+
     <StatDef  Name="BleedingRate">
       <Label>Bleeding</Label>
       <Description>Amount of blood being lost from a wound.</Description>
@@ -85,7 +91,7 @@
       <Size>2</Size>
       <Height>0.85</Height>
       <FloorOffset>0</FloorOffset>
-      <MaxHitpoints>0</MaxHitpoints>
+      <MaxHitpoints>200</MaxHitpoints>
       <HealingRate>0</HealingRate>      
     </BodyPartDef>
     
@@ -95,7 +101,7 @@
       <Size>1</Size>
       <Height>0.56</Height>
       <FloorOffset>0.93</FloorOffset>
-      <MaxHitpoints>0</MaxHitpoints>
+      <MaxHitpoints>100</MaxHitpoints>
       <HealingRate>0</HealingRate>
     </BodyPartDef>
     
@@ -105,7 +111,7 @@
       <Size>5</Size>
       <Height>0.64</Height>
       <FloorOffset>0.85</FloorOffset>
-      <MaxHitpoints>0</MaxHitpoints>
+      <MaxHitpoints>400</MaxHitpoints>
       <HealingRate>0</HealingRate>
     </BodyPartDef>
     
@@ -115,7 +121,7 @@
       <Size>2</Size>
       <Height>0.21</Height>
       <FloorOffset>1.52</FloorOffset>
-      <MaxHitpoints>0</MaxHitpoints>
+      <MaxHitpoints>50</MaxHitpoints>
       <HealingRate>0</HealingRate>
     </BodyPartDef>
   </bodyPartDefs>
