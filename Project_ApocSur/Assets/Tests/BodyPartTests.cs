@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using NUnit.Framework;
-    using Projapocsur.Things;
+    using Projapocsur.World;
 
     public class BodyPartTests : TestsBase
     {

@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Things
+﻿namespace Projapocsur.World
 {
     using Projapocsur.Common;
     using Projapocsur.Common.Serialization;

@@ -2,7 +2,7 @@
 {
     using System;
     using NUnit.Framework;
-    using Projapocsur.Things;
+    using Projapocsur.World;
 
     public class InjuryTests : TestsBase
     {

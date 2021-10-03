@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Things
+﻿namespace Projapocsur.World
 {
     public class InjuryProcessingContext
     {

@@ -1,8 +1,8 @@
-﻿namespace Projapocsur.Things
+﻿namespace Projapocsur.World
 {
     using System;
     using Projapocsur.Common.Serialization;
-    using static Projapocsur.Things.SeverityConfig;
+    using static Projapocsur.World.SeverityConfig;
 
     [XmlSerializable]
     public class Injury : Thing<InjuryDef>

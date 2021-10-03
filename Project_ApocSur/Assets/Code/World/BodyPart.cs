@@ -1,9 +1,9 @@
-﻿namespace Projapocsur.Things
+﻿namespace Projapocsur.World
 {
     using System.Collections.Generic;
     using Projapocsur.Common;
     using Projapocsur.Common.Serialization;
-    using static Projapocsur.Things.SeverityConfig;
+    using static Projapocsur.World.SeverityConfig;
 
     [XmlSerializable]
     public class BodyPart : Thing<BodyPartDef>

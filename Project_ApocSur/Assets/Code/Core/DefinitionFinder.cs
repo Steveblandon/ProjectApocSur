@@ -5,7 +5,7 @@
     using System.Reflection;
     using Projapocsur.Common.Serialization;
     using Projapocsur.Common;
-    using Projapocsur.Things;
+    using Projapocsur.World;
 
     /// <summary>
     /// Utility for finding definitions loaded into memory.

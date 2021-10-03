@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Things
+﻿namespace Projapocsur.World
 {
     /// <summary>
     /// This serves as a lookup table to help with making sure there is a single place in code to trigger a refactor update 

@@ -3,7 +3,7 @@
     using NUnit.Framework;
     using Projapocsur.Common;
     using Projapocsur;
-    using Projapocsur.Things;
+    using Projapocsur.World;
     using System;
     using System.Collections.Generic;
     using System.IO;

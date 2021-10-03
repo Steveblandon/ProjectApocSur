@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Things
+﻿namespace Projapocsur.World
 {
     using System.Collections.Generic;
     using Projapocsur.Common.Serialization;

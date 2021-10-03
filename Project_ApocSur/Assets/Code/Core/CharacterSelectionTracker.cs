@@ -2,7 +2,7 @@ namespace Projapocsur
 {
     using System;
     using System.Collections.Generic;
-    using Projapocsur.Things;
+    using Projapocsur.World;
 
     public class CharacterSelectionTracker
     {
