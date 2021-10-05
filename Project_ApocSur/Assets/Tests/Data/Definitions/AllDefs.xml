@@ -77,6 +77,7 @@
       <Height>1.7</Height>
       <HeightRange>0.21</HeightRange>
       <MaxHitPoints>100</MaxHitPoints>
+      <HitBoxCount>4</HitBoxCount>
       <BodyParts>
         <DefRef RefDefName="Human_Leg" />
       </BodyParts>

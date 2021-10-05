@@ -16,6 +16,9 @@
         public float MaxHitPoints { get; private set; }
 
         [XmlMember]
+        public float HitBoxCount { get; private set; }
+
+        [XmlMember]
         public List<DefRef<BodyPartDef>> BodyParts { get;  set; }
 
         public override void PostLoad()

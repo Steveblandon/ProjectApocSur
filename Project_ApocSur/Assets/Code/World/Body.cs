@@ -24,7 +24,8 @@
         [XmlMember]
         public Stance CurrentStance { get; private set; }
 
-        private Dictionary<Stance, List<BodyHitProcessor>> hitProcessors;
+        [XmlMember]
+        private Dictionary<Stance, List<BodyHitBox>> hitBoxes;
 
         public Body() { }
 
@@ -41,10 +42,6 @@
         public void TakeDamage(BodyHitInfo hit)
         {
 
-        }
-
-        private class BodyHitProcessor
-        {
         }
     }
 
