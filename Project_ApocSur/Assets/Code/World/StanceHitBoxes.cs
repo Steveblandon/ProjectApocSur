@@ -15,9 +15,9 @@
         }
 
         [XmlMember]
-        public DefRef<StanceDef> StanceDefRef { get; private set; }
+        public DefRef<StanceDef> StanceDefRef { get; protected set; }
 
         [XmlMember]
-        public List<BodyHitBox> HitBoxes { get; private set; }
+        public List<BodyHitBox> HitBoxes { get; protected set; }
     }
 }

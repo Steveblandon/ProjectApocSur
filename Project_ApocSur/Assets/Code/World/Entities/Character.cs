@@ -32,7 +32,7 @@ namespace Projapocsur.World
         public static event Action<Character> OnDraftStateChangeEvent;
 
         public bool IsInPlayerFaction { get; set; }
-        public bool IsSelected { get; private set; }
+        public bool IsSelected { get; protected set; }
         public bool IsDrafted 
         { 
             get => this._isDrafted;

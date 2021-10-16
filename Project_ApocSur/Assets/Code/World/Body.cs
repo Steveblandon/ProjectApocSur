@@ -54,25 +54,25 @@
         #region stats
 
         [XmlMember]
-        public List<BodyPart> BodyParts { get; private set; }
+        public List<BodyPart> BodyParts { get; protected set; }
 
         [XmlMember]
-        public DefRef<StanceDef> CurrentStance { get; private set; }
+        public DefRef<StanceDef> CurrentStance { get; protected set; }
 
         [XmlMember]
-        public Stat BloodLoss { get; private set; }
+        public Stat BloodLoss { get; protected set; }
 
         [XmlMember]
-        public Stat HealingRate { get; private set; }
+        public Stat HealingRate { get; protected set; }
 
         [XmlMember]
-        public Stat Height { get; private set; }
+        public Stat Height { get; protected set; }
 
         [XmlMember]
-        public Stat HitPoints { get; private set; }
+        public Stat HitPoints { get; protected set; }
 
         [XmlMember]
-        public Stat Pain { get; private set; }
+        public Stat Pain { get; protected set; }
 
         #endregion
 

@@ -20,7 +20,7 @@ namespace Projapocsur.Common
         /// <summary>
         /// True if switch is on, false otherwise.
         /// </summary>
-        public bool IsOn { get; private set; }
+        public bool IsOn { get; protected set; }
 
         /// <summary>
         /// Color representing the state of the switch being on.
@@ -35,7 +35,7 @@ namespace Projapocsur.Common
         /// <summary>
         /// Current color.
         /// </summary>
-        public Color CurrentColor { get; private set; }
+        public Color CurrentColor { get; protected set; }
 
         /// <summary>
         /// Turn on the switch.

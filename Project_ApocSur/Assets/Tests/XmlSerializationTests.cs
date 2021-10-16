@@ -325,7 +325,7 @@ namespace Projapocsur.Tests
         private float valField;
 
         [XmlMember]
-        public string ValProp { get; private set; }
+        public string ValProp { get; protected set; }
 
         public float ValField { get => this.valField; }
 

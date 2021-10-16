@@ -24,19 +24,19 @@
         }
 
         [XmlMember]
-        public SeverityLevel Severity { get; private set; }
+        public SeverityLevel Severity { get; protected set; }
 
         [XmlMember]
-        public Stat BleedingRate { get; private set; }
+        public Stat BleedingRate { get; protected set; }
 
         [XmlMember]
-        public Stat PainIncrease { get; private set; }
+        public Stat PainIncrease { get; protected set; }
 
         [XmlMember]
-        public bool IsHealed { get; private set; }
+        public bool IsHealed { get; protected set; }
 
         [XmlMember]
-        public float HealingRateMultiplier { get; private set; }
+        public float HealingRateMultiplier { get; protected set; }
 
         public void OnStart(InjuryProcessingContext context)
         {

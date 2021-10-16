@@ -6,12 +6,12 @@
     public class InjuryDef : Def
     {
         [XmlMember]
-        public float BleedingRate { get; private set; }
+        public float BleedingRate { get; protected set; }
 
         [XmlMember]
-        public float Pain { get; private set; }
+        public float Pain { get; protected set; }
 
         [XmlMember]
-        public float HealingRateMultiplier { get; private set; } = 1f;
+        public float HealingRateMultiplier { get; protected set; } = 1f;
     }
 }

@@ -33,10 +33,10 @@
         }
 
         [XmlMember]
-        public Range TargetRange { get; private set; }
+        public Range TargetRange { get; protected set; }
 
         [XmlMember]
-        public bool IsEmpty { get; private set; }
+        public bool IsEmpty { get; protected set; }
 
         public void Calibrate(List<BodyPart> bodyParts, float bodyPartLengthMultiplier = 1f)
         {

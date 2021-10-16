@@ -27,16 +27,16 @@
         }
 
         [XmlMember]
-        public float Value { get; private set; }
+        public float Value { get; protected set; }
 
         [XmlMember]
-        public float MinValue { get; private set; }
+        public float MinValue { get; protected set; }
 
         [XmlMember]
-        public float MaxValue { get; private set; }
+        public float MaxValue { get; protected set; }
 
         [XmlMember]
-        public float DefaultValue { get; private set; }
+        public float DefaultValue { get; protected set; }
 
         public static Stat operator +(Stat stat, float amount)
         {

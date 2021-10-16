@@ -27,18 +27,18 @@
         }
 
         [XmlMember]
-        public Stat HitPoints { get; private set; }
+        public Stat HitPoints { get; protected set; }
 
         [XmlMember]
-        public float FloorHeight { get; private set; }
+        public float FloorHeight { get; protected set; }
 
         [XmlMember]
-        public float FloorOffset { get; private set; }
+        public float FloorOffset { get; protected set; }
 
         [XmlMember]
-        public float Length { get; private set; }
+        public float Length { get; protected set; }
 
-        public bool IsDestroyed { get; private set; }
+        public bool IsDestroyed { get; protected set; }
 
         public IReadOnlyCollection<Injury> Injuries { get => this.injuries; }
 

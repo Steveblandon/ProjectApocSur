@@ -57,7 +57,7 @@
         /// <summary>
         /// The name of the field/property.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
         /// <summary>
         /// The value of the field/property.
@@ -71,11 +71,11 @@
         /// <summary>
         /// The type of the field/property (not to be confused with <see cref="XmlSerializableMember"/>'s type).
         /// </summary>
-        public Type ValueType { get; private set; }
+        public Type ValueType { get; protected set; }
 
-        public XmlMemberAttribute XmlMemberAttribute { get; private set; }
+        public XmlMemberAttribute XmlMemberAttribute { get; protected set; }
 
-        public bool HasXmlSerializableAttribute { get; private set; }
+        public bool HasXmlSerializableAttribute { get; protected set; }
 
         private void PostConstruct()
         {

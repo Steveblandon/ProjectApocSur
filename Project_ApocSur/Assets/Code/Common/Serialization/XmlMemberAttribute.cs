@@ -12,12 +12,12 @@
         /// <summary>
         /// If not set, the serializer defaults to using the field/property name.
         /// </summary>
-        public string PreferredName { get; private set; }
+        public string PreferredName { get; protected set; }
 
         /// <summary>
         /// Indicates whether the member should be treated as a xml attribute instead of an element.
         /// </summary>
-        public bool IsAttribute { get; private set; }
+        public bool IsAttribute { get; protected set; }
 
         /// <summary>
         /// 

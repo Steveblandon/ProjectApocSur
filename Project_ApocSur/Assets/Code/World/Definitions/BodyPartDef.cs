@@ -6,18 +6,18 @@
     public class BodyPartDef : Def
     {
         [XmlMember]
-        public int Size { get; private set; }
+        public int Size { get; protected set; }
 
         [XmlMember]
-        public float BaseLength { get; private set; }
+        public float BaseLength { get; protected set; }
 
         [XmlMember]
-        public float BaseFloorOffset { get; private set; }
+        public float BaseFloorOffset { get; protected set; }
 
         [XmlMember]
-        public float MaxHitpoints { get; private set; }
+        public float MaxHitpoints { get; protected set; }
 
         [XmlMember]
-        public float HealingRate { get; private set; }
+        public float HealingRate { get; protected set; }
     }
 }

@@ -7,28 +7,28 @@
     public class BodyDef : Def
     {
         [XmlMember]
-        public float MaxHeightDeviationFactor { get; private set; }
+        public float MaxHeightDeviationFactor { get; protected set; }
 
         [XmlMember]
-        public float MaxHitPoints { get; private set; }
+        public float MaxHitPoints { get; protected set; }
 
         [XmlMember]
-        public float BaseHealingRate { get; private set; }
+        public float BaseHealingRate { get; protected set; }
 
         [XmlMember]
-        public float PainThreshold { get; private set; }
+        public float PainThreshold { get; protected set; }
 
         [XmlMember]
-        public int HitBoxCount { get; private set; }
+        public int HitBoxCount { get; protected set; }
 
         [XmlMember]
         public List<DefRef<BodyPartDef>> BodyParts { get; set; }
 
         [XmlMember]
-        public List<DefRef<StanceDef>> StanceCapabilities { get; private set; }
+        public List<DefRef<StanceDef>> StanceCapabilities { get; protected set; }
 
         [XmlMember]
-        public DefRef<StanceDef> DefaultStance { get; private set; }
+        public DefRef<StanceDef> DefaultStance { get; protected set; }
 
         public override void PostLoad()
         {

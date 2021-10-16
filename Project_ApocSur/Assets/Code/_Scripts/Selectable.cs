@@ -19,7 +19,7 @@ namespace Projapocsur.Scripts
         [SerializeField]
         protected Color onSelectOutlineColor = new Color(1, 1, 1, 1);
 
-        public bool IsSelected { get; private set; }
+        public bool IsSelected { get; protected set; }
 
         public void OnSelect()
         {

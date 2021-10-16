@@ -6,6 +6,6 @@
     public class StatDef : Def
     {
         [XmlMember]
-        public string Format { get; private set; }
+        public string Format { get; protected set; }
     }
 }

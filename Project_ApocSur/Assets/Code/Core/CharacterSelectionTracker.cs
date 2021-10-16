@@ -18,7 +18,7 @@ namespace Projapocsur
             Character.OnSelectStateChangeEvent += this.OnCharacterSelectStateChangeEvent;
         }
 
-        public Character MainSelelectee { get; private set; }
+        public Character MainSelelectee { get; protected set; }
         public IReadOnlyCollection<Character> Selectees { get { return this._selectees; } }
 
         private void OnCharacterSelectStateChangeEvent(Character character)

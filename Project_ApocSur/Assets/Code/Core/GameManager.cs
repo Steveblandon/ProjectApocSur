@@ -11,7 +11,7 @@ namespace Projapocsur
         public static GameManager Instance { get { return _instance; } }
         private static GameManager _instance = new GameManager();
 
-        public DraftTracker DraftTracker { get; private set; }
-        public CharacterSelectionTracker CharacterSelectionTracker { get; private set; }
+        public DraftTracker DraftTracker { get; protected set; }
+        public CharacterSelectionTracker CharacterSelectionTracker { get; protected set; }
     }
 }

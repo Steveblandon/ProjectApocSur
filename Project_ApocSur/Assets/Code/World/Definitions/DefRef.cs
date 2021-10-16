@@ -28,7 +28,7 @@
         }
 
         [XmlMember(isAttribute:true)]
-        public string RefDefName { get; private set; }
+        public string RefDefName { get; protected set; }
 
         public T Def 
         {
