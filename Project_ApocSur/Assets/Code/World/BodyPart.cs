@@ -19,6 +19,8 @@
         public BodyPart(string defName, float lengthMultiplier = 1f) : base(defName)
         {
             this.HitPoints = new Stat(DefNameOf.Stat.HitPoints, this.Def.MaxHitpoints, true);
+
+            // length multiplier will essentially either shrink or enlarge the body part
             this.Length = this.Def.BaseLength * lengthMultiplier;
             this.FloorOffset = this.Def.BaseFloorOffset * lengthMultiplier;
             this.FloorHeight = this.FloorOffset + this.Length;

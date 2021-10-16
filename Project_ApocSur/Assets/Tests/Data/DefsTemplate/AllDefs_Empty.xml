@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <statDefs>
     <StatDef Name="">
@@ -18,12 +18,16 @@
   </injuryDefs>
   <bodyDefs>
     <BodyDef Name="">
-      <Height>0</Height>
-      <HeightRange>0</HeightRange>
+      <MaxHeightDeviationFactor>0</MaxHeightDeviationFactor>
       <MaxHitPoints>0</MaxHitPoints>
+      <BaseHealingRate>0</BaseHealingRate>
+      <PainThreshold>0</PainThreshold>
+      <HitBoxCount>0</HitBoxCount>
       <BodyParts>
         <DefRef RefDefName="Human_Leg" />
       </BodyParts>
+      <StanceCapabilities />
+      <DefaultStance RefDefName="" />
       <Label></Label>
       <Description></Description>
     </BodyDef>

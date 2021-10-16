@@ -15,6 +15,7 @@
         public Stat(string defName, float initialValue, float maxValue, float minValue = 0f) : base(defName)
         {
             this.Value = initialValue;
+            this.DefaultValue = initialValue;
             this.MaxValue = maxValue;
             this.MinValue = minValue;
             this.useMinMaxLimiters = true;
@@ -33,6 +34,9 @@
 
         [XmlMember]
         public float MaxValue { get; private set; }
+
+        [XmlMember]
+        public float DefaultValue { get; private set; }
 
         public static Stat operator +(Stat stat, float amount)
         {

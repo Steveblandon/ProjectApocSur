@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <!-- ======================= STATS ================ -->
   <statDefs>
@@ -98,13 +98,27 @@
     <BodyDef Name="Human">
       <Label>Human</Label>
       <Description>Just a human.</Description>
-      <Height>1.7</Height>
-      <HeightRange>0.21</HeightRange>
+      <MaxHeightDeviationFactor>0.13</MaxHeightDeviationFactor>
       <MaxHitPoints>100</MaxHitPoints>
-      <HitBoxCount>4</HitBoxCount>
+      <BaseHealingRate>1</BaseHealingRate>
+      <PainThreshold>100</PainThreshold>
+      <HitBoxCount>3</HitBoxCount>
       <BodyParts>
+        <DefRef RefDefName="Human_Head" />
+        <DefRef RefDefName="Human_Torso" />
+        <DefRef RefDefName="Human_Arm" />
+        <DefRef RefDefName="Human_Arm" />
+        <DefRef RefDefName="Human_Leg" />
         <DefRef RefDefName="Human_Leg" />
       </BodyParts>
+      <StanceCapabilities>
+        <DefRef RefDefName="Stand" />
+        <DefRef RefDefName="Sit" />
+        <DefRef RefDefName="Crouch" />
+        <DefRef RefDefName="SitOnGround" />
+        <DefRef RefDefName="Prone" />
+      </StanceCapabilities>
+      <DefaultStance RefDefName="Stand" />
     </BodyDef>
   </bodyDefs>
 

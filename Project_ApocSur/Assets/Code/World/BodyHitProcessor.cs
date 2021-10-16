@@ -77,7 +77,8 @@
                 }
             }
 
-            throw new InvalidOperationException($"unable to process hit. hitBoxCount={hitBoxes.Count}");
+            LogUtility.Log(LogLevel.Warning, $"processed a bodyHit miss, but that is not expected inside {nameof(BodyHitProcessor)}");
+            return -1;
         }
 
         public void ReCalibrate(List<BodyPart> bodyParts)
