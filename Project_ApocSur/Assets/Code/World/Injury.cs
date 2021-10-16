@@ -2,14 +2,10 @@
 {
     using System;
     using Projapocsur.Common.Serialization;
-    using static Projapocsur.World.SeverityConfig;
 
     [XmlSerializable]
     public class Injury : Thing<InjuryDef>
     {
-        [XmlMember]
-        private float healThreshold;
-
         [XmlMember]
         private float healedAmount;
 
@@ -17,14 +13,13 @@
 
         public Injury(string defName, SeverityLevel severity) : base(defName)
         {
-            float bleedingRate = this.Def.BleedingRate * SeverityAmpliflier[severity];
-            float pain = this.Def.Pain * SeverityAmpliflier[severity];
+            float bleedingRate = this.Def.BleedingRate * Config.SeverityAmpliflier[severity];
+            float pain = this.Def.Pain * Config.SeverityAmpliflier[severity];
 
             this.BleedingRate = new Stat(DefNameOf.Stat.BleedingRate, bleedingRate, bleedingRate);
             this.PainIncrease = new Stat(DefNameOf.Stat.PainIncrease, pain, pain);
-            this.healThreshold = this.Def.HealThreshold;
 
-            this.HealingRateMultiplier = this.Def.HealingRateMultiplier / SeverityAmpliflier[severity];
+            this.HealingRateMultiplier = this.Def.HealingRateMultiplier / Config.SeverityAmpliflier[severity];
             this.Severity = severity;
         }
 
@@ -55,8 +50,8 @@
             if (healingRate > 0)
             {
                 float newHealedAmount = this.healedAmount + healingRate;
-                this.healedAmount = Math.Min(newHealedAmount, this.healThreshold);
-                float healEffectMultiplier = 1f - (this.healedAmount / this.healThreshold);
+                this.healedAmount = Math.Min(newHealedAmount, Config.DefaultInjuryHealThreshold);
+                float healEffectMultiplier = 1f - (this.healedAmount / Config.DefaultInjuryHealThreshold);
 
                 float previousPain = this.PainIncrease.Value;
                 this.PainIncrease *= healEffectMultiplier;
@@ -67,7 +62,7 @@
                 context.Pain -= painDiff;
                 context.BloodLoss += this.BleedingRate.Value;
 
-                this.IsHealed = this.healedAmount == this.healThreshold;
+                this.IsHealed = this.healedAmount == Config.DefaultInjuryHealThreshold;
             }
         }
 

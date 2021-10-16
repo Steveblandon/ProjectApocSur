@@ -60,7 +60,7 @@
         private void Deserialize(XmlReader reader, object data)
         {  
             var memberByName = new Dictionary<string, XmlSerializableMember>();
-            IEnumerable<XmlSerializableMember> serializableMembers = XmlSerializableMemberFactory.GetSerializableMembers(data);
+            ICollection<XmlSerializableMember> serializableMembers = XmlSerializableMemberFactory.GetSerializableMembers(data);
 
             serializableMembers.ForEach((member) => memberByName[member.XmlMemberAttribute.PreferredName ?? member.Name] = member);
             this.Deserialize(reader, data.GetType().Name, memberByName);

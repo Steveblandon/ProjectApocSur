@@ -18,6 +18,7 @@
         public override void Setup()
         {
             base.Setup();
+
             if (!Directory.Exists(extendedTestDataPath))
             {
                 Directory.CreateDirectory(extendedTestDataPath);
@@ -49,8 +50,8 @@
             defs.injuryDefs.Add(new InjuryDef());
             defs.statDefs.Add(new StatDef());
 
-            AssertNullExceptionTryCatch<Exception>(() => StorageUtility.SaveData(defs, emptyUri, StorageMode.Absolute));
-            AssertNullExceptionTryCatch<Exception>(() => StorageUtility.LoadData(out defs, emptyUri, StorageMode.Absolute));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => StorageUtility.SaveData(defs, emptyUri, StorageMode.Absolute));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => StorageUtility.LoadData(out defs, emptyUri, StorageMode.Absolute));
         }
 
         [Test]
@@ -58,7 +59,7 @@
         {
             var defs = new DefinitionFinder.Defs();
 
-            AssertNullExceptionTryCatch<Exception>(() => StorageUtility.LoadData(out defs, uri, StorageMode.Absolute));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => StorageUtility.LoadData(out defs, uri, StorageMode.Absolute));
         }
     }
 }

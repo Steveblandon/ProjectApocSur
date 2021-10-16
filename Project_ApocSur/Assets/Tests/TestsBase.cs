@@ -19,12 +19,12 @@
             }
         }
 
-        public static void AssertNullExceptionTryCatch(Action codeToRun)
+        public static void Assert_NoExceptionThrownTryCatch(Action codeToRun)
         {
-            AssertNullExceptionTryCatch<Exception>(codeToRun);
+            Assert_NoExceptionThrownTryCatch<Exception>(codeToRun);
         }
 
-        public static void AssertNullExceptionTryCatch<T>(Action codeToRun) where T : Exception
+        public static void Assert_NoExceptionThrownTryCatch<T>(Action codeToRun) where T : Exception
         {
             TryCatch(codeToRun, out T thrownException);
             
@@ -35,7 +35,7 @@
             }
         }
 
-        public static void AssertNotNullExceptionTryCatch<T>(Action codeToRun, out T thrownException) where T : Exception
+        public static void Assert_ExceptionThrownTryCatch<T>(Action codeToRun, out T thrownException) where T : Exception
         {
             TryCatch(codeToRun, out thrownException);
 

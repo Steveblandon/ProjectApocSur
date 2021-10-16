@@ -1,8 +1,7 @@
 ﻿namespace Projapocsur.World
 {
-    using System.Collections.Generic;
-    using Projapocsur.Common.Serialization;
     using Projapocsur;
+    using Projapocsur.Common.Serialization;
 
     /// <summary>
     /// <para>
@@ -13,9 +12,14 @@
     /// prefix.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    /// <remarks>
+    /// NOTICE: Don't use this as a key in a hash table, it won't work. Use the DefRefName instead.
+    /// </remarks>
     [XmlSerializable]
     public class DefRef<T> where T : Def
     {
+        private T defInternal;
+
         public DefRef() { }
 
         public DefRef(string refDefName)
@@ -26,16 +30,17 @@
         [XmlMember(isAttribute:true)]
         public string RefDefName { get; private set; }
 
-        public T Def { get; private set; }
-
-        public void LinkToDef()
+        public T Def 
         {
-            this.Def = DefinitionFinder.Find<T>(this.RefDefName);
-        }
-    }
+            get 
+            {
+                if (this.defInternal == null)
+                {
+                    this.defInternal = DefinitionFinder.Find<T>(this.RefDefName);
+                }
 
-    public static class DefRefExtensions
-    {
-        public static void LinkDef<T>(this List<DefRef<T>> defRefs) where T : Def => defRefs.ForEach((defRef) => defRef.LinkToDef());
+                return this.defInternal;
+            } 
+        }
     }
 }

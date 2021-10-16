@@ -113,5 +113,15 @@
                 return new Stat(this.Def.Name, this.Value, useMinMaxLimiters: false);
             }
         }
+
+        public bool IsAtMinValue()
+        {
+            return this.Value == this.MinValue;
+        }
+
+        public bool IsAtMaxValue()
+        {
+            return this.Value == this.MaxValue;
+        }
     }
 }

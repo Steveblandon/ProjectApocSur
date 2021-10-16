@@ -4,7 +4,7 @@
     using NUnit.Framework;
     using Projapocsur.World;
 
-    public class InjuryTests : TestsBase
+    public class InjuryTests : DefDependantTestsBase
     {
         private static InjuryProcessingContext injuryProcessingContext;     // note, private fields get lost after setup, need to be static to be persistant
 
@@ -12,16 +12,14 @@
         {
             base.Setup();
 
-            AssertNullExceptionTryCatch<Exception>(() => DefinitionFinder.Init(TestDataPath));
-
             Stat bloodLoss = null;
-            AssertNullExceptionTryCatch<Exception>(() => bloodLoss = new Stat(DefNameOf.Stat.BloodLoss, 0, 100));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => bloodLoss = new Stat(DefNameOf.Stat.BloodLoss, 0, 100));
 
             Stat healingRate = null;
-            AssertNullExceptionTryCatch<Exception>(() => healingRate = new Stat(DefNameOf.Stat.HealingRate, 100, false));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => healingRate = new Stat(DefNameOf.Stat.HealingRate, 100, false));
 
             Stat pain = null;
-            AssertNullExceptionTryCatch<Exception>(() => pain = new Stat(DefNameOf.Stat.Pain, 0, 100));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => pain = new Stat(DefNameOf.Stat.Pain, 0, 100));
 
             injuryProcessingContext = new InjuryProcessingContext()
             {
@@ -34,15 +32,14 @@
         [Test]
         public void TestLaceration_StatEffects_And_DefaultHealing()
         {
-            float cutHealNeeded = 0f;
-            AssertNullExceptionTryCatch<Exception>(() => cutHealNeeded = DefinitionFinder.Find<InjuryDef>(DefNameOf.Injury.Laceration).HealThreshold);
+            float cutHealNeeded = Config.DefaultInjuryHealThreshold;
 
             Injury cutWound = null;
-            AssertNullExceptionTryCatch<Exception>(() => cutWound = new Injury(DefNameOf.Injury.Laceration, SeverityLevel.Minor));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => cutWound = new Injury(DefNameOf.Injury.Laceration, SeverityLevel.Minor));
 
             float healingRateValue = cutHealNeeded / 2 / cutWound.HealingRateMultiplier;    // we set this up like this so that no matter what the healing rate multiplier is, the wound heals in 2 updates
-            var context = new InjuryProcessingContext();
-            injuryProcessingContext.CopyTo(context);
+
+            injuryProcessingContext.CopyTo(out InjuryProcessingContext context);
             context.HealingRate = new Stat(DefNameOf.Stat.HealingRate, healingRateValue, false);
 
             float previousPainValue = context.Pain.Value;
@@ -70,15 +67,14 @@
         [Test]
         public void TestBruise_StatEffects_And_OnDestroyEffect()
         {
-            float bruiseHealNeeded = 0f;
-            AssertNullExceptionTryCatch<Exception>(() => bruiseHealNeeded = DefinitionFinder.Find<InjuryDef>(DefNameOf.Injury.Bruise).HealThreshold);
+            float bruiseHealNeeded = Config.DefaultInjuryHealThreshold;
 
             Injury bruise = null;
-            AssertNullExceptionTryCatch<Exception>(() => bruise = new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => bruise = new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
 
             float healingRateValue = bruiseHealNeeded / 2 / bruise.HealingRateMultiplier;    // we set this up like this so that no matter what the healing rate multiplier is, the wound heals in 2 updates
-            var context = new InjuryProcessingContext();
-            injuryProcessingContext.CopyTo(context);
+
+            injuryProcessingContext.CopyTo(out InjuryProcessingContext context);
             context.HealingRate = new Stat(DefNameOf.Stat.HealingRate, healingRateValue, false);
 
             float previousPainValue = context.Pain.Value;
@@ -106,11 +102,10 @@
         [Test]
         public void TestSeverity_StatEffectAmplification()
         {
-            var context = new InjuryProcessingContext();
-            injuryProcessingContext.CopyTo(context);
+            injuryProcessingContext.CopyTo(out InjuryProcessingContext context);
 
             Injury fracture = null;
-            AssertNullExceptionTryCatch<Exception>(() => fracture = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Trivial));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => fracture = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Trivial));
             fracture.OnStart(context);
             fracture.OnUpdate(context);
 
@@ -119,7 +114,7 @@
             var previousPainValue = context.Pain.Value;
             var previousHealingRateMultiplier = fracture.HealingRateMultiplier;
 
-            AssertNullExceptionTryCatch<Exception>(() => fracture = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Minor));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => fracture = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Minor));
             fracture.OnStart(context);
             fracture.OnUpdate(context);
 
@@ -130,7 +125,7 @@
             previousPainValue = context.Pain.Value;
             previousHealingRateMultiplier = fracture.HealingRateMultiplier;
 
-            AssertNullExceptionTryCatch<Exception>(() => fracture = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Major));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => fracture = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Major));
             fracture.OnStart(context);
             fracture.OnUpdate(context);
 
@@ -141,7 +136,7 @@
             previousPainValue = context.Pain.Value;
             previousHealingRateMultiplier = fracture.HealingRateMultiplier;
 
-            AssertNullExceptionTryCatch<Exception>(() => fracture = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Severe));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => fracture = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Severe));
             fracture.OnStart(context);
             fracture.OnUpdate(context);
 

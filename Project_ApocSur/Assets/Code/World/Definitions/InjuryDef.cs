@@ -12,9 +12,6 @@
         public float Pain { get; private set; }
 
         [XmlMember]
-        public float HealThreshold { get; private set; } = 100;
-
-        [XmlMember]
         public float HealingRateMultiplier { get; private set; } = 1f;
     }
 }

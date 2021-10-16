@@ -15,38 +15,38 @@ namespace Projapocsur.Tests
         {
             using (var stream = File.Open(this.uri, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
             {
-                AssertNotNullExceptionTryCatch(
+                Assert_ExceptionThrownTryCatch(
                     () => XmlSerializer.Serialize(stream, new List<int>()),
                     out XmlUnsupportedTypeException typeException);
 
-                AssertNotNullExceptionTryCatch(
+                Assert_ExceptionThrownTryCatch(
                     () => XmlSerializer.Serialize(stream, new NonSerializableWithSerializableMembers()),
                     out typeException);
 
-                AssertNotNullExceptionTryCatch(
+                Assert_ExceptionThrownTryCatch(
                     () => XmlSerializer.Serialize(stream, new SerializableWithUnsupportedType()),
                     out typeException);
 
-                AssertNotNullExceptionTryCatch(
+                Assert_ExceptionThrownTryCatch(
                     () => XmlSerializer.Serialize(stream, new SerializableWithNestedUnsupportedType()),
                     out typeException);
 
-                AssertNotNullExceptionTryCatch(
+                Assert_ExceptionThrownTryCatch(
                     () => XmlSerializer.Serialize(stream, new SerializableWithNoDefaultValueAndParamaterlessPublicConstructorType()),
                     out XmlInvalidException invalidException);
                 Assert.IsTrue(invalidException.Message.Contains("instantiatable"));
 
-                AssertNotNullExceptionTryCatch(
+                Assert_ExceptionThrownTryCatch(
                     () => XmlSerializer.Serialize(stream, new SerializableWithCircularDependencySelf()),
                     out invalidException);
                 Assert.IsTrue(invalidException.Message.Contains("circular dependency"));
 
-                AssertNotNullExceptionTryCatch(
+                Assert_ExceptionThrownTryCatch(
                     () => XmlSerializer.Serialize(stream, new SerializableWithCircularDependencyRef1()),
                     out invalidException);
                 Assert.IsTrue(invalidException.Message.Contains("circular dependency"));
 
-                AssertNotNullExceptionTryCatch(
+                Assert_ExceptionThrownTryCatch(
                     () => XmlSerializer.Serialize(stream, new SerializableWithComplexStoredAsAttribute()),
                     out invalidException);
                 Assert.IsTrue(invalidException.Message.Contains("attribute"));
@@ -62,10 +62,10 @@ namespace Projapocsur.Tests
             Assert.AreEqual(valueToSerialize, objWithData.ValueToSerialize);
             Assert.AreEqual(valueToNotSerialize, objWithData.ValueToNotSerialize);
 
-            AssertNullExceptionTryCatch<Exception>(() => this.WriteToFile(objWithData));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.WriteToFile(objWithData));
 
             var readObj = new SerializableWithPrivateMemberAndIgnoredField();
-            AssertNullExceptionTryCatch<Exception>(() => this.ReadFromFile(out readObj));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.ReadFromFile(out readObj));
 
             Assert.AreEqual(valueToSerialize, readObj.ValueToSerialize);
             Assert.AreNotEqual(valueToNotSerialize, readObj.ValueToNotSerialize);
@@ -80,10 +80,10 @@ namespace Projapocsur.Tests
             Assert.AreEqual(expectedFieldValue, objWithData.ValField);
             Assert.AreEqual(expectedPropValue, objWithData.ValProp);
 
-            AssertNullExceptionTryCatch<Exception>(() => this.WriteToFile(objWithData));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.WriteToFile(objWithData));
 
             var readObj = new SerializableWithFieldsAndProperties();
-            AssertNullExceptionTryCatch<Exception>(() => this.ReadFromFile(out readObj));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.ReadFromFile(out readObj));
 
             Assert.AreEqual(expectedFieldValue, readObj.ValField);
             Assert.IsTrue(expectedPropValue == readObj.ValProp);
@@ -100,10 +100,10 @@ namespace Projapocsur.Tests
             Assert.AreEqual(expectedInt, objWithData.ValProp_int);
             Assert.IsTrue(expectedStr == objWithData.ValProp_str);
 
-            AssertNullExceptionTryCatch<Exception>(() => this.WriteToFile(objWithData));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.WriteToFile(objWithData));
 
             var readObj = new SerializableWithValuesStoredAsAttribute();
-            AssertNullExceptionTryCatch<Exception>(() => this.ReadFromFile(out readObj));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.ReadFromFile(out readObj));
 
             Assert.AreEqual(expectedInt, readObj.ValProp_int);
             Assert.IsTrue(expectedStr == readObj.ValProp_str);
@@ -120,10 +120,10 @@ namespace Projapocsur.Tests
             Assert.AreEqual(expectedFieldValue, objWithData.complexType.ValField);
             Assert.IsTrue(expectedPropValue == objWithData.ValProp_str);
 
-            AssertNullExceptionTryCatch<Exception>(() => this.WriteToFile(objWithData));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.WriteToFile(objWithData));
 
             var readObj = new SerializableWithValuesStoredWithPreferredNames();
-            AssertNullExceptionTryCatch<Exception>(() => this.ReadFromFile(out readObj));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.ReadFromFile(out readObj));
 
             Assert.AreEqual(expectedFieldValue, readObj.complexType.ValField);
             Assert.IsTrue(expectedPropValue == readObj.ValProp_str);
@@ -141,10 +141,10 @@ namespace Projapocsur.Tests
             objWithData.refList = expectedComplexTypeWithList;
             objWithData.vals = expectedlistOfLists;
 
-            AssertNullExceptionTryCatch<Exception>(() => this.WriteToFile(objWithData));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.WriteToFile(objWithData));
 
             var readObj = new SerializableWithNestedLists();
-            AssertNullExceptionTryCatch<Exception>(() => this.ReadFromFile(out readObj));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.ReadFromFile(out readObj));
 
             Assert.IsNotNull(readObj.wellNested);
             Assert.IsNotNull(readObj.refList?.vals);
@@ -187,10 +187,10 @@ namespace Projapocsur.Tests
             Assert.AreEqual(expectedInherritedPriv, objWithData.NonInherritedSerializableField);
             Assert.AreEqual(expectedInherritedProt, objWithData.InherritedVal_protected);
 
-            AssertNullExceptionTryCatch<Exception>(() => this.WriteToFile(objWithData));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.WriteToFile(objWithData));
 
             var readObj = new SerializableChild();
-            AssertNullExceptionTryCatch<Exception>(() => this.ReadFromFile(out readObj));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => this.ReadFromFile(out readObj));
 
             Assert.AreEqual(objWithData.mainVal, readObj.mainVal);
             Assert.AreEqual(objWithData.inherritedVal, readObj.inherritedVal);

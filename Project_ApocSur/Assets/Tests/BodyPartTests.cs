@@ -5,7 +5,7 @@
     using NUnit.Framework;
     using Projapocsur.World;
 
-    public class BodyPartTests : TestsBase
+    public class BodyPartTests : DefDependantTestsBase
     {
         private static InjuryProcessingContext injuryProcessingContext;
 
@@ -13,42 +13,37 @@
         {
             base.Setup();
 
-            AssertNullExceptionTryCatch<Exception>(() => DefinitionFinder.Init(TestDataPath));
-
             Stat bloodLoss = null;
-            AssertNullExceptionTryCatch<Exception>(() => bloodLoss = new Stat(DefNameOf.Stat.BloodLoss, 0, 100));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => bloodLoss = new Stat(DefNameOf.Stat.BloodLoss, 0, 100));
 
             Stat healingRate = null;
-            AssertNullExceptionTryCatch<Exception>(() => healingRate = new Stat(DefNameOf.Stat.HealingRate, 100, false));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => healingRate = new Stat(DefNameOf.Stat.HealingRate, 100, false));
 
             Stat pain = null;
-            AssertNullExceptionTryCatch<Exception>(() => pain = new Stat(DefNameOf.Stat.Pain, 0, 100));
+            Assert_NoExceptionThrownTryCatch<Exception>(() => pain = new Stat(DefNameOf.Stat.Pain, 0, 100));
 
-            injuryProcessingContext = new InjuryProcessingContext()
-            {
-                BloodLoss = bloodLoss,
-                HealingRate = healingRate,
-                Pain = pain
-            };
+            injuryProcessingContext = new InjuryProcessingContext(pain, bloodLoss, healingRate);
         }
 
         [Test]
         public void TestTakeDamage()
         {
-            InjuryProcessingContext context = new InjuryProcessingContext();
-            injuryProcessingContext.CopyTo(context);
+            injuryProcessingContext.CopyTo(out InjuryProcessingContext context);
 
             BodyPart bodyPart = new BodyPart(DefNameOf.BodyPart.Human_Arm);
             bodyPart.OnStart(context);
 
             var injuriesNames = new List<string>() { DefNameOf.Injury.Bruise, DefNameOf.Injury.Fracture };
 
-            foreach (var threshold in SeverityConfig.SeverityThresholds)
+            foreach (var threshold in Config.SeverityThresholds)
             {
-                AssertNullExceptionTryCatch(() => bodyPart.TakeDamage(bodyPart.HitPoints.MaxValue * threshold.Key - 1, injuriesNames));
+                Assert_NoExceptionThrownTryCatch(() => bodyPart.TakeDamage(bodyPart.HitPoints.MaxValue * threshold.Key - 1, injuriesNames));
                 bodyPart.OnUpdate(context);     // due to how injuries processing works now, new injuries will only be exposed after the next update call after taking damage
 
-                Assert.AreEqual(injuriesNames.Count, bodyPart.Injuries.Count);
+                if (!bodyPart.IsDestroyed)
+                {
+                    Assert.AreEqual(injuriesNames.Count, bodyPart.Injuries.Count);
+                }
 
                 foreach (var injury in bodyPart.Injuries)
                 {
@@ -64,14 +59,13 @@
         [Test]
         public void TestHealedInjury()
         {
-            InjuryProcessingContext context = new InjuryProcessingContext();
-            injuryProcessingContext.CopyTo(context);
+            injuryProcessingContext.CopyTo(out InjuryProcessingContext context);
 
             BodyPart bodyPart = new BodyPart(DefNameOf.BodyPart.Human_Arm);
 
-            AssertNullExceptionTryCatch(() => bodyPart.OnStart(context));       // nothing should happen here since there are no injuries
-            AssertNullExceptionTryCatch(() => bodyPart.OnUpdate(context));      // nothing should happen here since there are no injuries
-            AssertNullExceptionTryCatch(() => bodyPart.OnDestroy(context));     // nothing should happen here since there are no injuries
+            Assert_NoExceptionThrownTryCatch(() => bodyPart.OnStart(context));       // nothing should happen here since there are no injuries
+            Assert_NoExceptionThrownTryCatch(() => bodyPart.OnUpdate(context));      // nothing should happen here since there are no injuries
+            Assert_NoExceptionThrownTryCatch(() => bodyPart.OnDestroy(context));     // nothing should happen here since there are no injuries
 
             var injuriesNames = new List<string>() { DefNameOf.Injury.Laceration, DefNameOf.Injury.Bruise, DefNameOf.Injury.Fracture };
             float painBeforeDamage = context.Pain.Value;
@@ -103,7 +97,7 @@
             Assert.IsNotNull(bruise);
             Assert.IsTrue(bruise.HealingRateMultiplier > 0);
             Assert.AreEqual(100, context.HealingRate.Value);
-            Assert.AreEqual(100, bruise.Def.HealThreshold);
+            Assert.AreEqual(100, Config.DefaultInjuryHealThreshold);
 
             while (!bruise.IsHealed)
             {

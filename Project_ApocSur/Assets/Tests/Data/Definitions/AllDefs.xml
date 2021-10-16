@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <!-- ======================= STATS ================ -->
   <statDefs>
@@ -86,44 +86,45 @@
 
   <!-- ======================= BODY PARTS ================ -->
   <bodyPartDefs>
-    <BodyPartDef  Name="Human_Leg">
-      <Label>Leg</Label>
+    <BodyPartDef  Name="Human_Head">
+      <Label>Head</Label>
       <Description></Description>
       <Size>2</Size>
-      <Height>0.85</Height>
-      <FloorOffset>0</FloorOffset>
-      <MaxHitpoints>200</MaxHitpoints>
-      <HealingRate>0</HealingRate>      
+      <BaseLength>0.21</BaseLength>
+      <BaseFloorOffset>1.52</BaseFloorOffset>
+      <MaxHitpoints>50</MaxHitpoints>
+      <HealingRate>0</HealingRate>
+    </BodyPartDef>
+
+    <BodyPartDef  Name="Human_Torso">
+      <Label>Torso</Label>
+      <Description></Description>
+      <Size>5</Size>
+      <BaseLength>0.64</BaseLength>
+      <BaseFloorOffset>0.85</BaseFloorOffset>
+      <MaxHitpoints>400</MaxHitpoints>
+      <HealingRate>0</HealingRate>
     </BodyPartDef>
     
     <BodyPartDef  Name="Human_Arm">
       <Label>Arm</Label>
       <Description></Description>
       <Size>1</Size>
-      <Height>0.56</Height>
-      <FloorOffset>0.93</FloorOffset>
+      <BaseLength>0.56</BaseLength>
+      <BaseFloorOffset>0.93</BaseFloorOffset>
       <MaxHitpoints>100</MaxHitpoints>
       <HealingRate>0</HealingRate>
     </BodyPartDef>
-    
-    <BodyPartDef  Name="Human_Torso">
-      <Label>Torso</Label>
-      <Description></Description>
-      <Size>5</Size>
-      <Height>0.64</Height>
-      <FloorOffset>0.85</FloorOffset>
-      <MaxHitpoints>400</MaxHitpoints>
-      <HealingRate>0</HealingRate>
-    </BodyPartDef>
-    
-    <BodyPartDef  Name="Human_Head">
-      <Label>Head</Label>
+
+    <BodyPartDef  Name="Human_Leg">
+      <Label>Leg</Label>
       <Description></Description>
       <Size>2</Size>
-      <Height>0.21</Height>
-      <FloorOffset>1.52</FloorOffset>
-      <MaxHitpoints>50</MaxHitpoints>
+      <BaseLength>0.85</BaseLength>
+      <BaseFloorOffset>0</BaseFloorOffset>
+      <MaxHitpoints>200</MaxHitpoints>
       <HealingRate>0</HealingRate>
     </BodyPartDef>
+    
   </bodyPartDefs>
 </Defs>

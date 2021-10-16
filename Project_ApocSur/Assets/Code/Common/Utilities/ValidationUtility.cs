@@ -40,21 +40,7 @@
         /// <param name="param"> The parameter to validate.</param>
         public static void ThrowIfNullOrEmpty<T>(string paramName, ICollection<T> param)
         {
-            if (param == null || !param.Any())
-            {
-                throw new ArgumentException(paramName, "can not be null or empty");
-            }
-        }
-
-        /// <summary>
-        /// Validates a container object, making sure its not null or empty.
-        /// </summary>
-        /// <typeparam name="T"> the data type in the container.</typeparam>
-        /// <param name="paramName"> The name of the parameter to display in the error log.</param>
-        /// <param name="param"> The parameter to validate.</param>
-        public static void ThrowIfNullOrEmpty<T>(string paramName, IEnumerable<T> param)
-        {
-            if (param == null || !param.Any())
+            if (param.IsNullOrEmpty())
             {
                 throw new ArgumentException(paramName, "can not be null or empty");
             }

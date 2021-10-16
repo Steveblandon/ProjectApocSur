@@ -9,10 +9,10 @@
         public int Size { get; private set; }
 
         [XmlMember]
-        public float Height { get; private set; }
+        public float BaseLength { get; private set; }
 
         [XmlMember]
-        public float FloorOffset { get; private set; }
+        public float BaseFloorOffset { get; private set; }
 
         [XmlMember]
         public float MaxHitpoints { get; private set; }

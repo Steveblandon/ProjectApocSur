@@ -24,63 +24,77 @@
         protected List<float> bodyHitChances = new List<float>();
 
         [XmlMember]
-        private int withinRangeBodySize;
+        protected int withinRangeBodySize;
 
-        private Random random = new Random();
-
-        public BodyHitBox(Range targetRange, List<BodyPart> bodyParts)
+        public BodyHitBox(Range targetRange, List<BodyPart> bodyParts, float bodyPartLengthMultiplier)
         {
             this.TargetRange = targetRange;
-            this.Calibrate(bodyParts);
+            this.Calibrate(bodyParts, bodyPartLengthMultiplier);
         }
 
         [XmlMember]
-        public Range TargetRange { get; }
+        public Range TargetRange { get; private set; }
 
-        public void Calibrate(List<BodyPart> bodyParts)
+        [XmlMember]
+        public bool IsEmpty { get; private set; }
+
+        public void Calibrate(List<BodyPart> bodyParts, float bodyPartLengthMultiplier = 1f)
         {
             this.bodyHitChances = new List<float>(bodyParts.Count);
             this.withinRangeBodySize = 0;
 
             foreach (var bodyPart in bodyParts)
             {
-                withinRangeBodySize += bodyPart.Def.Size;
-                float heightFromFloor = bodyPart.Def.Height + bodyPart.Def.FloorOffset;
-                float heightWithinRange = bodyPart.Def.Height;
-                bool isfloorOffsetWithinBounds = this.TargetRange.IsValueWithinBounds(bodyPart.Def.FloorOffset);
-                bool isHeightWithinBounds = this.TargetRange.IsValueWithinBounds(heightFromFloor);
+                float adjustedLength = bodyPart.Length * bodyPartLengthMultiplier;
+                float adjustedFloorOffset = bodyPart.FloorOffset * bodyPartLengthMultiplier;
+                float adjustedFloorHeight = adjustedLength + adjustedFloorOffset;
+                float lengthWithinRange = adjustedLength;      // begin by assuming the entire length is within range
+                bool isfloorOffsetWithinBounds = this.TargetRange.IsValueWithinBounds(adjustedFloorOffset);
+                bool isHeightWithinBounds = this.TargetRange.IsValueWithinBounds(adjustedFloorHeight);
 
                 if (isfloorOffsetWithinBounds && !isHeightWithinBounds)
                 {
-                    heightWithinRange = this.TargetRange.UpperBound - bodyPart.Def.FloorOffset;
+                    lengthWithinRange = this.TargetRange.UpperBound - adjustedFloorOffset;
                 }
                 else if (!isfloorOffsetWithinBounds && isHeightWithinBounds)
                 {
-                    heightWithinRange = heightFromFloor - this.TargetRange.LowerBound;
+                    lengthWithinRange = adjustedFloorHeight - this.TargetRange.LowerBound;
                 }
                 else if (!isfloorOffsetWithinBounds && !isHeightWithinBounds)
                 {
-                    heightWithinRange = 0;
+                    lengthWithinRange = 0;
+                }
+
+                if (lengthWithinRange > 0)
+                {
+                    this.withinRangeBodySize += bodyPart.Def.Size;
                 }
 
                 // factor in the portion of body part within range for hit chance
-                float hitChance = heightWithinRange / bodyPart.Def.Height;
-                bodyHitChances.Add(hitChance);
+                float hitChance = lengthWithinRange / adjustedLength;
+                this.bodyHitChances.Add(hitChance);
             }
 
-            float totalHitChances = 0;
-
-            // factor in body part size relative to all body parts within range for hit chance
-            for (int index = 0; index < bodyHitChances.Count; index++)
+            if (this.withinRangeBodySize > 0)
             {
-                bodyHitChances[index] *= (bodyParts[index].Def.Size / (float) this.withinRangeBodySize);
-                totalHitChances += bodyHitChances[index];
+                float totalHitChances = 0;
+
+                // factor in body part size relative to all body parts within range for hit chance
+                for (int index = 0; index < bodyHitChances.Count; index++)
+                {
+                    bodyHitChances[index] *= (bodyParts[index].Def.Size / (float)this.withinRangeBodySize);
+                    totalHitChances += bodyHitChances[index];
+                }
+
+                // make hit chance proportional to total hit chances, this is so that all hit chances will always add up to 1 and there is no chance to miss
+                for (int index = 0; index < bodyHitChances.Count; index++)
+                {
+                    bodyHitChances[index] /= totalHitChances;
+                }
             }
-
-            // make hit chance proportional to total hit chances, this is so that all hit chances will always add up to 1 and there is no chance to miss
-            for (int index = 0; index < bodyHitChances.Count; index++)
+            else
             {
-                bodyHitChances[index] /= totalHitChances;
+                this.IsEmpty = true;
             }
         }
 
@@ -91,7 +105,7 @@
                 throw new ArgumentException($"count = {this.bodyHitChances.Count}, expected count = {bodyParts.Count}", nameof(this.bodyHitChances));
             }
 
-            float randValue = this.random.Next(0, 10) / 10f;
+            double randValue = RandomNumberGenerator.Roll();
             float trailingSum = 0;
 
             for (int index = 0; index < this.bodyHitChances.Count; index++)

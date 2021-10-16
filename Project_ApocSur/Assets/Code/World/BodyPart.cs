@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Projapocsur.Common;
     using Projapocsur.Common.Serialization;
-    using static Projapocsur.World.SeverityConfig;
+    using static Projapocsur.World.Config;
 
     [XmlSerializable]
     public class BodyPart : Thing<BodyPartDef>
@@ -16,13 +16,27 @@
 
         public BodyPart() { }
 
-        public BodyPart(string defName) : base(defName)
+        public BodyPart(string defName, float lengthMultiplier = 1f) : base(defName)
         {
             this.HitPoints = new Stat(DefNameOf.Stat.HitPoints, this.Def.MaxHitpoints, true);
+            this.Length = this.Def.BaseLength * lengthMultiplier;
+            this.FloorOffset = this.Def.BaseFloorOffset * lengthMultiplier;
+            this.FloorHeight = this.FloorOffset + this.Length;
         }
 
         [XmlMember]
         public Stat HitPoints { get; private set; }
+
+        [XmlMember]
+        public float FloorHeight { get; private set; }
+
+        [XmlMember]
+        public float FloorOffset { get; private set; }
+
+        [XmlMember]
+        public float Length { get; private set; }
+
+        public bool IsDestroyed { get; private set; }
 
         public IReadOnlyCollection<Injury> Injuries { get => this.injuries; }
 
@@ -73,6 +87,12 @@
         {
             SeverityLevel severity = GetSeverityLevelFromPercentage(damage / this.HitPoints.MaxValue);
             this.HitPoints -= damage;
+
+            if (this.HitPoints.IsAtMinValue())
+            {
+                this.IsDestroyed = true;
+                return;
+            }
 
             foreach (string defName in injuryDefNames)
             {
