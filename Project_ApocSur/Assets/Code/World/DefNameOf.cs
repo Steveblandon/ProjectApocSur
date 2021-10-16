@@ -9,6 +9,11 @@
     {
         // Note: keep ordered by alphabetical order
 
+        public static class Body
+        {
+            public static string Human { get; } = nameof(Human);
+        }
+
         public static class BodyPart
         {
             public static string Human_Arm { get; } = nameof(Human_Arm);
@@ -29,6 +34,19 @@
             public static string Laceration { get; } = nameof(Laceration);
         }
 
+        public static class Stance
+        {
+            public static string Stand { get; } = nameof(Stand);
+
+            public static string Sit { get; } = nameof(Sit);
+
+            public static string Crouch { get; } = nameof(Crouch);
+
+            public static string SitOnGround { get; } = nameof(SitOnGround);
+
+            public static string Prone { get; } = nameof(Prone);
+        }
+
         public static class Stat
         {
             // ===================================================================== // 
@@ -39,6 +57,8 @@
             public static string BloodLoss { get; } = nameof(BloodLoss);
 
             public static string HealingRate { get; } = nameof(HealingRate);
+
+            public static string Height { get; } = nameof(Height);
 
             public static string HitPoints { get; } = nameof(HitPoints);
 

@@ -69,6 +69,30 @@
     </InjuryDef>
   </injuryDefs>
 
+  <!-- ======================= STANCES ================ -->
+  <stanceDefs>
+    <StanceDef Name="Stand">
+      <Label>Standing</Label>
+      <HeightMultiplier>1</HeightMultiplier>
+    </StanceDef>
+    <StanceDef Name="Sit">
+      <Label>Sitting</Label>
+      <HeightMultiplier>0.8</HeightMultiplier>
+    </StanceDef>
+    <StanceDef Name="Crouch">
+      <Label>Crouching</Label>
+      <HeightMultiplier>0.6</HeightMultiplier>
+    </StanceDef>
+    <StanceDef Name="SitOnGround">
+      <Label>Sitting</Label>
+      <HeightMultiplier>0.4</HeightMultiplier>
+    </StanceDef>
+    <StanceDef Name="Prone">
+      <Label>Laying down</Label>
+      <HeightMultiplier>0.1</HeightMultiplier>
+    </StanceDef>
+  </stanceDefs>
+
   <!-- ======================= BODIES ================ -->
   <bodyDefs>
     <BodyDef Name="Human">

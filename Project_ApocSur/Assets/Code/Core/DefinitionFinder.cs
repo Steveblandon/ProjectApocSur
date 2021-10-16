@@ -134,6 +134,9 @@
 
             [XmlMember]
             public List<BodyPartDef> bodyPartDefs;
+
+            [XmlMember]
+            public List<StanceDef> stanceDefs;
         }
     }
 }

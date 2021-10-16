@@ -1,0 +1,23 @@
+﻿namespace Projapocsur.World
+{
+    using System.Collections.Generic;
+    using Projapocsur.Common.Serialization;
+
+    [XmlSerializable]
+    public class StanceHitBoxes
+    {
+        public StanceHitBoxes() { }
+
+        public StanceHitBoxes(DefRef<StanceDef> defRef, List<BodyHitBox> hitBoxes)
+        {
+            this.StanceDefRef = defRef;
+            this.HitBoxes = hitBoxes;
+        }
+
+        [XmlMember]
+        public DefRef<StanceDef> StanceDefRef { get; private set; }
+
+        [XmlMember]
+        public List<BodyHitBox> HitBoxes { get; private set; }
+    }
+}
