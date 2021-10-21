@@ -7,6 +7,7 @@
         public const float DefaultHealingRateRangeMultiplier = 100;
         public const float DefaultBloodLossThreshold = 100;
         public const float DefaultInjuryHealThreshold = 100;
+        public const float DefaultBleedingRateOnLimbLoss = 10;
 
         public static readonly IReadOnlyDictionary<SeverityLevel, float> SeverityAmpliflier = new Dictionary<SeverityLevel, float>()
         {

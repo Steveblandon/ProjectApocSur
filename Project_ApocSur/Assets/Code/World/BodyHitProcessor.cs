@@ -57,28 +57,24 @@
             }
         }
 
-        /// <summary>
-        /// Processes a body hit.
-        /// </summary>
-        /// <returns>The index of the damaged body part.</returns>
-        public int Process(BodyHitInfo hit, List<BodyPart> bodyParts, DefRef<StanceDef> currentStance)
+        public (BodyPart bodyPart, int index) ProcessHit(BodyHitInfo hit, List<BodyPart> bodyParts, DefRef<StanceDef> currentStance)
         {
             var hitBoxes = this.hitBoxesPerStance[currentStance.RefDefName].HitBoxes;
 
-            for (int index = 0; index < hitBoxes.Count; index++)
+            for (int hitboxIndex = 0; hitboxIndex < hitBoxes.Count; hitboxIndex++)
             {
-                var currentHitBox = hitBoxes[index];
+                var currentHitBox = hitBoxes[hitboxIndex];
 
                 if (currentHitBox.TargetRange.IsValueWithinBounds(hit.Height))
                 {
-                    var hitBodyPart = currentHitBox.GetHitBodyPart(bodyParts);
+                    var (hitBodyPart, bodyPartIndex) = currentHitBox.GetHitBodyPart(bodyParts);
                     hitBodyPart.TakeDamage(hit.Damage, hit.InjuryDefNames);
-                    return index;
+                    return (hitBodyPart, bodyPartIndex);
                 }
             }
 
             LogUtility.Log(LogLevel.Warning, $"processed a bodyHit miss, but that is not expected inside {nameof(BodyHitProcessor)}");
-            return -1;
+            return (null, -1);
         }
 
         public void ReCalibrate(List<BodyPart> bodyParts)

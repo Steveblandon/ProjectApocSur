@@ -63,7 +63,7 @@
         {
             if (this.useMinMaxLimiters)
             {
-                float newValue = this.Value - amount;
+                float newValue = Math.Min(this.Value - amount, this.MaxValue);   // we compare it to the max value incase of a positive amount
                 this.Value = Math.Max(newValue, this.MinValue);
             }
             else
@@ -76,7 +76,7 @@
         {
             if (this.useMinMaxLimiters)
             {
-                float newValue = this.Value + amount;
+                float newValue = Math.Max(this.Value + amount, this.MinValue);      // we compare it to the min value incase of a negative amount
                 this.Value = Math.Min(newValue, this.MaxValue);
             }
             else

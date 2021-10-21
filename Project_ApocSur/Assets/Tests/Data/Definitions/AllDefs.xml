@@ -64,7 +64,7 @@
       <Label>Laceration</Label>
       <Description>a deep cut.</Description>
       <Pain>9</Pain>
-      <BleedingRate>5</BleedingRate>
+      <BleedingRate>50</BleedingRate>
       <HealingRateMultiplier>0.8</HealingRateMultiplier>
     </InjuryDef>
   </injuryDefs>
@@ -99,7 +99,6 @@
       <Label>Human</Label>
       <Description>Just a human.</Description>
       <MaxHeightDeviationFactor>0.13</MaxHeightDeviationFactor>
-      <MaxHitPoints>100</MaxHitPoints>
       <BaseHealingRate>1</BaseHealingRate>
       <PainThreshold>100</PainThreshold>
       <HitBoxCount>3</HitBoxCount>
@@ -131,7 +130,7 @@
       <BaseLength>0.21</BaseLength>
       <BaseFloorOffset>1.52</BaseFloorOffset>
       <MaxHitpoints>50</MaxHitpoints>
-      <HealingRate>0</HealingRate>
+      <IsVital>true</IsVital>
     </BodyPartDef>
 
     <BodyPartDef  Name="Human_Torso">
@@ -141,7 +140,7 @@
       <BaseLength>0.64</BaseLength>
       <BaseFloorOffset>0.85</BaseFloorOffset>
       <MaxHitpoints>400</MaxHitpoints>
-      <HealingRate>0</HealingRate>
+      <IsVital>true</IsVital>
     </BodyPartDef>
     
     <BodyPartDef  Name="Human_Arm">
@@ -151,7 +150,6 @@
       <BaseLength>0.56</BaseLength>
       <BaseFloorOffset>0.93</BaseFloorOffset>
       <MaxHitpoints>100</MaxHitpoints>
-      <HealingRate>0</HealingRate>
     </BodyPartDef>
 
     <BodyPartDef  Name="Human_Leg">
@@ -161,7 +159,6 @@
       <BaseLength>0.85</BaseLength>
       <BaseFloorOffset>0</BaseFloorOffset>
       <MaxHitpoints>200</MaxHitpoints>
-      <HealingRate>0</HealingRate>
     </BodyPartDef>
     
   </bodyPartDefs>

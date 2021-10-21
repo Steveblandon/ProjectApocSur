@@ -16,8 +16,8 @@
 
         [XmlMember]
         public float MaxHitpoints { get; protected set; }
-
+        
         [XmlMember]
-        public float HealingRate { get; protected set; }
+        public bool IsVital { get; protected set; }
     }
 }

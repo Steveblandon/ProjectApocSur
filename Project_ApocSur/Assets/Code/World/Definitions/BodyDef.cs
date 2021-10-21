@@ -10,9 +10,6 @@
         public float MaxHeightDeviationFactor { get; protected set; }
 
         [XmlMember]
-        public float MaxHitPoints { get; protected set; }
-
-        [XmlMember]
         public float BaseHealingRate { get; protected set; }
 
         [XmlMember]

@@ -6,9 +6,6 @@
     [XmlSerializable]
     public class Injury : Thing<InjuryDef>
     {
-        [XmlMember]
-        private float healedAmount;
-
         public Injury() { }
 
         public Injury(string defName, SeverityLevel severity) : base(defName)
@@ -36,11 +33,15 @@
         public bool IsHealed { get; protected set; }
 
         [XmlMember]
+        public float HealedAmount { get; protected set; }
+
+        [XmlMember]
         public float HealingRateMultiplier { get; protected set; }
 
         public void OnStart(InjuryProcessingContext context)
         {
             context.Pain += this.PainIncrease.Value;
+            context.BloodLoss += this.BleedingRate.Value;
         }
 
         public void OnUpdate(InjuryProcessingContext context)
@@ -49,9 +50,9 @@
 
             if (healingRate > 0)
             {
-                float newHealedAmount = this.healedAmount + healingRate;
-                this.healedAmount = Math.Min(newHealedAmount, Config.DefaultInjuryHealThreshold);
-                float healEffectMultiplier = 1f - (this.healedAmount / Config.DefaultInjuryHealThreshold);
+                float newHealedAmount = this.HealedAmount + healingRate;
+                this.HealedAmount = Math.Min(newHealedAmount, Config.DefaultInjuryHealThreshold);
+                float healEffectMultiplier = 1f - (this.HealedAmount / Config.DefaultInjuryHealThreshold);
 
                 float previousPain = this.PainIncrease.Value;
                 this.PainIncrease *= healEffectMultiplier;
@@ -62,7 +63,7 @@
                 context.Pain -= painDiff;
                 context.BloodLoss += this.BleedingRate.Value;
 
-                this.IsHealed = this.healedAmount == Config.DefaultInjuryHealThreshold;
+                this.IsHealed = this.HealedAmount == Config.DefaultInjuryHealThreshold;
             }
         }
 

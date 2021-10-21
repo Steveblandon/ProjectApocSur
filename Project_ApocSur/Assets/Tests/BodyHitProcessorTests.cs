@@ -74,7 +74,7 @@
             Assert.AreNotEqual(0, legs.Count);
 
             var hitInfo = new BodyHitInfo(legs[0].Length / 2, new List<string>(), 5);
-            Assert_NoExceptionThrownTryCatch(() => hitProcessor.Process(hitInfo, bodyParts, humanBodyDef.DefaultStance));
+            Assert_NoExceptionThrownTryCatch(() => hitProcessor.ProcessHit(hitInfo, bodyParts, humanBodyDef.DefaultStance));
 
             var damagedLegs = new List<BodyPart>();
             damagedLegs.AddRange(legs, leg => leg.HitPoints.Value < leg.HitPoints.MaxValue);    // since hit was at leg length, we expect one of the legs to be damaged
@@ -88,7 +88,7 @@
 
             while (!legs[0].IsDestroyed || !legs[1].IsDestroyed)
             {
-                hitProcessor.Process(hitInfo, bodyParts, humanBodyDef.DefaultStance);
+                hitProcessor.ProcessHit(hitInfo, bodyParts, humanBodyDef.DefaultStance);
             }
 
             bodyParts.RemoveAll(bodyPart => bodyPart.Def.Name == DefNameOf.BodyPart.Human_Leg && bodyPart.IsDestroyed);

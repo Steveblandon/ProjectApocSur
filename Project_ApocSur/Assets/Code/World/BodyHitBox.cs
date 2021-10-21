@@ -98,7 +98,7 @@
             }
         }
 
-        public BodyPart GetHitBodyPart(List<BodyPart> bodyParts)
+        public (BodyPart bodyPart, int index) GetHitBodyPart(List<BodyPart> bodyParts)
         {
             if (this.bodyHitChances.Count != bodyParts.Count)
             {
@@ -119,11 +119,11 @@
 
                 if (randValue <= trailingSum)
                 {
-                    return bodyParts[index];
+                    return (bodyParts[index], index);
                 }
             }
 
-            return null;
+            return (null, -1);
         }
     }
 }

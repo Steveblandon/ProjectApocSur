@@ -1,9 +1,9 @@
 ﻿namespace Projapocsur.World
 {
+    using System;
     using System.Collections.Generic;
     using Projapocsur.Common;
     using Projapocsur.Common.Serialization;
-    using static Projapocsur.World.Config;
 
     [XmlSerializable]
     public class BodyPart : Thing<BodyPartDef>
@@ -38,7 +38,10 @@
         [XmlMember]
         public float Length { get; protected set; }
 
-        public bool IsDestroyed { get; protected set; }
+        [XmlMember]
+        public bool IsDamaged { get; protected set; }
+
+        public bool IsDestroyed { get; protected set; }     // not saving this as it's expected that the body part will be removed once destroyed
 
         public IReadOnlyCollection<Injury> Injuries { get => this.injuries; }
 
@@ -48,8 +51,15 @@
             this.latestContext = context;
         }
 
-        public void OnUpdate(InjuryProcessingContext context)
+        public void OnUpdate(InjuryProcessingContext context, float maxHitpointsAllowedPercentage = 1f)
         {
+            if (this.IsDestroyed)
+            {
+                return;
+            }
+
+            // process injuries
+            float injuriesHealedAmount = 0f;
             var unhealedInjuries = new Queue<Injury>();
 
             while (this.Injuries.Count > 0)
@@ -65,18 +75,38 @@
                 else
                 {
                     unhealedInjuries.Enqueue(injury);
+                    injuriesHealedAmount += injury.HealedAmount;
                 }
             }
 
+            // requeue unhealed injuries
             while (unhealedInjuries.Count > 0)
             {
                 this.injuries.Enqueue(unhealedInjuries.Dequeue());
             }
 
+            // queue new unprocessed injuries, note, this is setup this way so that new injuries from TakeDamage don't interfere with an onUpdate injury processing loop
             while (newInjuries.Count > 0)
             {
                 this.injuries.Enqueue(newInjuries.Dequeue());
             }
+
+            // heal up to the allowed max hit points, either by the default passed-in allowed amount or based on how much injuries have healed...
+            // ... what we end up with is essentially either body part heals or its healing is stunted (as far as hit points are concerned...
+            // ... since injury healing would be independent from this logic). 
+            float totalInjuriesHealNeeded = this.injuries.Count * Config.DefaultInjuryHealThreshold;
+            
+            if (totalInjuriesHealNeeded > 0)
+            {
+                float injuriesBasedMaxHitPointsAllowedPercentage = injuriesHealedAmount / totalInjuriesHealNeeded;
+                maxHitpointsAllowedPercentage = Math.Min(maxHitpointsAllowedPercentage, injuriesBasedMaxHitPointsAllowedPercentage);
+            }
+            
+            float maxHitPointsAllowed = this.HitPoints.MaxValue * maxHitpointsAllowedPercentage;
+
+            this.HitPoints += Math.Min(context.HealingRate.Value, Math.Max(0, maxHitPointsAllowed - this.HitPoints.Value));
+
+            this.IsDamaged = this.HitPoints.Value < this.HitPoints.MaxValue;
         }
 
         public void OnDestroy(InjuryProcessingContext context)
@@ -87,7 +117,7 @@
 
         public void TakeDamage(float damage, IEnumerable<string> injuryDefNames)
         {
-            SeverityLevel severity = GetSeverityLevelFromPercentage(damage / this.HitPoints.MaxValue);
+            SeverityLevel severity = Config.GetSeverityLevelFromPercentage(damage / this.HitPoints.MaxValue);
             this.HitPoints -= damage;
 
             if (this.HitPoints.IsAtMinValue())
@@ -102,6 +132,8 @@
                 injury.OnStart(latestContext);
                 this.newInjuries.Enqueue(injury);
             }
+
+            this.IsDamaged = true;
         }
     }
 }

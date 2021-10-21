@@ -61,7 +61,7 @@
 
             Assert.AreEqual(0, hitbox.HitChances[0]);   // leg is expected to be entirely out of range
             Assert.AreEqual(1, hitbox.HitChances[1]);   // torso, even if not entirely within range is now the only bodypart in range, therefore hitchance should 100%
-            Assert.AreEqual(torso, hitbox.GetHitBodyPart(bodyParts));
+            Assert.AreEqual(torso, hitbox.GetHitBodyPart(bodyParts).bodyPart);
         }
 
         [Test]
@@ -77,7 +77,7 @@
             Assert.AreEqual(range, hitbox.TargetRange);
             Assert.AreEqual(0, hitbox.HitChances.Sum());
             Assert.IsTrue(hitbox.IsEmpty);
-            Assert.IsNull(hitbox.GetHitBodyPart(bodyParts));
+            Assert.IsNull(hitbox.GetHitBodyPart(bodyParts).bodyPart);
         }
 
         [Test]
@@ -92,14 +92,14 @@
             Assert.AreEqual(bodyParts.Count, hitbox.HitChances.Count);
             Assert.AreEqual(range, hitbox.TargetRange);
             Assert.AreEqual(1, hitbox.HitChances[0]);       // leg is entirely within the target range of the hitbox, but head is not, so hit chance should be 100% for the leg, even though there are 2 body parts.
-            Assert.AreEqual(leg, hitbox.GetHitBodyPart(bodyParts));
+            Assert.AreEqual(leg, hitbox.GetHitBodyPart(bodyParts).bodyPart);
 
             range = new Range(leg.FloorHeight / 2, leg.FloorHeight);
             hitbox = new BodyHitBoxWithVisibleChances(range, bodyParts);
             Assert.AreEqual(bodyParts.Count, hitbox.HitChances.Count);
             Assert.AreEqual(range, hitbox.TargetRange);
             Assert.AreEqual(1, hitbox.HitChances[0]);       // body part is half within the target range of the hitbox, but is the only one in range, so hit chance should still be 100%.
-            Assert.AreEqual(leg, hitbox.GetHitBodyPart(bodyParts));
+            Assert.AreEqual(leg, hitbox.GetHitBodyPart(bodyParts).bodyPart);
 
             Assert.AreEqual(leg.Def.Size, hitbox.Size);     // since leg is the only part within range, hitbox size should be equal to leg's as opposed to leg's + head's
         }
