@@ -10,6 +10,12 @@
 
         private bool useMinMaxLimiters;
 
+        [XmlMember]
+        private float minValue;
+
+        [XmlMember]
+        private float maxValue;
+
         public Stat() { }
 
         public Stat(string defName, float initialValue, float maxValue, float minValue = 0f) : base(defName)
@@ -30,24 +36,22 @@
         public float Value { get; protected set; }
 
         [XmlMember]
-        public float MinValue { get; protected set; }
-
-        [XmlMember]
-        public float MaxValue { get; protected set; }
-
-        [XmlMember]
         public float DefaultValue { get; protected set; }
+
+        public float MinValue { get => this.minValue; set => this.minValue = value > this.maxValue ? this.minValue : value; }      // assert that minValue <= maxValue
+
+        public float MaxValue { get => this.maxValue; set => this.maxValue = value < this.minValue ? this.maxValue : value; }       // assert that maxValue >= minValue
 
         public static Stat operator +(Stat stat, float amount)
         {
-            stat.ApplyIncrease(amount);
+            stat.ApplyQuantity(amount);
 
             return stat;
         }
 
         public static Stat operator -(Stat stat, float amount)
         {
-            stat.ApplyReduction(amount);
+            stat.ApplyQuantity(-amount);
 
             return stat;
         }
@@ -59,20 +63,7 @@
             return stat;
         }
 
-        public void ApplyReduction(float amount)
-        {
-            if (this.useMinMaxLimiters)
-            {
-                float newValue = Math.Min(this.Value - amount, this.MaxValue);   // we compare it to the max value incase of a positive amount
-                this.Value = Math.Max(newValue, this.MinValue);
-            }
-            else
-            {
-                this.Value -= amount;
-            }
-        }
-
-        public void ApplyIncrease(float amount)
+        public void ApplyQuantity(float amount)
         {
             if (this.useMinMaxLimiters)
             {

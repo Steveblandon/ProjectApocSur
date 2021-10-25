@@ -13,6 +13,9 @@
         [XmlMember]
         private BodyHitProcessor hitProcessor;
 
+        [XmlMember]
+        private List<BodyPart> bodyParts;
+
         public Body() { }
 
         public Body(string defName) : base (defName)
@@ -31,25 +34,23 @@
                 minValue: this.Def.BaseHealingRate - healingRateRange);
 
             // instantiate body height using a gaussian based on tallest body part... simultaneously instantiate body parts to determine tallest
-            this.BodyParts = new List<BodyPart>();
+            this.bodyParts = new List<BodyPart>();
             this.injuryProcessingContext = new InjuryProcessingContext(this.Pain, this.BloodLoss, this.HealingRate);
             float heightValue = 0f;
             float heightMultiplier = (float)RandomNumberGenerator.RollGaussian() * this.Def.MaxHeightDeviationFactor * 2 - this.Def.MaxHeightDeviationFactor + 1;
-            float bodyPartsAggregateHitpoints = 0f;
             int bodyPartsAggregateSize = 0;
 
             foreach (var bodyPartDef in this.Def.BodyParts)
             {
                 var bodyPart = new BodyPart(bodyPartDef.RefDefName, lengthMultiplier: heightMultiplier);
                 bodyPart.OnStart(this.injuryProcessingContext);
-                this.BodyParts.Add(bodyPart);
+                this.bodyParts.Add(bodyPart);
                 heightValue = Math.Max(heightValue, bodyPart.FloorHeight);      // note, heightMultiplier will already be factored into the floorHeight, no need to muliply the final heightValue by it
-                bodyPartsAggregateHitpoints += bodyPart.HitPoints.Value;
                 bodyPartsAggregateSize += bodyPart.Def.Size;
             }
 
             this.Height = new Stat(DefNameOf.Stat.Height, heightValue, useMinMaxLimiters: false);
-            this.HitPoints = new Stat(DefNameOf.Stat.HitPoints, bodyPartsAggregateHitpoints);
+            this.HitPointsPercentage = new Stat(DefNameOf.Stat.HitPoints, 1);
             this.BleedingRate = new Stat(DefNameOf.Stat.BleedingRate, 0, maxValue: Config.DefaultBleedingRateOnLimbLoss * bodyPartsAggregateSize);
 
             // instantiate hit processor given all the established information
@@ -58,8 +59,7 @@
 
         #region stats
 
-        [XmlMember]
-        public List<BodyPart> BodyParts { get; protected set; }
+        public IReadOnlyList<BodyPart> BodyParts { get => this.bodyParts; }
 
         [XmlMember]
         public DefRef<StanceDef> CurrentStance { get; protected set; }
@@ -74,7 +74,7 @@
         public Stat Height { get; protected set; }
 
         [XmlMember]
-        public Stat HitPoints { get; protected set; }
+        public Stat HitPointsPercentage { get; protected set; }
 
         [XmlMember]
         public Stat Pain { get; protected set; }
@@ -93,29 +93,42 @@
                 return;
             }
 
-            if (this.BloodLoss.IsAtMaxValue())
+            if (this.BloodLoss.IsAtMaxValue())      // bled to death
             {
-                this.OnDestroy();
-                this.IsDestroyed = true;
+                this.DestroySelf();
                 return;
             }
 
+            // apply healing rate to blood loss / bleeding rate
             this.BleedingRate -= this.HealingRate.Value;
             this.BloodLoss -= this.HealingRate.Value - this.BleedingRate.Value;
 
-            float maxHitpointsPercentage = 1 - this.BloodLoss.Value / this.BloodLoss.MaxValue;
-            float maxHitpointsAllowed = this.HitPoints.MaxValue * maxHitpointsPercentage;
-            float bodyPartsAggregateHitPoints = 0f;
+            // calculate max hit points percentage allowed and update body parts
+            float maxHitPointsPercentageAllowedByBloodLoss = 1 - this.BloodLoss.Value / this.BloodLoss.MaxValue;
+            float lowestVitalPartHitPointsPercentage = 1f;
+            float averagePercentageOfAllBodyPartsHitPoints = 0f;
 
             foreach (var bodyPart in this.BodyParts)
             {
-                bodyPart.OnUpdate(this.injuryProcessingContext, maxHitpointsPercentage);
-                bodyPartsAggregateHitPoints += bodyPart.HitPoints.Value;
+                bodyPart.OnUpdate(this.injuryProcessingContext, maxHitPointsPercentageAllowedByBloodLoss);
+                var remainingHitpointsPercentage = bodyPart.HitPoints.Value / bodyPart.HitPoints.MaxValue;
+                averagePercentageOfAllBodyPartsHitPoints += remainingHitpointsPercentage;
+
+                if (bodyPart.Def.IsVital)
+                {
+                    lowestVitalPartHitPointsPercentage = Math.Min(lowestVitalPartHitPointsPercentage, remainingHitpointsPercentage);
+                }
             }
 
-            float newHitPoints = Math.Min(bodyPartsAggregateHitPoints, maxHitpointsAllowed);
-            this.HitPoints -= this.HitPoints.Value - newHitPoints;
-            this.DestroyOnZeroHitPoints();
+            averagePercentageOfAllBodyPartsHitPoints /= this.BodyParts.Count;
+
+            float maxHitpointsAllowedPercentage = Math.Min(averagePercentageOfAllBodyPartsHitPoints, Math.Min(lowestVitalPartHitPointsPercentage, maxHitPointsPercentageAllowedByBloodLoss));
+            this.HitPointsPercentage += maxHitpointsAllowedPercentage - this.HitPointsPercentage.Value;   // healing rate does not need to be applied here since it has already been applied to blood loss and body parts
+
+            if (this.HitPointsPercentage.IsAtMinValue())
+            {
+                this.DestroySelf();
+            }
         }
 
         public void OnDestroy()
@@ -130,52 +143,16 @@
 
         public void TakeDamage(BodyHitInfo hit)
         {
-             if (this.IsDestroyed)
+            if (this.IsDestroyed)
             {
                 return;
             }
 
             var (damagedBodyPart, damagedBodyPartIndex) = this.hitProcessor.ProcessHit(hit, this.BodyParts, this.CurrentStance);
 
-            if (damagedBodyPart == null)
+            if (damagedBodyPart != null && damagedBodyPart.IsDestroyed)
             {
-                return;
-            }
-
-            if (damagedBodyPart.IsDestroyed)
-            {
-                damagedBodyPart.OnDestroy(this.injuryProcessingContext);
-
-                // destruction of vital body parts = destroyed body (i.e. death).
-                if (damagedBodyPart.Def.IsVital)
-                {
-                    this.OnDestroy();
-                    this.IsDestroyed = true;
-                    return;
-                }
-                else
-                {
-                    this.BodyParts.RemoveAt(damagedBodyPartIndex);
-                    this.hitProcessor.ReCalibrate(this.BodyParts);
-                }
-
-                this.BleedingRate += Config.DefaultBleedingRateOnLimbLoss * damagedBodyPart.Def.Size;   // bleeding from limb loss proportional to its size.
-            }
-
-            if (!this.IsDestroyed)
-            {
-                // apply body damage with amplification for vital parts
-                float damage = hit.Damage;
-
-                if (damagedBodyPart.Def.IsVital)
-                {
-                    float remainingBodyPartHitPointsPercentage = damagedBodyPart.HitPoints.Value / damagedBodyPart.HitPoints.MaxValue;
-                    int amplification = (int) Math.Max(1, (1 - remainingBodyPartHitPointsPercentage) * 10f);
-                    damage *= amplification;
-                }
-
-                this.HitPoints -= damage;
-                this.DestroyOnZeroHitPoints();
+                this.RemoveBodyPartAt(damagedBodyPartIndex);
             }
         }
 
@@ -186,13 +163,27 @@
             this.injuryProcessingContext = new InjuryProcessingContext(this.Pain, this.BloodLoss, this.HealingRate);
         }
 
-        private void DestroyOnZeroHitPoints()
+        private void RemoveBodyPartAt(int index)
         {
-            if (this.HitPoints.IsAtMinValue())
+            BodyPart bodyPart = this.bodyParts[index];
+            bodyPart.OnDestroy(this.injuryProcessingContext);
+            this.bodyParts.RemoveAt(index);
+
+            if (bodyPart.Def.IsVital)    // destruction of vital body parts = destroyed body (i.e. death).
             {
-                this.OnDestroy();
-                this.IsDestroyed = true;
+                this.DestroySelf();
             }
+            else
+            {
+                this.BleedingRate += Config.DefaultBleedingRateOnLimbLoss * bodyPart.Def.Size;   // bleeding from limb loss proportional to its size.
+                this.hitProcessor.ReCalibrate(this.BodyParts);
+            }
+        }
+
+        private void DestroySelf()
+        {
+            this.OnDestroy();
+            this.IsDestroyed = true;
         }
     }
 }

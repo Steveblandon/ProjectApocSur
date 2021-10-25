@@ -1,9 +1,10 @@
 ﻿namespace Projapocsur.Tests
 {
+    using System;
     using System.Collections.Generic;
     using NUnit.Framework;
-    using Projapocsur.World;
     using Projapocsur.Common;
+    using Projapocsur.World;
 
     public class BodyTests : DefDependantTestsBase
     {
@@ -22,22 +23,20 @@
             Assert.AreEqual(body.Def.BodyParts.Count, body.BodyParts.Count);
 
             float expectedBodyHeight = 0f;
-            float expectedHitPoints = 0f;
             float expectedBodySize = 0f;
 
             foreach (var bodyPart in body.BodyParts)
             {
                 expectedBodyHeight = bodyPart.FloorHeight > expectedBodyHeight ? bodyPart.FloorHeight : expectedBodyHeight;
-                expectedHitPoints += bodyPart.HitPoints.Value;
                 expectedBodySize += bodyPart.Def.Size;
             }
 
             float maxBodyBleedRate = Config.DefaultBleedingRateOnLimbLoss * expectedBodySize;
             Assert.AreEqual(0, body.BleedingRate.Value);
-            body.BleedingRate.ApplyIncrease(maxBodyBleedRate);
+            body.BleedingRate.ApplyQuantity(maxBodyBleedRate);
             Assert.AreEqual(maxBodyBleedRate, body.BleedingRate.Value);
 
-            Assert.AreEqual(expectedHitPoints, body.HitPoints.Value);
+            Assert.AreEqual(1f, body.HitPointsPercentage.Value);
             Assert.IsTrue(expectedBodyHeight > 0f);
             Assert.AreNotEqual(0f, body.Def.MaxHeightDeviationFactor);
 
@@ -84,7 +83,7 @@
             // test bleeding to death generic scenario 
             Assert.AreEqual(0, body.BleedingRate.Value);
             Assert.IsFalse(body.IsDestroyed);
-            body.BleedingRate.ApplyIncrease(body.BleedingRate.MaxValue);
+            body.BleedingRate.ApplyQuantity(body.BleedingRate.MaxValue);
             Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
             Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());    // due to healing it should take about 2 updates for body to bleed to death
             Assert.IsTrue(body.IsDestroyed);
@@ -94,7 +93,112 @@
         }
 
         [Test]
-        public void TestHealedNonBleedingInjury()
+        public void TestDirectBodyPartDamage_DeathFromVitalPartDestruction()
+        {
+            Body body = null;
+            Assert_NoExceptionThrownTryCatch(() => body = new Body(DefNameOf.Body.Human));
+            BodyPart head = body.BodyParts.Find(bodyPart => bodyPart.Def.Name == DefNameOf.BodyPart.Human_Head);
+            Assert.IsNotNull(head);
+            head.TakeDamage(float.MaxValue, new List<string>());
+            Assert.IsTrue(head.IsDestroyed);
+            Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
+            Assert.AreEqual(0, body.HitPointsPercentage.Value);
+            Assert.IsTrue(body.IsDestroyed);
+        }
+
+        [Test]
+        public void TestDirectBodyPartDamage_BodyHitPointsAsDamagedVitalPartPercentage()
+        {
+            Body body = null;
+            float expectedPercentage = 0.5f;
+            Assert_NoExceptionThrownTryCatch(() => body = new Body(DefNameOf.Body.Human));
+
+            // apply damage to all body parts so that the average of their remaining hit points is at ~75%
+            foreach (var bodyPart in body.BodyParts)
+            {
+                if (bodyPart.Def.Name != DefNameOf.BodyPart.Human_Head)
+                {
+                    bodyPart.TakeDamage(bodyPart.HitPoints.MaxValue / 4, Array.Empty<string>());
+                }
+
+                Assert.IsFalse(bodyPart.IsDestroyed);
+            }
+
+            // apply damage to head, more than all other body parts to assert the body response
+            BodyPart head = body.BodyParts.Find(bodyPart => bodyPart.Def.Name == DefNameOf.BodyPart.Human_Head);
+            Assert.IsNotNull(head);
+            head.TakeDamage(head.HitPoints.MaxValue * expectedPercentage, Array.Empty<string>());
+            Assert.IsFalse(head.IsDestroyed);
+            Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
+            float expectedHitPoints = (body.HealingRate.Value / head.HitPoints.MaxValue) + expectedPercentage;
+            Assert.AreEqual(expectedHitPoints, body.HitPointsPercentage.Value);
+        }
+
+        [Test]
+        public void TestDirectBodyPartDamage_BodyHitPointsAsBodyPartHitPointsAverage()
+        {
+            Body body = null;
+            float expectedPercentage = 0.9f;
+            Assert_NoExceptionThrownTryCatch(() => body = new Body(DefNameOf.Body.Human));
+
+            // apply damage to all non-vital body parts so that the average of their remaining hit points is at ~25%
+            foreach (var bodyPart in body.BodyParts)
+            {
+                if (!bodyPart.Def.IsVital)
+                {
+                    bodyPart.TakeDamage(bodyPart.HitPoints.MaxValue * expectedPercentage, Array.Empty<string>());
+                }
+
+                Assert.IsFalse(bodyPart.IsDestroyed);
+            }
+
+            // apply damage to head, but no more than all other body parts to assert the body response
+            float vitalPartPercentage = 0.5f;
+            BodyPart head = body.BodyParts.Find(bodyPart => bodyPart.Def.Name == DefNameOf.BodyPart.Human_Head);
+            Assert.IsNotNull(head);
+            head.TakeDamage(head.HitPoints.MaxValue * vitalPartPercentage, Array.Empty<string>());
+            Assert.IsFalse(head.IsDestroyed);
+            Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
+            Assert.IsTrue(body.HitPointsPercentage.Value < vitalPartPercentage);
+        }
+
+        [Test]
+        public void TestDirectBodyPartDamage_BodyHitPointsAsBloodLossDefined()
+        {
+            Body body = null;
+            float nonVitalPartPercentage = 0.6f;
+            Assert_NoExceptionThrownTryCatch(() => body = new Body(DefNameOf.Body.Human));
+
+            // apply damage to all non-vital body parts so that the average of their remaining hit points is at ~25%
+            foreach (var bodyPart in body.BodyParts)
+            {
+                if (!bodyPart.Def.IsVital)
+                {
+                    bodyPart.TakeDamage(bodyPart.HitPoints.MaxValue * nonVitalPartPercentage, Array.Empty<string>());
+                }
+
+                Assert.IsFalse(bodyPart.IsDestroyed);
+            }
+
+            // apply damage to head, but no more than all other body parts to assert the body response
+            float vitalPartPercentage = 0.5f;
+            BodyPart head = body.BodyParts.Find(bodyPart => bodyPart.Def.Name == DefNameOf.BodyPart.Human_Head);
+            Assert.IsNotNull(head);
+            head.TakeDamage(head.HitPoints.MaxValue * vitalPartPercentage, Array.Empty<string>());
+            Assert.IsFalse(head.IsDestroyed);
+
+            // add bleeding rate
+            float bloodLossDefinedPercentage = 0.1f;
+            body.BleedingRate.ApplyQuantity(body.BloodLoss.MaxValue * (1 - bloodLossDefinedPercentage));
+
+            // update body
+            Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
+            Assert.IsTrue(body.HitPointsPercentage.Value < vitalPartPercentage);
+            Assert.IsTrue(body.HitPointsPercentage.Value < nonVitalPartPercentage);
+        }
+
+        [Test]
+        public void TestScenario_HealedNonBleedingInjury()
         {
             Body body = null;
             Assert_NoExceptionThrownTryCatch(() => body = new Body(DefNameOf.Body.Human));
@@ -125,7 +229,7 @@
 
             //boost healing rate to heal injury in 3 more updates
             float healingRateBonus = Config.DefaultInjuryHealThreshold / body.HealingRate.Value / 3 / bruise.HealingRateMultiplier;
-            body.HealingRate.ApplyIncrease(healingRateBonus);
+            body.HealingRate.ApplyQuantity(healingRateBonus);
 
             Assert.IsTrue(body.HealingRate.Value * 3 + bruise.HealedAmount > Config.DefaultInjuryHealThreshold);
 
@@ -133,7 +237,7 @@
             Assert.IsTrue(damagedLeg.IsDamaged);
             Assert.IsFalse(bruise.IsHealed);
             Assert.IsFalse(damagedLeg.HitPoints.IsAtMaxValue());
-            Assert.IsFalse(body.HitPoints.IsAtMaxValue());
+            Assert.IsFalse(body.HitPointsPercentage.IsAtMaxValue());
 
             Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
             Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
@@ -145,11 +249,11 @@
             Assert.IsFalse(damagedLeg.IsDamaged);
             
             Assert.IsTrue(damagedLeg.HitPoints.IsAtMaxValue());
-            Assert.IsTrue(body.HitPoints.IsAtMaxValue());
+            Assert.IsTrue(body.HitPointsPercentage.IsAtMaxValue());
         }
 
         [Test]
-        public void TestDestroyedBodyPartBodyBleeding()
+        public void TestScenario_DestroyedBodyPartBodyBleeding()
         {
             Body body = null;
             Assert_NoExceptionThrownTryCatch(() => body = new Body(DefNameOf.Body.Human));
@@ -188,7 +292,7 @@
         }
 
         [Test]
-        public void TestVitalPartDamageAmplificationAndBodyDestructionOnLostVitalPart()
+        public void TestScenario_BodyDestructionOnLostVitalPart()
         {
             Body body = null;
             Assert_NoExceptionThrownTryCatch(() => body = new Body(DefNameOf.Body.Human));
@@ -204,79 +308,27 @@
             Assert.AreEqual(0, body.BleedingRate.Value);
             Assert.AreEqual(0, body.BloodLoss.Value);
 
-            BodyPart mostDamagedVitalPart = null;
-            float previousBodyHitpoints = body.HitPoints.Value;
-            float previousMostDamagedVitalPartHitPoints = 0f;
-            bool assertedAmplificationAtLeastOnce = false;
-
             while (!body.IsDestroyed)
             {
-                previousBodyHitpoints = body.HitPoints.Value;
-
-                if (mostDamagedVitalPart != null)
-                {
-                    previousMostDamagedVitalPartHitPoints = mostDamagedVitalPart.HitPoints.Value;
-                }
-
                 Assert_NoExceptionThrownTryCatch(() => body.TakeDamage(hitInfo));             
                 
                 if (body.IsDestroyed)
                 {
                     break;
                 }
-                
-                foreach (var bodyPart in vitalParts)
-                {
-                    if (!bodyPart.IsDamaged)
-                    {
-                        continue;
-                    }
-
-                    if (mostDamagedVitalPart == null)
-                    {
-                        mostDamagedVitalPart = bodyPart;
-                        break;
-                    }
-
-                    float remainingBodyPartHitPointsPercentage = mostDamagedVitalPart.HitPoints.Value / mostDamagedVitalPart.HitPoints.MaxValue;
-                    float otherRemainingBodyPartHitPointsPercentage = bodyPart.HitPoints.Value / bodyPart.HitPoints.MaxValue;
-
-                    if (otherRemainingBodyPartHitPointsPercentage < remainingBodyPartHitPointsPercentage)
-                    {
-                        mostDamagedVitalPart = bodyPart;
-                    }
-                }
-
-                // test for damage amplification
-                if (mostDamagedVitalPart != null && mostDamagedVitalPart.HitPoints.Value != previousMostDamagedVitalPartHitPoints)
-                {
-                    float remainingBodyPartHitPointsPercentage = mostDamagedVitalPart.HitPoints.Value / mostDamagedVitalPart.HitPoints.MaxValue;
-
-                    if (remainingBodyPartHitPointsPercentage < 0.8f)     // amplification doesn't take effect if damage is minor (anything less than 20% loss of hitpoints gets amplified by just 1, therefore unchanged)
-                    {
-                        float damageToBodyPart = hitInfo.Damage;
-                        float damageToBody = previousBodyHitpoints - body.HitPoints.Value;
-                        Assert.IsTrue(damageToBody > damageToBodyPart);
-                        assertedAmplificationAtLeastOnce = true;
-                    }
-                }
-                
 
                 Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
             }
-
-            Assert.IsTrue(assertedAmplificationAtLeastOnce);
 
             BodyPart destroyedPart = null;
             vitalParts.ForEach(part => destroyedPart = part.IsDestroyed ? part : destroyedPart);
             Assert.IsTrue(destroyedPart.Def.IsVital);
             Assert.IsTrue(destroyedPart.IsDestroyed);
             Assert.IsTrue(body.IsDestroyed);
-            Assert.IsTrue(body.HitPoints.Value > 0);    // although destroyed, body should still have some hp left
         }
 
         [Test]
-        public void TestHealedBleedingInjury()
+        public void TestScenario_HealedBleedingInjury()
         {
             Body body = null;
             Assert_NoExceptionThrownTryCatch(() => body = new Body(DefNameOf.Body.Human));
@@ -309,7 +361,7 @@
 
             //boost healing rate to heal injury in 3 more updates (+1 an extra one for unhindered healing)
             float healingRateBonus = Config.DefaultInjuryHealThreshold / body.HealingRate.Value / 3 / laceration.HealingRateMultiplier;
-            body.HealingRate.ApplyIncrease(healingRateBonus);
+            body.HealingRate.ApplyQuantity(healingRateBonus);
 
             Assert.IsTrue(body.HealingRate.Value * 3 + laceration.HealedAmount > Config.DefaultInjuryHealThreshold);
 
@@ -317,7 +369,7 @@
             Assert.IsTrue(damagedLeg.IsDamaged);
             Assert.IsFalse(laceration.IsHealed);
             Assert.IsFalse(damagedLeg.HitPoints.IsAtMaxValue());
-            Assert.IsFalse(body.HitPoints.IsAtMaxValue());
+            Assert.IsFalse(body.HitPointsPercentage.IsAtMaxValue());
             
             Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
             Assert_NoExceptionThrownTryCatch(() => body.OnUpdate());
@@ -328,7 +380,7 @@
             Assert.IsFalse(damagedLeg.IsDamaged);
 
             Assert.IsTrue(damagedLeg.HitPoints.IsAtMaxValue());
-            Assert.IsTrue(body.HitPoints.IsAtMaxValue());
+            Assert.IsTrue(body.HitPointsPercentage.IsAtMaxValue());
             Assert.AreEqual(0, body.BloodLoss.Value);
         }
     }

@@ -117,6 +117,11 @@
 
         public void TakeDamage(float damage, IEnumerable<string> injuryDefNames)
         {
+            if (this.IsDestroyed)
+            {
+                return;
+            }
+
             SeverityLevel severity = Config.GetSeverityLevelFromPercentage(damage / this.HitPoints.MaxValue);
             this.HitPoints -= damage;
 

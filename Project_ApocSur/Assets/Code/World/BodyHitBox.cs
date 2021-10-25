@@ -26,7 +26,7 @@
         [XmlMember]
         protected int withinRangeBodySize;
 
-        public BodyHitBox(Range targetRange, List<BodyPart> bodyParts, float bodyPartLengthMultiplier)
+        public BodyHitBox(Range targetRange, IReadOnlyList<BodyPart> bodyParts, float bodyPartLengthMultiplier)
         {
             this.TargetRange = targetRange;
             this.Calibrate(bodyParts, bodyPartLengthMultiplier);
@@ -38,7 +38,7 @@
         [XmlMember]
         public bool IsEmpty { get; protected set; }
 
-        public void Calibrate(List<BodyPart> bodyParts, float bodyPartLengthMultiplier = 1f)
+        public void Calibrate(IReadOnlyList<BodyPart> bodyParts, float bodyPartLengthMultiplier = 1f)
         {
             this.bodyHitChances = new List<float>(bodyParts.Count);
             this.withinRangeBodySize = 0;
@@ -98,7 +98,7 @@
             }
         }
 
-        public (BodyPart bodyPart, int index) GetHitBodyPart(List<BodyPart> bodyParts)
+        public (BodyPart bodyPart, int index) GetHitBodyPart(IReadOnlyList<BodyPart> bodyParts)
         {
             if (this.bodyHitChances.Count != bodyParts.Count)
             {

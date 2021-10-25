@@ -5,43 +5,49 @@
     <StatDef  Name="Height">
       <Label>Height</Label>
       <Description>How tall someone or something is when in an upright posture.</Description>
-      <Format>{0}m</Format>
+      <Format>{0:00.0}m</Format>
     </StatDef>
 
     <StatDef  Name="HitPoints">
       <Label>HP</Label>
-      <Description>Hit points left before permanant body part loss and/or death.</Description>
-      <Format>{0:0}</Format>
+      <Description>Hit points left before permanant body part loss.</Description>
+      <Format>{0:000000}</Format>
+    </StatDef>
+
+    <StatDef  Name="HitPointsPercentage">
+      <Label>HP</Label>
+      <Description>Hit points left before death.</Description>
+      <Format>{0:000}%</Format>
     </StatDef>
 
     <StatDef  Name="BleedingRate">
       <Label>Bleeding</Label>
       <Description>Amount of blood being lost from a wound.</Description>
-      <Format>{0:0}</Format>
+      <Format>{0:000}</Format>
     </StatDef>
 
     <StatDef  Name="PainIncrease">
       <Label>Pain</Label>
       <Description>Amount of pain being caused by an injury.</Description>
-      <Format>{0:0}</Format>
+      <Format>{0:000}</Format>
     </StatDef>
 
     <StatDef  Name="Pain">
       <Label>Pain</Label>
       <Description>Amount of pain a creature has.</Description>
-      <Format>{0:0}</Format>
+      <Format>{0:000}</Format>
     </StatDef>
 
     <StatDef  Name="BloodLoss">
       <Label>Blood loss</Label>
       <Description>Amount of blood lost.</Description>
-      <Format>{0:0}</Format>
+      <Format>{0:000}</Format>
     </StatDef>
 
     <StatDef  Name="HealingRate">
       <Label>Healing rate</Label>
       <Description>How quickly a body or body part is healing from its injuries.</Description>
-      <Format>{0:0}</Format>
+      <Format>{0:000}</Format>
     </StatDef>
   </statDefs>
 

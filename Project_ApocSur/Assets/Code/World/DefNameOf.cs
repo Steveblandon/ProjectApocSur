@@ -62,6 +62,8 @@
 
             public static string HitPoints { get; } = nameof(HitPoints);
 
+            public static string HitPointsPercentage { get; } = nameof(HitPointsPercentage);
+
             public static string Pain { get; } = nameof(Pain);
 
             public static string PainIncrease { get; } = nameof(PainIncrease);

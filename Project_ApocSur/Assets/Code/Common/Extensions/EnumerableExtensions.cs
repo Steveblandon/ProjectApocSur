@@ -32,6 +32,19 @@
             }
         }
 
+        public static T Find<T>(this IEnumerable<T> source, Predicate<T> match)
+        {
+            foreach (var item in source)
+            {
+                if (match(item))
+                {
+                    return item;
+                }
+            }
+
+            return default(T);
+        }
+
         /// <summary>
         /// Checks if a collection is null or empty.
         /// </summary>

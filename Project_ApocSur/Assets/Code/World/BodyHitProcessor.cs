@@ -16,7 +16,7 @@
 
         public BodyHitProcessor() { }
 
-        public BodyHitProcessor(List<DefRef<StanceDef>> stanceDefRefs, List<BodyPart> bodyParts, int hitBoxCount, float height)
+        public BodyHitProcessor(List<DefRef<StanceDef>> stanceDefRefs, IReadOnlyList<BodyPart> bodyParts, int hitBoxCount, float height)
         {
             this.hitBoxesPerStance = new Dictionary<string, StanceHitBoxes>(stanceDefRefs.Count);
             float rangeLength = height / hitBoxCount;
@@ -57,7 +57,7 @@
             }
         }
 
-        public (BodyPart bodyPart, int index) ProcessHit(BodyHitInfo hit, List<BodyPart> bodyParts, DefRef<StanceDef> currentStance)
+        public (BodyPart bodyPart, int index) ProcessHit(BodyHitInfo hit, IReadOnlyList<BodyPart> bodyParts, DefRef<StanceDef> currentStance)
         {
             var hitBoxes = this.hitBoxesPerStance[currentStance.RefDefName].HitBoxes;
 
@@ -77,7 +77,7 @@
             return (null, -1);
         }
 
-        public void ReCalibrate(List<BodyPart> bodyParts)
+        public void ReCalibrate(IReadOnlyList<BodyPart> bodyParts)
         {
             foreach (var hitBoxesPerStanceItem in hitBoxesPerStance)
             {
