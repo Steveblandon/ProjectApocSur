@@ -1,6 +1,6 @@
 {
-    "name": "ProjApocSur-Assembly",
-    "rootNamespace": "ProjApocSur",
+    "name": "Projapocsur-Assembly",
+    "rootNamespace": "Projapocsur",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

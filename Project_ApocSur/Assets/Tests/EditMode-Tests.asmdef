@@ -1,10 +1,10 @@
 {
-    "name": "ProjApocSur-Tests-EditMode",
+    "name": "Projapocsur-Tests-EditMode",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "ProjApocSur-Assembly"
+        "Projapocsur-Assembly"
     ],
     "includePlatforms": [
         "Editor"
