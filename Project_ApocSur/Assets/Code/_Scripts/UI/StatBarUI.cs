@@ -19,7 +19,10 @@ namespace Projapocsur.Scripts
         private int MaxHueDeviation;
 
         [SerializeField]
-        private Image image;
+        private Image image, background;
+
+        [SerializeField]
+        private bool enableBackground;
 
         private RectTransform rectTransform, rectTransformInternal;
 
@@ -39,11 +42,20 @@ namespace Projapocsur.Scripts
                 this.rectTransformInternal = this.image.GetComponent<RectTransform>();
                 this.imageOriginalColor = this.image.color;
             }
+
+            if (background != null)
+            {
+                background.enabled = true;
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
+            if (background != null)
+            {
+                background.enabled = this.enableBackground;
+            }
             // stat changes will be event-driven and the responsible for triggering a rect transform update,
             // but for the time being call from here with the use of the dummy stats.
             float statValueSpan = Math.Abs(statMaxValue - statMinValue);
