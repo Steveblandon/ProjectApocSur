@@ -1,8 +1,6 @@
 ﻿namespace Projapocsur.Tests
 {
     using NUnit.Framework;
-    using Projapocsur.Common;
-    using Projapocsur;
     using Projapocsur.World;
     using System;
     using System.Collections.Generic;

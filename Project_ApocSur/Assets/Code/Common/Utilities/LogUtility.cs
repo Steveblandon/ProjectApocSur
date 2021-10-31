@@ -1,5 +1,5 @@
 ﻿
-namespace Projapocsur.Common
+namespace Projapocsur
 {
     using UnityEngine;
 

@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Common
+﻿namespace Projapocsur
 {
     public interface IPointerLeftClickHandler
     {

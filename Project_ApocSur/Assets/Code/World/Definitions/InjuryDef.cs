@@ -1,6 +1,6 @@
 ﻿namespace Projapocsur.World
 {
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     [XmlSerializable]
     public class InjuryDef : Def

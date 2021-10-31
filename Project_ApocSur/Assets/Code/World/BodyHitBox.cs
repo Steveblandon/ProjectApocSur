@@ -2,8 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Projapocsur.Common;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     /*
      * NOTE: we avoid having bodyParts as a instance variable since serializing them here would create duplicates on deserialization.

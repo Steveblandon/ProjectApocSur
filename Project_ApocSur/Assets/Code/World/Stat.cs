@@ -1,7 +1,7 @@
 ﻿namespace Projapocsur.World
 {
     using System;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     [XmlSerializable]
     public class Stat : Thing<StatDef>

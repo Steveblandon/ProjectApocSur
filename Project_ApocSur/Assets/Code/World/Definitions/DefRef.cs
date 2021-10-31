@@ -1,7 +1,6 @@
 ﻿namespace Projapocsur.World
 {
-    using Projapocsur;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     /// <summary>
     /// <para>

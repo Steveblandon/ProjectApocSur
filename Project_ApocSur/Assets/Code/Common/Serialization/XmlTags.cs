@@ -1,4 +1,4 @@
-﻿namespace Projapocsur.Common.Serialization
+﻿namespace Projapocsur.Serialization
 {
     public static class XmlTags
     {

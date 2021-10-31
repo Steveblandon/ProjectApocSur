@@ -1,11 +1,10 @@
-﻿namespace Projapocsur.Common.Serialization
+﻿namespace Projapocsur.Serialization
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
     using System.Xml;
-    using Projapocsur.Common;
 
     /// <summary>
     /// Deserializes XML written by <see cref="XmlSerializer"/>.

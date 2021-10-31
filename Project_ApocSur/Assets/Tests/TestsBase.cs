@@ -5,7 +5,7 @@
     using NUnit.Framework;
     using UnityEngine;
     using UnityEngine.TestTools;
-    using static Projapocsur.Common.ExceptionUtility;
+    using static Projapocsur.ExceptionUtility;
 
     public class TestsBase : IPrebuildSetup
     {

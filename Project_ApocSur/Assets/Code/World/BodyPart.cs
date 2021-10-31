@@ -2,8 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Projapocsur.Common;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     [XmlSerializable]
     public class BodyPart : Thing<BodyPartDef>

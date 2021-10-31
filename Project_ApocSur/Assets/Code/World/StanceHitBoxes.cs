@@ -1,7 +1,7 @@
 ﻿namespace Projapocsur.World
 {
     using System.Collections.Generic;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     [XmlSerializable]
     public class StanceHitBoxes

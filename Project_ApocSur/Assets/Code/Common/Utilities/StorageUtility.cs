@@ -1,7 +1,7 @@
-﻿namespace Projapocsur.Common
+﻿namespace Projapocsur
 {
     using System.IO;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
     using UnityEngine;
 
     public enum StorageMode

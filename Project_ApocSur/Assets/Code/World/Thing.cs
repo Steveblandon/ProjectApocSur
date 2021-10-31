@@ -1,7 +1,6 @@
 ﻿namespace Projapocsur.World
 {
-    using Projapocsur.Common;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     public abstract class Thing<T> : ILoadable where T : Def
     {

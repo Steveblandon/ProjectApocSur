@@ -1,9 +1,9 @@
-﻿namespace Projapocsur.Common.Serialization
+﻿namespace Projapocsur.Serialization
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Projapocsur.Common;
+    
 
     /// <summary>
     /// Determines what fields/properties of an instance are serializable and returns them as <see cref="XmlSerializableMember"/>.

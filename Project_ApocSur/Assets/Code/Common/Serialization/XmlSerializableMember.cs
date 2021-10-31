@@ -1,8 +1,7 @@
-﻿namespace Projapocsur.Common.Serialization
+﻿namespace Projapocsur.Serialization
 {
     using System;
     using System.Reflection;
-    using Projapocsur.Common;
 
     /// <summary>
     /// Contains all the information needed of a serializable class's member for the <see cref="XmlSerializer"/> to work with.

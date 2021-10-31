@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using NUnit.Framework;
-    using Projapocsur.Common;
     using Projapocsur.World;
 
     public class BodyHitBoxTests : DefDependantTestsBase

@@ -2,8 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using NUnit.Framework;
-    using Projapocsur.Common;
+    using NUnit.Framework;    
     using Projapocsur.World;
 
     public class BodyTests : DefDependantTestsBase

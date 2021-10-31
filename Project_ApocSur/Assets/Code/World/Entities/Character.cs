@@ -2,7 +2,6 @@ namespace Projapocsur.World
 {
     using System;
     using Projapocsur.Scripts;
-    using Projapocsur.Common;
     using UnityEngine;
 
     public class Character

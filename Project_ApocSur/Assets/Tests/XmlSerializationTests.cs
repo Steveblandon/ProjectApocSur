@@ -4,7 +4,7 @@ namespace Projapocsur.Tests
     using System.Collections.Generic;
     using System.IO;
     using NUnit.Framework;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     public class XmlSerializationTests : TestsBase
     {

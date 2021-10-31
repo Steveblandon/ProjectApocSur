@@ -1,7 +1,6 @@
 ﻿namespace Projapocsur.World
 {
-    using Projapocsur.Common;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     // NOTE: the properties of this class have a protected-access setter instead of private so that derive classes
     // can serialize these values. Otherwise they don't have access to the setter and serialization will fail.

@@ -1,6 +1,6 @@
-﻿namespace Projapocsur.Common
+﻿namespace Projapocsur
 {
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     [XmlSerializable]
     public class Range

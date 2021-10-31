@@ -1,6 +1,5 @@
 namespace Projapocsur.Scripts
 {
-    using Projapocsur.Common;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -20,12 +19,7 @@ namespace Projapocsur.Scripts
         // Start is called before the first frame update
         void Start()
         {
-            if (image == null)
-            {
-                Debug.LogError($"missing image reference. disabling {this.name}.");
-                this.enabled = false;
-            }
-            else
+            if (!this.DisableOnMissingReference(image, nameof(image)))
             {
                 this.rectTransform = this.GetComponent<RectTransform>();
                 this.rectTransformInternal = this.image.GetComponent<RectTransform>();

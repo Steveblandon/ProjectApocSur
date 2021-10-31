@@ -1,9 +1,7 @@
 ﻿namespace Projapocsur.World
 {
-    using System;
     using System.Collections.Generic;
-    using Projapocsur.Common;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     /// <summary>
     /// Processes <see cref="Body"/> hits. Needs to be recalibrated everytime the <see cref="BodyPart"/>s list changes.

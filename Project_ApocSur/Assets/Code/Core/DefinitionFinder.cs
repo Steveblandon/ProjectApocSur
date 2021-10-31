@@ -3,8 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Projapocsur.Common.Serialization;
-    using Projapocsur.Common;
+    using Projapocsur.Serialization;
     using Projapocsur.World;
 
     /// <summary>

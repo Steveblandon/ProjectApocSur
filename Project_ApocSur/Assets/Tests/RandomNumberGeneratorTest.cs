@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using NUnit.Framework;
-    using Projapocsur.Common;
 
     public class RandomNumberGeneratorTest
     {

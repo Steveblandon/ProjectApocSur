@@ -1,11 +1,10 @@
-﻿namespace Projapocsur.Common.Serialization
+﻿namespace Projapocsur.Serialization
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
-    using System.Xml;
-    using Projapocsur.Common;
+    using System.Xml;    
 
     /// <summary>
     /// <para>Custom XMLSerializer that unlike the .NET serializers allows for the serialization of any field/property marked 
