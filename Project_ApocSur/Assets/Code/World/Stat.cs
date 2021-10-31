@@ -25,6 +25,7 @@
             this.MaxValue = maxValue;
             this.MinValue = minValue;
             this.useMinMaxLimiters = true;
+            this.UpdateValueAsPercentage();
         }
 
         public Stat(string defName, float initialValue, bool useMinMaxLimiters = true) : this(defName, initialValue, initialValue)
@@ -38,9 +39,36 @@
         [XmlMember]
         public float DefaultValue { get; protected set; }
 
-        public float MinValue { get => this.minValue; set => this.minValue = value > this.maxValue ? this.minValue : value; }      // assert that minValue <= maxValue
+        [XmlMember]
+        public float ValueAsPercentage { get; protected set; }
 
-        public float MaxValue { get => this.maxValue; set => this.maxValue = value < this.minValue ? this.maxValue : value; }       // assert that maxValue >= minValue
+        public float MinValue 
+        { 
+            get => this.minValue; 
+            set
+            {
+                if (value <= this.maxValue)
+                {
+                    this.minValue = value;
+                }
+
+                OnStateChangeEvent?.Invoke();
+            }
+        }
+
+        public float MaxValue 
+        { 
+            get => this.maxValue; 
+            set 
+            {
+                if (value >= minValue)
+                {
+                    this.maxValue = value;
+                }
+
+                OnStateChangeEvent?.Invoke();
+            }
+        }
 
         public static Stat operator +(Stat stat, float amount)
         {
@@ -69,11 +97,14 @@
             {
                 float newValue = Math.Max(this.Value + amount, this.MinValue);      // we compare it to the min value incase of a negative amount
                 this.Value = Math.Min(newValue, this.MaxValue);
+                this.UpdateValueAsPercentage();
             }
             else
             {
                 this.Value += amount;
             }
+
+            OnStateChangeEvent?.Invoke();
         }
 
         public void ApplyMultiplier(float multiplier)
@@ -90,11 +121,15 @@
                 {
                     this.Value = Math.Max(newValue, this.MinValue);
                 }
+
+                this.UpdateValueAsPercentage();
             }
             else
             {
                 this.Value *= multiplier;
             }
+
+            OnStateChangeEvent?.Invoke();
         }
 
         public Stat Clone()
@@ -117,6 +152,13 @@
         public bool IsAtMaxValue()
         {
             return this.Value == this.MaxValue;
+        }
+
+        private void UpdateValueAsPercentage()
+        {
+            float statValueSpan = Math.Abs(this.maxValue - this.minValue);
+            float relativeStatValue = Math.Abs(this.Value - this.minValue);
+            this.ValueAsPercentage = relativeStatValue / (statValueSpan == 0 ? 0.000001f : statValueSpan);
         }
     }
 }

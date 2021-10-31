@@ -104,19 +104,18 @@
             this.BloodLoss -= this.HealingRate.Value - this.BleedingRate.Value;
 
             // calculate max hit points percentage allowed and update body parts
-            float maxHitPointsPercentageAllowedByBloodLoss = 1 - this.BloodLoss.Value / this.BloodLoss.MaxValue;
+            float maxHitPointsPercentageAllowedByBloodLoss = 1 - this.BloodLoss.ValueAsPercentage;
             float lowestVitalPartHitPointsPercentage = 1f;
             float averagePercentageOfAllBodyPartsHitPoints = 0f;
 
             foreach (var bodyPart in this.BodyParts)
             {
                 bodyPart.OnUpdate(this.injuryProcessingContext, maxHitPointsPercentageAllowedByBloodLoss);
-                var remainingHitpointsPercentage = bodyPart.HitPoints.Value / bodyPart.HitPoints.MaxValue;
-                averagePercentageOfAllBodyPartsHitPoints += remainingHitpointsPercentage;
+                averagePercentageOfAllBodyPartsHitPoints += bodyPart.HitPoints.ValueAsPercentage;
 
                 if (bodyPart.Def.IsVital)
                 {
-                    lowestVitalPartHitPointsPercentage = Math.Min(lowestVitalPartHitPointsPercentage, remainingHitpointsPercentage);
+                    lowestVitalPartHitPointsPercentage = Math.Min(lowestVitalPartHitPointsPercentage, bodyPart.HitPoints.ValueAsPercentage);
                 }
             }
 
