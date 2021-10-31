@@ -1,32 +1,21 @@
 namespace Projapocsur.Scripts
 {
-    using System.Collections;
-    using System.Collections.Generic;
+    using Projapocsur.Common;
     using UnityEngine;
     using UnityEngine.UI;
-    using Projapocsur.Common;
-    using System;
 
-    public class StatBarUI : MonoBehaviour
+    public class StatBarUI : StatViewUI
     {
-        [SerializeField]
-        private Direction direction;
-
-        [SerializeField]
-        private float statMinValue, statMaxValue, statValue;
-
-        [SerializeField]
-        private int MaxHueDeviation;
-
         [SerializeField]
         private Image image, background;
 
         [SerializeField]
         private bool enableBackground;
 
-        private RectTransform rectTransform, rectTransformInternal;
+        [SerializeField]
+        private Direction direction;
 
-        private Color imageOriginalColor;
+        private RectTransform rectTransform, rectTransformInternal;
 
         // Start is called before the first frame update
         void Start()
@@ -40,7 +29,7 @@ namespace Projapocsur.Scripts
             {
                 this.rectTransform = this.GetComponent<RectTransform>();
                 this.rectTransformInternal = this.image.GetComponent<RectTransform>();
-                this.imageOriginalColor = this.image.color;
+                this.originalColor = this.image.color;
             }
 
             if (background != null)
@@ -56,37 +45,14 @@ namespace Projapocsur.Scripts
             {
                 background.enabled = this.enableBackground;
             }
-            // stat changes will be event-driven and the responsible for triggering a rect transform update,
-            // but for the time being call from here with the use of the dummy stats.
-            float statValueSpan = Math.Abs(statMaxValue - statMinValue);
-            float relativeStatValue = Math.Abs(statValue - statMinValue);
-            float statPercentage = relativeStatValue / (statValueSpan == 0 ? 0.000001f : statValueSpan);
-            this.UpdateRectTransform(statPercentage);
-        }
 
-        void UpdateImageColor(float percentage)
-        {
-            if (this.MaxHueDeviation <= 0f)
-            {
-                if (this.imageOriginalColor != this.image.color)
-                {
-                    this.image.color = this.imageOriginalColor;
-                }
-
-                return;
-            }
-
-            Color.RGBToHSV(this.imageOriginalColor, out float H, out float S, out float V);
-            float newHue = H - (this.MaxHueDeviation / 360f * percentage);
-            this.image.color = Color.HSVToRGB(newHue, S, V);
+            float statPercentageReduction = this.GetStatPercentageReduction();
+            image.color = this.GetCurrentColor(statPercentageReduction);
+            this.UpdateRectTransform(statPercentageReduction);
         }
 
         void UpdateRectTransform(float percentage)
         {
-            percentage = 1 - percentage;
-
-            this.UpdateImageColor(percentage);
-
             switch (direction)
             {
                 case Direction.Up:
