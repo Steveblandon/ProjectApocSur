@@ -5,6 +5,8 @@ namespace Projapocsur.Scripts
 
     public class StatBarUI : StatViewUI
     {
+        public const string CompName = nameof(StatBarUI);
+
         [SerializeField]
         private Image image, background;
 
@@ -19,7 +21,7 @@ namespace Projapocsur.Scripts
         // Start is called before the first frame update
         void Start()
         {
-            if (!this.DisableOnMissingReference(image, nameof(image)))
+            if (!this.DisableOnMissingReference(image, nameof(image), CompName))
             {
                 this.rectTransform = this.GetComponent<RectTransform>();
                 this.rectTransformInternal = this.image.GetComponent<RectTransform>();

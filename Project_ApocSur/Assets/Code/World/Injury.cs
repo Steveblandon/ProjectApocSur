@@ -1,11 +1,13 @@
 ﻿namespace Projapocsur.World
 {
     using System;
-    using Projapocsur.Common.Serialization;
+    using Projapocsur.Serialization;
 
     [XmlSerializable]
     public class Injury : Thing<InjuryDef>
     {
+        public event Action IsHealedEvent;
+
         public Injury() { }
 
         public Injury(string defName, SeverityLevel severity) : base(defName)
@@ -33,6 +35,9 @@
         public bool IsHealed { get; protected set; }
 
         [XmlMember]
+        public bool IsBleeding { get; protected set; }
+
+        [XmlMember]
         public float HealedAmount { get; protected set; }
 
         [XmlMember]
@@ -42,6 +47,7 @@
         {
             context.Pain += this.PainIncrease.Value;
             context.BloodLoss += this.BleedingRate.Value;
+            this.IsBleeding = !this.BleedingRate.IsAtMinValue();
         }
 
         public void OnUpdate(InjuryProcessingContext context)
@@ -64,6 +70,12 @@
                 context.BloodLoss += this.BleedingRate.Value;
 
                 this.IsHealed = this.HealedAmount == Config.DefaultInjuryHealThreshold;
+                this.IsBleeding = !this.BleedingRate.IsAtMinValue();
+
+                if (this.IsHealed)
+                {
+                    this.IsHealedEvent?.Invoke();
+                }
             }
         }
 

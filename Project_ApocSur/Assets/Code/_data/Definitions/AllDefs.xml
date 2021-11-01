@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- ======================= STATS ================ -->
+  <statDefs>
+    <StatDef  Name="Height">
+      <Label>Height</Label>
+      <Description>How tall someone or something is when in an upright posture.</Description>
+      <Format>{0:00.0}m</Format>
+    </StatDef>
+
+    <StatDef  Name="HitPoints">
+      <Label>HP</Label>
+      <Description>Hit points left before permanant body part loss.</Description>
+      <Format>{0:000000}</Format>
+    </StatDef>
+
+    <StatDef  Name="HitPointsPercentage">
+      <Label>HP</Label>
+      <Description>Hit points left before death.</Description>
+      <Format>{0:000}%</Format>
+    </StatDef>
+
+    <StatDef  Name="BleedingRate">
+      <Label>Bleeding</Label>
+      <Description>Amount of blood being lost from a wound.</Description>
+      <Format>{0:000}</Format>
+    </StatDef>
+
+    <StatDef  Name="PainIncrease">
+      <Label>Pain</Label>
+      <Description>Amount of pain being caused by an injury.</Description>
+      <Format>{0:000}</Format>
+    </StatDef>
+
+    <StatDef  Name="Pain">
+      <Label>Pain</Label>
+      <Description>Amount of pain a creature has.</Description>
+      <Format>{0:000}</Format>
+    </StatDef>
+
+    <StatDef  Name="BloodLoss">
+      <Label>Blood loss</Label>
+      <Description>Amount of blood lost.</Description>
+      <Format>{0:000}</Format>
+    </StatDef>
+
+    <StatDef  Name="HealingRate">
+      <Label>Healing rate</Label>
+      <Description>How quickly a body or body part is healing from its injuries.</Description>
+      <Format>{0:000}</Format>
+    </StatDef>
+  </statDefs>
+
+  <!-- ======================= INJURIES ================ -->
+  <injuryDefs>
+    <InjuryDef  Name="Bruise">
+      <Label>Bruise</Label>
+      <Description>Swollen body part from blunt trauma.</Description>
+      <Pain>3</Pain>
+    </InjuryDef>
+
+    <InjuryDef  Name="Fracture">
+      <Label>Fracture</Label>
+      <Description>broken bone. Takes a long time to heal.</Description>
+      <Pain>15</Pain>
+      <HealingRateMultiplier>0.05</HealingRateMultiplier>
+    </InjuryDef>
+
+    <InjuryDef  Name="Laceration">
+      <Label>Laceration</Label>
+      <Description>a deep cut.</Description>
+      <Pain>9</Pain>
+      <BleedingRate>50</BleedingRate>
+      <HealingRateMultiplier>0.8</HealingRateMultiplier>
+    </InjuryDef>
+  </injuryDefs>
+
+  <!-- ======================= STANCES ================ -->
+  <stanceDefs>
+    <StanceDef Name="Stand">
+      <Label>Standing</Label>
+      <HeightMultiplier>1</HeightMultiplier>
+    </StanceDef>
+    <StanceDef Name="Sit">
+      <Label>Sitting</Label>
+      <HeightMultiplier>0.8</HeightMultiplier>
+    </StanceDef>
+    <StanceDef Name="Crouch">
+      <Label>Crouching</Label>
+      <HeightMultiplier>0.6</HeightMultiplier>
+    </StanceDef>
+    <StanceDef Name="SitOnGround">
+      <Label>Sitting</Label>
+      <HeightMultiplier>0.4</HeightMultiplier>
+    </StanceDef>
+    <StanceDef Name="Prone">
+      <Label>Laying down</Label>
+      <HeightMultiplier>0.1</HeightMultiplier>
+    </StanceDef>
+  </stanceDefs>
+
+  <!-- ======================= BODIES ================ -->
+  <bodyDefs>
+    <BodyDef Name="Human">
+      <Label>Human</Label>
+      <Description>Just a human.</Description>
+      <MaxHeightDeviationFactor>0.13</MaxHeightDeviationFactor>
+      <BaseHealingRate>1</BaseHealingRate>
+      <PainThreshold>100</PainThreshold>
+      <HitBoxCount>3</HitBoxCount>
+      <BodyParts>
+        <DefRef RefDefName="Human_Head" />
+        <DefRef RefDefName="Human_Torso" />
+        <DefRef RefDefName="Human_Arm" />
+        <DefRef RefDefName="Human_Arm" />
+        <DefRef RefDefName="Human_Leg" />
+        <DefRef RefDefName="Human_Leg" />
+      </BodyParts>
+      <StanceCapabilities>
+        <DefRef RefDefName="Stand" />
+        <DefRef RefDefName="Sit" />
+        <DefRef RefDefName="Crouch" />
+        <DefRef RefDefName="SitOnGround" />
+        <DefRef RefDefName="Prone" />
+      </StanceCapabilities>
+      <DefaultStance RefDefName="Stand" />
+    </BodyDef>
+  </bodyDefs>
+
+  <!-- ======================= BODY PARTS ================ -->
+  <bodyPartDefs>
+    <BodyPartDef  Name="Human_Head">
+      <Label>Head</Label>
+      <Description></Description>
+      <Size>2</Size>
+      <BaseLength>0.21</BaseLength>
+      <BaseFloorOffset>1.52</BaseFloorOffset>
+      <MaxHitpoints>50</MaxHitpoints>
+      <IsVital>true</IsVital>
+    </BodyPartDef>
+
+    <BodyPartDef  Name="Human_Torso">
+      <Label>Torso</Label>
+      <Description></Description>
+      <Size>5</Size>
+      <BaseLength>0.64</BaseLength>
+      <BaseFloorOffset>0.85</BaseFloorOffset>
+      <MaxHitpoints>400</MaxHitpoints>
+      <IsVital>true</IsVital>
+    </BodyPartDef>
+    
+    <BodyPartDef  Name="Human_Arm">
+      <Label>Arm</Label>
+      <Description></Description>
+      <Size>1</Size>
+      <BaseLength>0.56</BaseLength>
+      <BaseFloorOffset>0.93</BaseFloorOffset>
+      <MaxHitpoints>100</MaxHitpoints>
+    </BodyPartDef>
+
+    <BodyPartDef  Name="Human_Leg">
+      <Label>Leg</Label>
+      <Description></Description>
+      <Size>2</Size>
+      <BaseLength>0.85</BaseLength>
+      <BaseFloorOffset>0</BaseFloorOffset>
+      <MaxHitpoints>200</MaxHitpoints>
+    </BodyPartDef>
+    
+  </bodyPartDefs>
+</Defs>
