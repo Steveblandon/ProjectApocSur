@@ -15,6 +15,7 @@
             this.style = new GUIStyle();
             this.style.wordWrap = true;
             this.style.fixedHeight = 200;
+            this.style.normal.textColor = Color.white;
         }
         public override void OnGUI(Rect position, SerializedProperty prop, GUIContent label)
         {

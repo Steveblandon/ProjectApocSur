@@ -70,7 +70,7 @@
       <Label>Laceration</Label>
       <Description>a deep cut.</Description>
       <Pain>9</Pain>
-      <BleedingRate>50</BleedingRate>
+      <BleedingRate>5</BleedingRate>
       <HealingRateMultiplier>0.8</HealingRateMultiplier>
     </InjuryDef>
   </injuryDefs>

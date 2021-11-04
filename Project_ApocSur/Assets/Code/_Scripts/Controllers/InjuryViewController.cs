@@ -32,11 +32,23 @@ namespace Projapocsur.Scripts
                 if (this.injury != null)
                 {
                     this.injury.IsHealedEvent -= this.InjuryIsHealedEventHandler;
+                    this.Injury.BleedingRate.OnValueAtMinEvent -= this.BleedingStoppedEventHandler;
                 }
 
                 this.injury = value;
-                this.UpdateOnDemand();
                 this.injury.IsHealedEvent += this.InjuryIsHealedEventHandler;
+
+                if (this.injury.IsBleedingSource)
+                {
+                    this.bleedingRateIcon.gameObject.SetActive(true);
+                    this.Injury.BleedingRate.OnValueAtMinEvent += this.BleedingStoppedEventHandler;
+                }
+                else
+                {
+                    this.bleedingRateIcon.gameObject.SetActive(false);
+                }
+
+                this.UpdateOnDemand();
             }
         }
 
@@ -56,18 +68,26 @@ namespace Projapocsur.Scripts
             if (this.injury != null)
             {
                 this.injury.IsHealedEvent -= this.InjuryIsHealedEventHandler;
+                this.Injury.BleedingRate.OnValueAtMinEvent -= this.BleedingStoppedEventHandler;
             }
         }
 
         private void UpdateOnDemand()
         {
             this.title.text = this.injury.Def.Name;
-            bleedingRateIcon.enabled = this.injury.IsBleeding;
+            this.bleedingRateIcon.enabled = this.injury.IsBleeding;
         }
 
         private void InjuryIsHealedEventHandler()
         {
+            this.injury.IsHealedEvent -= this.InjuryIsHealedEventHandler;
             this.InjuryIsHealedEvent?.Invoke(this);
+        }
+
+        private void BleedingStoppedEventHandler()
+        {
+            this.bleedingRateIcon.enabled = false;
+            this.Injury.BleedingRate.OnValueAtMinEvent -= this.BleedingStoppedEventHandler;
         }
     }
 }

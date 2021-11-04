@@ -8,6 +8,7 @@
         public const float DefaultBloodLossThreshold = 100;
         public const float DefaultInjuryHealThreshold = 100;
         public const float DefaultBleedingRateOnLimbLoss = 10;
+        public const float DefaultInjuryBleedingHealThreshold = 0.2f;  // affects the bleeding rate so it stops sooner than when the injury is fully healed
 
         public static readonly IReadOnlyDictionary<SeverityLevel, float> SeverityAmpliflier = new Dictionary<SeverityLevel, float>()
         {

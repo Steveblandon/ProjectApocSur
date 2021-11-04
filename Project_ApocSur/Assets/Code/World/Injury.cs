@@ -13,9 +13,10 @@
         public Injury(string defName, SeverityLevel severity) : base(defName)
         {
             float bleedingRate = this.Def.BleedingRate * Config.SeverityAmpliflier[severity];
-            float pain = this.Def.Pain * Config.SeverityAmpliflier[severity];
-
             this.BleedingRate = new Stat(DefNameOf.Stat.BleedingRate, bleedingRate, bleedingRate);
+            this.IsBleedingSource = bleedingRate > 0f;
+            
+            float pain = this.Def.Pain * Config.SeverityAmpliflier[severity];
             this.PainIncrease = new Stat(DefNameOf.Stat.PainIncrease, pain, pain);
 
             this.HealingRateMultiplier = this.Def.HealingRateMultiplier / Config.SeverityAmpliflier[severity];
@@ -36,6 +37,9 @@
 
         [XmlMember]
         public bool IsBleeding { get; protected set; }
+
+        [XmlMember]
+        public bool IsBleedingSource { get; protected set; }
 
         [XmlMember]
         public float HealedAmount { get; protected set; }
@@ -65,6 +69,11 @@
                 float painDiff = previousPain - this.PainIncrease.Value;
 
                 this.BleedingRate *= healEffectMultiplier;
+
+                if (this.BleedingRate.ValueAsPercentage < Config.DefaultInjuryBleedingHealThreshold)
+                {
+                    this.BleedingRate *= 0f;
+                }
                 
                 context.Pain -= painDiff;
                 context.BloodLoss += this.BleedingRate.Value;

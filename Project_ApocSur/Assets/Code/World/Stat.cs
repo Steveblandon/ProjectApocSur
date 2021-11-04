@@ -7,6 +7,8 @@
     public class Stat : Thing<StatDef>
     {
         public event Action OnStateChangeEvent;
+        public event Action OnValueAtMinEvent;
+        public event Action OnValueAtMaxEvent;
 
         private bool useMinMaxLimiters;
 
@@ -52,7 +54,7 @@
                     this.minValue = value;
                 }
 
-                OnStateChangeEvent?.Invoke();
+                this.InvokeEvents();
             }
         }
 
@@ -66,7 +68,7 @@
                     this.maxValue = value;
                 }
 
-                OnStateChangeEvent?.Invoke();
+                this.InvokeEvents();
             }
         }
 
@@ -104,7 +106,7 @@
                 this.Value += amount;
             }
 
-            OnStateChangeEvent?.Invoke();
+            this.InvokeEvents();
         }
 
         public void ApplyMultiplier(float multiplier)
@@ -129,7 +131,7 @@
                 this.Value *= multiplier;
             }
 
-            OnStateChangeEvent?.Invoke();
+            this.InvokeEvents();
         }
 
         public Stat Clone()
@@ -159,6 +161,20 @@
             float statValueSpan = Math.Abs(this.maxValue - this.minValue);
             float relativeStatValue = Math.Abs(this.Value - this.minValue);
             this.ValueAsPercentage = relativeStatValue / (statValueSpan == 0 ? 0.000001f : statValueSpan);
+        }
+
+        private void InvokeEvents()
+        {
+            this.OnStateChangeEvent?.Invoke();
+
+            if (this.IsAtMaxValue())
+            {
+                this.OnValueAtMaxEvent?.Invoke();
+            }
+            else if (this.IsAtMinValue())
+            {
+                this.OnValueAtMinEvent?.Invoke();
+            }
         }
     }
 }

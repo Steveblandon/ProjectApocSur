@@ -33,40 +33,11 @@ namespace Projapocsur.Scripts
             }
         }
 
-        // TEMPORARY TESTING
-        private void TestDataInsert()
-        {
-            DefinitionFinder.Init();
-            List<Injury> injuries = new List<Injury>();
-            injuries.Add(new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
-            injuries.Add(new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
-            injuries.Add(new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
-            injuries.Add(new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Major));
-            injuries.Add(new Injury(DefNameOf.Injury.Laceration, SeverityLevel.Trivial));
-            injuries.Add(new Injury(DefNameOf.Injury.Laceration, SeverityLevel.Trivial));
-            injuries.Add(new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
-            injuries.Add(new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
-            injuries.Add(new Injury(DefNameOf.Injury.Laceration, SeverityLevel.Trivial));
-
-            Stat pain = new Stat(DefNameOf.Stat.Pain, 0, 100);
-            Stat bloodLoss = new Stat(DefNameOf.Stat.BloodLoss, 0, 100);
-            Stat healingRate = new Stat(DefNameOf.Stat.HealingRate, 5, 100);
-
-            var context = new InjuryProcessingContext(pain, bloodLoss, healingRate);
-
-            injuries.ForEach(injury => injury.OnStart(context));
-
-            this.ManageViewsFor(injuries);
-        }
-        // TEMPORARY TESTING
-
         void OnEnable()
         {
             this.rectTransform ??= this.GetComponent<RectTransform>();
             this.DisableOnMissingReference(this.rectTransform, nameof(this.rectTransform), CompName);
             this.DisableOnMissingReference(this.injuryViewPrefab, nameof(this.injuryViewPrefab), CompName);
-
-            //this.TestDataInsert();
         }
 
         public void ManageViewsFor(IReadOnlyList<Injury> injuries)
