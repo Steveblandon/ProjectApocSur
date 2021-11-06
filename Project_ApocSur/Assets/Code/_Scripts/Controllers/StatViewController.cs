@@ -16,6 +16,11 @@
             get => this.stat;
             set
             {
+                if (!this.isActiveAndEnabled)
+                {
+                    return;
+                }
+
                 if (value != this.stat)
                 {
                     if (this.stat != null)

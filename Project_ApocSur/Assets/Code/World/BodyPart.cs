@@ -7,6 +7,8 @@
     [XmlSerializable]
     public class BodyPart : Thing<BodyPartDef>
     {
+        public event Action<Injury> OnNewInjuryEvent;
+
         private InjuryProcessingContext latestContext;
         private Queue<Injury> newInjuries = new Queue<Injury>();
 
@@ -106,6 +108,7 @@
             this.HitPoints += Math.Min(context.HealingRate.Value, Math.Max(0, maxHitPointsAllowed - this.HitPoints.Value));
 
             this.IsDamaged = this.HitPoints.Value < this.HitPoints.MaxValue;
+            this.latestContext = context;
         }
 
         public void OnDestroy(InjuryProcessingContext context)
@@ -133,8 +136,9 @@
             foreach (string defName in injuryDefNames)
             {
                 var injury = new Injury(defName, severity);
-                injury.OnStart(latestContext);
+                injury.OnStart(this.latestContext);
                 this.newInjuries.Enqueue(injury);
+                this.OnNewInjuryEvent?.Invoke(injury);
             }
 
             this.IsDamaged = true;

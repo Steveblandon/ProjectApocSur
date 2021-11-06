@@ -40,7 +40,7 @@ namespace Projapocsur.Scripts
             this.DisableOnMissingReference(this.injuryViewPrefab, nameof(this.injuryViewPrefab), CompName);
         }
 
-        public void ManageViewsFor(IReadOnlyList<Injury> injuries)
+        public void ManageViewsFor(IReadOnlyCollection<Injury> injuries)
         {
             if (!this.isActiveAndEnabled)
             {

@@ -1071,10 +1071,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ed9ec586713ce1439f95e30dc1e5132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attach: 0
   statMinValue: 0
   statMaxValue: 100
   statValue: 100
+  attachToggle: 0
+  attachState: 
 --- !u!1 &647409032
 GameObject:
   m_ObjectHideFlags: 0
@@ -2705,6 +2706,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1652849487 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1091599377047589584, guid: 89f806ed3ad0aec4d95816d913be126a, type: 3}
+  m_PrefabInstance: {fileID: 1580498709}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff638ab282e92104d86633647d5daadd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1732403179
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2854,9 +2866,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d466e1ba93a90224880ec5afd6d94c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  hitpointsBar: {fileID: 0}
-  injuriesViewManager: {fileID: 0}
+  title: {fileID: 1932196509}
+  hitpointsBar: {fileID: 1652849487}
+  injuriesViewManager: {fileID: 430294141}
+--- !u!114 &1732403185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732403181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a57cc05a4f252184f84c881d4e979fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SetToBodyPart1: 0
+  SetToBodyPart2: 0
+  currentBodyPartName: 
+  Punch: 0
+  punchDamage: 0
 --- !u!1 &1767655029
 GameObject:
   m_ObjectHideFlags: 0
@@ -3122,7 +3151,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 300
@@ -3132,7 +3161,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: <b>Title</b>
+  m_Text: Title
 --- !u!222 &1932196510
 CanvasRenderer:
   m_ObjectHideFlags: 0
