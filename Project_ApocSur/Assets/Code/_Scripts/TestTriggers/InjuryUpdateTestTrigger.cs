@@ -9,12 +9,16 @@ namespace Projapocsur.Scripts
     public class InjuryUpdateTestTrigger : MonoBehaviour
     {
         [SerializeField]
-        [Button(nameof(InsertData), ButtonWidth = 200)]
+        [Button(nameof(InsertMultipleInjuries), ButtonWidth = 200)]
         private bool SetInjuries;
 
         [SerializeField]
         [Button(nameof(InjuryUpdate), ButtonWidth = 200)]
         private bool UpdateInjuries;
+
+        [SerializeField]
+        [Button(nameof(InsertOneInjury), ButtonWidth = 200)]
+        private bool AddInjury;
 
         [SerializeField]
         private float healingRateValue = 5f;
@@ -39,6 +43,12 @@ namespace Projapocsur.Scripts
             this.injuryManager = this.GetComponent<InjuriesViewManager>();
 
             DefinitionFinder.Init();
+
+            this.pain = new Stat(DefNameOf.Stat.Pain, 0, 100);
+            this.bloodLoss = new Stat(DefNameOf.Stat.BloodLoss, 0, 100);
+            this.healingRate = new Stat(DefNameOf.Stat.HealingRate, this.healingRateValue, 100);
+
+            this.currentContext = new InjuryProcessingContext(pain, bloodLoss, healingRate);
         }
 
         void Update()
@@ -52,7 +62,7 @@ namespace Projapocsur.Scripts
             }
         }
 
-        private void InsertData()
+        private void InsertMultipleInjuries()
         {
             this.currentInjuries = new List<Injury>();
             this.currentInjuries.Add(new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
@@ -65,15 +75,17 @@ namespace Projapocsur.Scripts
             this.currentInjuries.Add(new Injury(DefNameOf.Injury.Bruise, SeverityLevel.Minor));
             this.currentInjuries.Add(new Injury(DefNameOf.Injury.Laceration, SeverityLevel.Trivial));
 
-            this.pain = new Stat(DefNameOf.Stat.Pain, 0, 100);
-            this.bloodLoss = new Stat(DefNameOf.Stat.BloodLoss, 0, 100);
-            this.healingRate = new Stat(DefNameOf.Stat.HealingRate, this.healingRateValue, 100);
-
-            this.currentContext = new InjuryProcessingContext(pain, bloodLoss, healingRate);
-
             this.currentInjuries.ForEach(injury => injury.OnStart(this.currentContext));
 
-            injuryManager.ManageViewsFor(this.currentInjuries);
+            this.injuryManager.ManageViewsFor(this.currentInjuries);
+        }
+
+        private void InsertOneInjury()
+        {
+            var injury = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Minor);
+            this.currentInjuries ??= new List<Injury>();
+            this.currentInjuries.Add(injury);
+            this.injuryManager.AddToExistingManagedViews(injury);
         }
 
         private void InjuryUpdate()

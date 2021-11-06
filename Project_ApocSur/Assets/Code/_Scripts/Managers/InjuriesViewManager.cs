@@ -54,22 +54,32 @@ namespace Projapocsur.Scripts
             // create new controllers
             foreach (var injury in injuries)
             {
-                GameObject injuryView = Instantiate(injuryViewPrefab, this.transform);
-
-                if (this.UpdateViewHeight(injuryView, this.injuryViewControllers.Count) != null 
-                    && injuryView.TryGetComponent(out InjuryViewController controller))
-                {
-                    this.injuryViewControllers.Add(controller);
-                    controller.Injury = injury;
-                    controller.InjuryIsHealedEvent += this.InjuryIsHealedEventHandler;
-                }
-                else
-                {
-                    Debug.LogError($"unable to find {nameof(InjuryViewController)} component in newly instantiated {nameof(injuryView)}");
-                }
+                this.AddToExistingManagedViews(injury, resizeToFit: false);
             }
 
             this.ResizeToFitViews();
+        }
+
+        public void AddToExistingManagedViews(Injury injury, bool resizeToFit = true)
+        {
+            GameObject injuryView = Instantiate(injuryViewPrefab, this.transform);
+
+            if (this.UpdateViewHeight(injuryView, this.injuryViewControllers.Count) != null
+                && injuryView.TryGetComponent(out InjuryViewController controller))
+            {
+                this.injuryViewControllers.Add(controller);
+                controller.Injury = injury;
+                controller.InjuryIsHealedEvent += this.InjuryIsHealedEventHandler;
+            }
+            else
+            {
+                Debug.LogError($"unable to find {nameof(InjuryViewController)} component in newly instantiated {nameof(injuryView)}");
+            }
+
+            if (resizeToFit)
+            {
+                this.ResizeToFitViews();
+            }
         }
 
         private void InjuryIsHealedEventHandler(InjuryViewController controller)
