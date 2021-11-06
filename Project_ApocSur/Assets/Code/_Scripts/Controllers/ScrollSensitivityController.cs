@@ -27,7 +27,7 @@ namespace Projapocsur.Scripts
             }
         }
 
-        void OnDisable()
+        void OnDestroy()
         {
             if (this.scrollViewContentItemManager != null)
             {

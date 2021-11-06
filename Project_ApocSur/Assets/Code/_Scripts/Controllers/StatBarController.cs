@@ -53,6 +53,14 @@ namespace Projapocsur.Scripts
             }
         }
 
+        void OnDestroy()
+        {
+            if (this.Stat != null)
+            {
+                this.Stat.OnStateChangeEvent -= this.OnStatStateChangeEventHandler;
+            }
+        }
+
         protected override void OnStatStateChangeEventHandler()
         {
             base.OnStatStateChangeEventHandler();

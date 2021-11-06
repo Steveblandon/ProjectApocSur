@@ -24,7 +24,7 @@ namespace Projapocsur.Scripts
             get => this.injury;
             set
             {
-                if (!this.isActiveAndEnabled)
+                if (!this.isActiveAndEnabled || this.injury == value)
                 {
                     return;
                 }

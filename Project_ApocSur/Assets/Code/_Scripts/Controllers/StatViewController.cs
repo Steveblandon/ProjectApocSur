@@ -4,7 +4,7 @@
     using System;
     using Projapocsur.World;
 
-    public class StatViewController : MonoBehaviour
+    public abstract class StatViewController : MonoBehaviour
     {
         [SerializeField]
         private int maxHueDeviation;
