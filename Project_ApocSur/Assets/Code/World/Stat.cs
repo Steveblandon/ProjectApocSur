@@ -49,12 +49,11 @@
             get => this.minValue; 
             set
             {
-                if (value <= this.maxValue)
+                if (value <= this.maxValue && this.minValue != value)
                 {
                     this.minValue = value;
+                    this.InvokeEvents();
                 }
-
-                this.InvokeEvents();
             }
         }
 
@@ -63,12 +62,11 @@
             get => this.maxValue; 
             set 
             {
-                if (value >= minValue)
+                if (value >= minValue && this.maxValue != value)
                 {
                     this.maxValue = value;
+                    this.InvokeEvents();
                 }
-
-                this.InvokeEvents();
             }
         }
 
@@ -95,6 +93,8 @@
 
         public void ApplyQuantity(float amount)
         {
+            float originalValue = this.Value;
+
             if (this.useMinMaxLimiters)
             {
                 float newValue = Math.Max(this.Value + amount, this.MinValue);      // we compare it to the min value incase of a negative amount
@@ -106,11 +106,16 @@
                 this.Value += amount;
             }
 
-            this.InvokeEvents();
+            if (this.Value != originalValue)
+            {
+                this.InvokeEvents();
+            }
         }
 
         public void ApplyMultiplier(float multiplier)
         {
+            float originalValue = this.Value;
+
             if (this.useMinMaxLimiters)
             {
                 float newValue = this.Value * multiplier;
@@ -131,7 +136,10 @@
                 this.Value *= multiplier;
             }
 
-            this.InvokeEvents();
+            if (this.Value != originalValue)
+            {
+                this.InvokeEvents();
+            }
         }
 
         public Stat Clone()

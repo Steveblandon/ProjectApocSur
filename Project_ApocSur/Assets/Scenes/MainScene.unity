@@ -820,6 +820,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SetInjuries: 0
   UpdateInjuries: 0
+  AddInjury: 0
   healingRateValue: 5
   painValue: 0
   bloodLossValue: 0
@@ -960,14 +961,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 487912560}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9dd4d547761b30647891d51f9957b6bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statMinValue: 0
-  statMaxValue: 100
-  statValue: 100
   maxHueDeviation: 112
   image: {fileID: 1441394671}
   outline: {fileID: 781009988}
@@ -1056,6 +1054,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &612715391 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1091599377047589587, guid: 89f806ed3ad0aec4d95816d913be126a, type: 3}
+  m_PrefabInstance: {fileID: 1091599377966846455}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &612715392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 612715391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed9ec586713ce1439f95e30dc1e5132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attach: 0
+  statMinValue: 0
+  statMaxValue: 100
+  statValue: 100
 --- !u!1 &647409032
 GameObject:
   m_ObjectHideFlags: 0
@@ -2823,6 +2842,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1732403183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732403181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d466e1ba93a90224880ec5afd6d94c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 0}
+  hitpointsBar: {fileID: 0}
+  injuriesViewManager: {fileID: 0}
 --- !u!1 &1767655029
 GameObject:
   m_ObjectHideFlags: 0

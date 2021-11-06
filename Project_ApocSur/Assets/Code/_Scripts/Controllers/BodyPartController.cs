@@ -3,7 +3,7 @@ namespace Projapocsur.Scripts
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class BodyPartUI : StatViewUI
+    public class BodyPartController : StatViewController
     {
         [SerializeField]
         private Image image, outline;
@@ -39,12 +39,11 @@ namespace Projapocsur.Scripts
 
             if (statPercentageReduction > reductionThreshold)
             {
-                this.originalColor = belowThresholdColor;
-                image.color = this.GetCurrentColor(statPercentageReduction);
+                image.color = this.GetColorWithNewHue(this.belowThresholdColor, statPercentageReduction);
             }
             else
             {
-                image.color = imageOriginalColor;
+                image.color = this.imageOriginalColor;
             }
         }
     }

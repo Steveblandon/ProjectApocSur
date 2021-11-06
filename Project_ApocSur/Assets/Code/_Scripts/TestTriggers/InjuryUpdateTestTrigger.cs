@@ -49,6 +49,7 @@ namespace Projapocsur.Scripts
             this.healingRate = new Stat(DefNameOf.Stat.HealingRate, this.healingRateValue, 100);
 
             this.currentContext = new InjuryProcessingContext(pain, bloodLoss, healingRate);
+            this.enabled = false;
         }
 
         void Update()
