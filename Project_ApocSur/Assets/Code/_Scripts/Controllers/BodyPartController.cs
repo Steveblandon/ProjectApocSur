@@ -3,6 +3,9 @@ namespace Projapocsur.Scripts
     using UnityEngine;
     using UnityEngine.UI;
 
+    /// <summary>
+    /// Hitpoints stat color representation prototype put to the side for now.
+    /// </summary>
     public class BodyPartController : StatViewController
     {
         [SerializeField]

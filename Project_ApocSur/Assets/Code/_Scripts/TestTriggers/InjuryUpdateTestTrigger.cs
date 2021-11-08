@@ -78,7 +78,7 @@ namespace Projapocsur.Scripts
 
             this.currentInjuries.ForEach(injury => injury.OnStart(this.currentContext));
 
-            this.injuryManager.ManageViewsFor(this.currentInjuries);
+            this.injuryManager.SetInjuries(this.currentInjuries);
         }
 
         private void InsertOneInjury()
@@ -86,7 +86,7 @@ namespace Projapocsur.Scripts
             var injury = new Injury(DefNameOf.Injury.Fracture, SeverityLevel.Minor);
             this.currentInjuries ??= new List<Injury>();
             this.currentInjuries.Add(injury);
-            this.injuryManager.AddToExistingManagedViews(injury);
+            this.injuryManager.AddInjury(injury);
         }
 
         private void InjuryUpdate()

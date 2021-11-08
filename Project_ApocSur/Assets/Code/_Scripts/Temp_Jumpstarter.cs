@@ -22,6 +22,11 @@ namespace Projapocsur.Scripts
 
         private Character testCharacter;
 
+        void Awake()
+        {
+            DefinitionFinder.Init();
+        }
+
         void Start()
         {
             if (this.characterAvatar == null || this.characterPortrait == null)
@@ -30,7 +35,8 @@ namespace Projapocsur.Scripts
             }
             else
             {
-                this.testCharacter = new Character(this.characterAvatar, this.characterPortrait);
+                Body body = new Body(DefNameOf.Body.Human);
+                this.testCharacter = new Character(this.characterAvatar, this.characterPortrait, body);
                 this.testCharacter.IsInPlayerFaction = true;
             }
         }

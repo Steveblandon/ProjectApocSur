@@ -13,10 +13,11 @@ namespace Projapocsur.World
         private Moveable mover;
         private bool _isDrafted;
 
-        public Character(SimpleSelectable avatar, SelectableUI portrait)
+        public Character(SimpleSelectable avatar, SelectableUI portrait, Body body)
         {
             ValidationUtility.ThrowIfNull(nameof(avatar), avatar);
             ValidationUtility.ThrowIfNull(nameof(portrait), portrait);
+            ValidationUtility.ThrowIfNull(nameof(body), body);
 
             this.mover = avatar.GetComponent<Moveable>();
             this.avatar = avatar;
@@ -25,13 +26,19 @@ namespace Projapocsur.World
             this.portrait.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
 
             // TODO: on character destruction make sure to unregister from all these events.
+
+            this.Body = body;
         }
 
         public static event Action<Character> OnSelectStateChangeEvent;
         public static event Action<Character> OnDraftStateChangeEvent;
 
+        public Body Body { get; }
+
         public bool IsInPlayerFaction { get; set; }
+        
         public bool IsSelected { get; protected set; }
+        
         public bool IsDrafted 
         { 
             get => this._isDrafted;

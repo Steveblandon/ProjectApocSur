@@ -40,7 +40,7 @@ namespace Projapocsur.Scripts
             this.DisableOnMissingReference(this.injuryViewPrefab, nameof(this.injuryViewPrefab), CompName);
         }
 
-        public void ManageViewsFor(IReadOnlyCollection<Injury> injuries)
+        public void SetInjuries(IReadOnlyCollection<Injury> injuries)
         {
             if (!this.isActiveAndEnabled)
             {
@@ -54,13 +54,13 @@ namespace Projapocsur.Scripts
             // create new controllers
             foreach (var injury in injuries)
             {
-                this.AddToExistingManagedViews(injury, resizeToFit: false);
+                this.AddInjury(injury, resizeToFit: false);
             }
 
             this.ResizeToFitViews();
         }
 
-        public void AddToExistingManagedViews(Injury injury, bool resizeToFit = true)
+        public void AddInjury(Injury injury, bool resizeToFit = true)
         {
             GameObject injuryView = Instantiate(injuryViewPrefab, this.transform);
 

@@ -62,12 +62,12 @@ namespace Projapocsur.Scripts
         {
             this.title.text = this.bodyPart.Def.Label;
             this.hitpointsBar.Stat = this.bodyPart.HitPoints;
-            this.injuriesViewManager.ManageViewsFor(bodyPart.Injuries);
+            this.injuriesViewManager.SetInjuries(bodyPart.Injuries);
         }
 
         private void OnNewInjuryEventHandler(Injury injury)
         {
-            this.injuriesViewManager.AddToExistingManagedViews(injury);
+            this.injuriesViewManager.AddInjury(injury);
         }
     }
 }

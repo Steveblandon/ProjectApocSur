@@ -11,40 +11,40 @@
 
         public static class Body
         {
-            public static string Human { get; } = nameof(Human);
+            public const string Human = nameof(Human);
         }
 
         public static class BodyPart
         {
-            public static string Human_Arm { get; } = nameof(Human_Arm);
+            public const string Human_Arm = nameof(Human_Arm);
 
-            public static string Human_Head { get; } = nameof(Human_Head);
+            public const string Human_Head = nameof(Human_Head);
 
-            public static string Human_Leg { get; } = nameof(Human_Leg);
+            public const string Human_Leg = nameof(Human_Leg);
 
-            public static string Human_Torso { get; } = nameof(Human_Torso);
+            public const string Human_Torso = nameof(Human_Torso);
         }
 
         public static class Injury
         {
-            public static string Bruise { get; } = nameof(Bruise);
+            public const string Bruise = nameof(Bruise);
 
-            public static string Fracture { get; } = nameof(Fracture);
+            public const string Fracture = nameof(Fracture);
 
-            public static string Laceration { get; } = nameof(Laceration);
+            public const string Laceration = nameof(Laceration);
         }
 
         public static class Stance
         {
-            public static string Stand { get; } = nameof(Stand);
+            public const string Stand = nameof(Stand);
 
-            public static string Sit { get; } = nameof(Sit);
+            public const string Sit = nameof(Sit);
 
-            public static string Crouch { get; } = nameof(Crouch);
+            public const string Crouch = nameof(Crouch);
 
-            public static string SitOnGround { get; } = nameof(SitOnGround);
+            public const string SitOnGround = nameof(SitOnGround);
 
-            public static string Prone { get; } = nameof(Prone);
+            public const string Prone = nameof(Prone);
         }
 
         public static class Stat
@@ -52,21 +52,21 @@
             // ===================================================================== // 
             // ============================== MEDICAL ============================== //
             // ===================================================================== // 
-            public static string BleedingRate { get; } = nameof(BleedingRate);
+            public const string BleedingRate = nameof(BleedingRate);
 
-            public static string BloodLoss { get; } = nameof(BloodLoss);
+            public const string BloodLoss = nameof(BloodLoss);
 
-            public static string HealingRate { get; } = nameof(HealingRate);
+            public const string HealingRate = nameof(HealingRate);
 
-            public static string Height { get; } = nameof(Height);
+            public const string Height = nameof(Height);
 
-            public static string HitPoints { get; } = nameof(HitPoints);
+            public const string HitPoints = nameof(HitPoints);
 
-            public static string HitPointsPercentage { get; } = nameof(HitPointsPercentage);
+            public const string HitPointsPercentage = nameof(HitPointsPercentage);
 
-            public static string Pain { get; } = nameof(Pain);
+            public const string Pain = nameof(Pain);
 
-            public static string PainIncrease { get; } = nameof(PainIncrease);
+            public const string PainIncrease = nameof(PainIncrease);
         }
     }
 }

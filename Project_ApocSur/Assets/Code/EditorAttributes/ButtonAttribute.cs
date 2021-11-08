@@ -11,7 +11,7 @@
     [System.AttributeUsage(System.AttributeTargets.Field)]
     public class ButtonAttribute : PropertyAttribute
     {
-        public static float kDefaultButtonWidth = 80;
+        public static float kDefaultButtonWidth = 300;
 
         public readonly string MethodName;
 
