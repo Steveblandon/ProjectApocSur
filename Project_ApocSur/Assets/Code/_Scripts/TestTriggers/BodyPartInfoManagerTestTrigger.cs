@@ -34,10 +34,7 @@
 
         void Start()
         {
-            DefinitionFinder.Init();
-
             this.bodyPartInfoManager = this.GetComponent<BodyPartInfoManager>();
-
             this.pain = new Stat(DefNameOf.Stat.Pain, 0, 100);
             this.bloodLoss = new Stat(DefNameOf.Stat.BloodLoss, 0, 100);
             this.healingRate = new Stat(DefNameOf.Stat.HealingRate, 5, 100);

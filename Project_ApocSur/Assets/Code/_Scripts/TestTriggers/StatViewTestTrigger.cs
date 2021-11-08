@@ -31,8 +31,6 @@
         void Start()
         {
             this.statViewController = this.GetComponent<StatViewController>();
-
-            DefinitionFinder.Init();
             this.attachState = deattached;
             this.enabled = false;
         }

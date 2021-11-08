@@ -44,7 +44,7 @@ namespace Projapocsur
                         this.SelecteesDrafted = character.IsDrafted;
                     }
                 }
-                else if (!character.IsSelected && GameManager.Instance.CharacterSelectionTracker.Selectees.Count == 0)
+                else if (!character.IsSelected && GameMaster.Instance.CharacterSelectionTracker.Selectees.Count == 0)
                 {
                     this.SelecteesDrafted = null;
                 }

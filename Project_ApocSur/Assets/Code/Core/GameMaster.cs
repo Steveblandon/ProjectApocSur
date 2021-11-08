@@ -1,15 +1,15 @@
 namespace Projapocsur
 {
-    public class GameManager
+    public class GameMaster
     {
-        private GameManager()
+        private GameMaster()
         {
             this.DraftTracker = new DraftTracker();
             this.CharacterSelectionTracker = new CharacterSelectionTracker();
         }
 
-        public static GameManager Instance { get { return _instance; } }
-        private static GameManager _instance = new GameManager();
+        public static GameMaster Instance { get { return _instance; } }
+        private static GameMaster _instance = new GameMaster();
 
         public DraftTracker DraftTracker { get; protected set; }
         public CharacterSelectionTracker CharacterSelectionTracker { get; protected set; }

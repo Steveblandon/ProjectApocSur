@@ -30,14 +30,14 @@
 
             if (this.isActiveAndEnabled)
             {
-                GameManager.Instance.CharacterSelectionTracker.OnSelectionChangeEvent += this.OnCurrentCharacterSelectChangeEventHandler;
+                GameMaster.Instance.CharacterSelectionTracker.OnSelectionChangeEvent += this.OnCurrentCharacterSelectChangeEventHandler;
                 this.bodyOutlineManager.OnSelectedBodyPartChangeEvent += this.OnSelectedBodyPartChangeEventHandler;
             }
         }
 
         void OnDestroy()
         {
-            GameManager.Instance.CharacterSelectionTracker.OnSelectionChangeEvent -= this.OnCurrentCharacterSelectChangeEventHandler;
+            GameMaster.Instance.CharacterSelectionTracker.OnSelectionChangeEvent -= this.OnCurrentCharacterSelectChangeEventHandler;
             this.bodyOutlineManager.OnSelectedBodyPartChangeEvent -= this.OnSelectedBodyPartChangeEventHandler;
         }
 
