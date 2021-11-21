@@ -43,23 +43,23 @@
 
         private void ApplyBruiseDamage()
         {
-            var hitInfo = new BodyHitInfo(this.hitHeight, new List<string>(1) { DefNameOf.Injury.Bruise }, this.damage);
+            var hitInfo = new DamageInfo(this.hitHeight, new List<string>(1) { DefNameOf.Injury.Bruise }, this.damage);
             this.ApplyDamage(hitInfo);
         }
 
         private void ApplyFractureDamage()
         {
-            var hitInfo = new BodyHitInfo(this.hitHeight, new List<string>(1) { DefNameOf.Injury.Fracture }, this.damage);
+            var hitInfo = new DamageInfo(this.hitHeight, new List<string>(1) { DefNameOf.Injury.Fracture }, this.damage);
             this.ApplyDamage(hitInfo);
         }
 
         private void ApplyLacerationDamage()
         {
-            var hitInfo = new BodyHitInfo(this.hitHeight, new List<string>(1) { DefNameOf.Injury.Laceration }, this.damage);
+            var hitInfo = new DamageInfo(this.hitHeight, new List<string>(1) { DefNameOf.Injury.Laceration }, this.damage);
             this.ApplyDamage(hitInfo);
         }
 
-        private void ApplyDamage(BodyHitInfo hitInfo)
+        private void ApplyDamage(DamageInfo hitInfo)
         {
             Character character = GameMaster.Instance.CharacterSelectionTracker.MainSelelectee;
             

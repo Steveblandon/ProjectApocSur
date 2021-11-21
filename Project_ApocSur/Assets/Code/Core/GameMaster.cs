@@ -4,14 +4,18 @@ namespace Projapocsur
     {
         private GameMaster()
         {
-            this.DraftTracker = new DraftTracker();
-            this.CharacterSelectionTracker = new CharacterSelectionTracker();
         }
 
-        public static GameMaster Instance { get { return _instance; } }
         private static GameMaster _instance = new GameMaster();
 
-        public DraftTracker DraftTracker { get; protected set; }
-        public CharacterSelectionTracker CharacterSelectionTracker { get; protected set; }
+        public static GameMaster Instance { get => _instance; }
+
+        public static GameMaster Init() => Instance;
+
+        public CharacterSelectionTracker CharacterSelectionTracker { get; } = new CharacterSelectionTracker();
+
+        public DraftTracker DraftTracker { get; } = new DraftTracker();
+
+        public ObjectPool ObjectPool { get; } = new ObjectPool();
     }
 }

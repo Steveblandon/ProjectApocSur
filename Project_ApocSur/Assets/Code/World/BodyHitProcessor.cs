@@ -55,7 +55,7 @@
             }
         }
 
-        public (BodyPart bodyPart, int index) ProcessHit(BodyHitInfo hit, IReadOnlyList<BodyPart> bodyParts, DefRef<StanceDef> currentStance)
+        public (BodyPart bodyPart, int index) ProcessHit(DamageInfo hit, IReadOnlyList<BodyPart> bodyParts, DefRef<StanceDef> currentStance)
         {
             var hitBoxes = this.hitBoxesPerStance[currentStance.RefDefName].HitBoxes;
 

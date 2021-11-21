@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
 
-    public class BodyHitInfo
+    public class DamageInfo
     {
-        public BodyHitInfo(float height, IEnumerable<string> injuryDefNames, float damage)
+        public DamageInfo(float height, IEnumerable<string> injuryDefNames, float damage)
         {
             this.Height = height;
             this.InjuryDefNames = injuryDefNames;

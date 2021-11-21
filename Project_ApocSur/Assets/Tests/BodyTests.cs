@@ -59,7 +59,7 @@
             float damage = 5;
             float expectedHPAfterDamage = legs[0].HitPoints.Value - damage;
             ICollection<string> injuries = new List<string>() { DefNameOf.Injury.Bruise, DefNameOf.Injury.Fracture };
-            var hitInfo = new BodyHitInfo(legs[0].FloorHeight - (legs[0].Length / 2), injuries, 5);
+            var hitInfo = new DamageInfo(legs[0].FloorHeight - (legs[0].Length / 2), injuries, 5);
             Assert_NoExceptionThrownTryCatch(() => body.TakeDamage(hitInfo));
 
             BodyPart damagedLeg = null;
@@ -209,7 +209,7 @@
             float damage = legs[0].Def.MaxHitpoints / 2;
             float expectedHPAfterDamage = legs[0].HitPoints.Value - damage;
             ICollection<string> injuries = new List<string>() { DefNameOf.Injury.Bruise };
-            var hitInfo = new BodyHitInfo(legs[0].FloorHeight - (legs[0].Length / 2), injuries, damage);
+            var hitInfo = new DamageInfo(legs[0].FloorHeight - (legs[0].Length / 2), injuries, damage);
             Assert_NoExceptionThrownTryCatch(() => body.TakeDamage(hitInfo));
 
             BodyPart damagedLeg = null;
@@ -263,7 +263,7 @@
 
             float damage = legs[0].Def.MaxHitpoints / 2;
             ICollection<string> injuries = new List<string>() { DefNameOf.Injury.Bruise };
-            var hitInfo = new BodyHitInfo(legs[0].FloorHeight - (legs[0].Length / 2), injuries, damage);
+            var hitInfo = new DamageInfo(legs[0].FloorHeight - (legs[0].Length / 2), injuries, damage);
 
             Assert.AreEqual(0, body.BleedingRate.Value);
             Assert.AreEqual(0, body.BloodLoss.Value);
@@ -302,7 +302,7 @@
 
             float damage = vitalParts[0].Def.MaxHitpoints / 2;
             ICollection<string> injuries = new List<string>() { DefNameOf.Injury.Bruise };
-            var hitInfo = new BodyHitInfo(vitalParts[0].FloorHeight - (vitalParts[0].Length / 2), injuries, damage);
+            var hitInfo = new DamageInfo(vitalParts[0].FloorHeight - (vitalParts[0].Length / 2), injuries, damage);
 
             Assert.AreEqual(0, body.BleedingRate.Value);
             Assert.AreEqual(0, body.BloodLoss.Value);
@@ -339,7 +339,7 @@
             float damage = legs[0].Def.MaxHitpoints / 4;        // bleeding of the injury is assumed to be high such as that it should limit the healing more than the damage
             float expectedHPAfterDamage = legs[0].HitPoints.Value - damage;
             ICollection<string> injuries = new List<string>() { DefNameOf.Injury.Laceration };
-            var hitInfo = new BodyHitInfo(legs[0].FloorHeight - (legs[0].Length / 2), injuries, damage);
+            var hitInfo = new DamageInfo(legs[0].FloorHeight - (legs[0].Length / 2), injuries, damage);
             Assert.AreEqual(0, body.BloodLoss.Value);
             Assert_NoExceptionThrownTryCatch(() => body.TakeDamage(hitInfo));
             Assert.IsTrue(body.BloodLoss.Value > 0);

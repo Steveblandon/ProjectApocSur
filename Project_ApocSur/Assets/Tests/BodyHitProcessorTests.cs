@@ -72,7 +72,7 @@
             legs.AddRange(bodyParts, bodyPart => bodyPart.Def.Name == DefNameOf.BodyPart.Human_Leg);
             Assert.AreNotEqual(0, legs.Count);
 
-            var hitInfo = new BodyHitInfo(legs[0].Length / 2, new List<string>(), 5);
+            var hitInfo = new DamageInfo(legs[0].Length / 2, new List<string>(), 5);
             Assert_NoExceptionThrownTryCatch(() => hitProcessor.ProcessHit(hitInfo, bodyParts, humanBodyDef.DefaultStance));
 
             var damagedLegs = new List<BodyPart>();

@@ -1,6 +1,4 @@
 namespace Projapocsur.Scripts
-
-
 {
     using Projapocsur.World;
     using UnityEngine;
@@ -8,9 +6,9 @@ namespace Projapocsur.Scripts
     /// <summary>
     /// Temporary placeholder for initializing connections or triggers for which a robust system isn't in place yet.
     /// </summary>
-    public class Temp_Jumpstarter : MonoBehaviour
+    public class GameInitializer : MonoBehaviour
     {
-        public static readonly string className = nameof(Temp_Jumpstarter);
+        public static readonly string className = nameof(GameInitializer);
 
         [Tooltip("will be linked to portrait below, in the future this will be managed by an instance that deals with character creation.")]
         [SerializeField]
@@ -25,6 +23,7 @@ namespace Projapocsur.Scripts
         void Awake()
         {
             DefinitionFinder.Init();
+            GameMaster.Init();
         }
 
         void Start()

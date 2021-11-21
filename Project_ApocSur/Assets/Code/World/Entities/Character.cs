@@ -87,7 +87,7 @@ namespace Projapocsur.World
                 {
                     if (this.mover != null)
                     {
-                        this.mover.MoveToMousePosition();
+                        this.mover.MoveToMousePosition(3);      // TODO: change value to movement speed stat value
                     }
                     else
                     {

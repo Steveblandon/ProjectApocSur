@@ -139,7 +139,7 @@
             this.BodyParts.ForEach(bodyPart => bodyPart.OnDestroy(this.injuryProcessingContext));
         }
 
-        public void TakeDamage(BodyHitInfo hit)
+        public void TakeDamage(DamageInfo hit)
         {
             if (this.IsDestroyed)
             {
