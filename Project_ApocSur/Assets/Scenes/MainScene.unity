@@ -2134,7 +2134,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fire: 0
   reload: 0
-  shootingDistance: 3
 --- !u!114 &1090649968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2148,9 +2147,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammoCapacity: 9
-  reloadTime: 0
-  aimTime: 0
-  projectileSpeed: 2
+  reloadTime: 0.5
+  aimTime: 0.2
+  projectileSpeed: 40
+  effectiveRange: 20
   ammo: 0
 --- !u!1 &1179361324
 GameObject:

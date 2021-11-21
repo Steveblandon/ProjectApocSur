@@ -16,14 +16,14 @@ namespace Projapocsur.Scripts
         void Start()
         {
             this.moveable = this.GetComponent<Moveable>();
-            this.moveable.OnStoppedMovingEvent += this.OnDestinationReachedEventHandler;
+            this.moveable.OnDestinationReachedEvent += this.OnDestinationReachedEventHandler;
         }
 
         void OnDestroy()
         {
             if (this.moveable != null)
             {
-                this.moveable.OnStoppedMovingEvent -= this.OnDestinationReachedEventHandler;
+                this.moveable.OnDestinationReachedEvent -= this.OnDestinationReachedEventHandler;
             }
         }
 
@@ -46,14 +46,14 @@ namespace Projapocsur.Scripts
             return this;
         }
 
-        public void PropelTowards(Vector3 direction, float speed)
+        public void PropelTowards(Vector3 direction, float distance, float speed)
         {
             if (destinationOffsetMultiplier > 0f)
             {
                 direction *= destinationOffsetMultiplier;
             }
             
-            this.moveable.MoveInDirection(direction, speed: speed);
+            this.moveable.MoveInDirection(direction, distance: distance, speed: speed);
         }
 
         private void OnDestinationReachedEventHandler()

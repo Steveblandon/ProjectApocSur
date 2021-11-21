@@ -6,32 +6,32 @@ namespace Projapocsur.Scripts
     public enum MoveDirective
     {
         None,
-        moveToDestination,
-        moveInDirection
+        MoveToDestination,
+        MoveInDirection
     }
 
     public class Moveable : MonoBehaviour
     {
-        public event Action OnStoppedMovingEvent;
-        
         public static readonly string CompName = nameof(Moveable);
+        public event Action OnDestinationReachedEvent;        
 
+        private Vector3 startingPoint;
         private Vector3 destination;
         private Vector3 direction;
         private MoveDirective moveDirective;
         private float speed;
+        private float distanceToTravel;
 
         void Start()
         {
-            this.destination = this.transform.position;
-            this.direction = Vector3.zero;
+            this.OnDestinationReached(false);
         }
 
         void Update()
         {
             switch (this.moveDirective)
             {
-                case MoveDirective.moveToDestination:
+                case MoveDirective.MoveToDestination:
                     this.transform.position = Vector3.MoveTowards(this.transform.position, this.destination, this.speed * Time.deltaTime);
                     if (this.transform.position != this.destination)
                     {
@@ -39,29 +39,39 @@ namespace Projapocsur.Scripts
                     }
                     else
                     {
-                        this.OnDestinationReached();
+                        this.OnDestinationReached(true);
                     }
+
                     break;
-                case MoveDirective.moveInDirection:
+                case MoveDirective.MoveInDirection:
                     this.transform.Translate(this.direction * this.speed * Time.deltaTime, Space.World);    // NOTE: must be Space.World to have it account for rotation, otherwise it won't move in the proper direction.
+                    float distanceTravelled = Vector3.Distance(startingPoint, this.transform.position);
+                    if (distanceTravelled >= distanceToTravel)
+                    {
+                        this.OnDestinationReached(true);
+                    }
+
                     break;
             }
         }
 
-        public void MoveInDirection(Vector3 direction, float speed)
+        public void MoveInDirection(Vector3 direction, float distance, float speed)
         {
+            this.startingPoint = this.transform.position;
             this.speed = speed;
             this.direction = direction;
-            this.moveDirective = MoveDirective.moveInDirection;
+            this.distanceToTravel = distance;
+            this.moveDirective = MoveDirective.MoveInDirection;
             this.enabled = true;
             Debug.Log($"{this.name} moving towards {this.direction}");
         }
 
         public void MoveToPosition(Vector3 position, float speed)
         {
+            this.startingPoint = this.transform.position;
             this.speed = speed;
             this.destination = position;
-            this.moveDirective = MoveDirective.moveToDestination;
+            this.moveDirective = MoveDirective.MoveToDestination;
             this.enabled = true;
             Debug.Log($"{this.name} moving from {this.transform.position} to {this.destination} [current Up direction: {this.transform.up}]");
         }
@@ -73,11 +83,18 @@ namespace Projapocsur.Scripts
             this.MoveToPosition(worldPoint, speed);
         }
 
-        private void OnDestinationReached()
+        private void OnDestinationReached(bool invokeEvent)
         {
             this.moveDirective = MoveDirective.None;
-            this.OnStoppedMovingEvent?.Invoke();
+            this.distanceToTravel = 0;
+            this.destination = this.transform.position;
+            this.direction = Vector3.zero;
             this.enabled = false;
+
+            if (invokeEvent)
+            {
+                this.OnDestinationReachedEvent?.Invoke();
+            }
         }
     }
 }

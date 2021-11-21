@@ -22,11 +22,13 @@ namespace Projapocsur.Scripts
         private float projectileSpeed;
 
         [SerializeField]
+        private float effectiveRange;
+
+        [SerializeField]
         [ReadOnly]
         private int ammo;
 
         private DamageInfo damageInfo;
-        private Vector3 target;
         private bool isBusy;
         private Queue<Func<IEnumerator>> queuedRoutine = new Queue<Func<IEnumerator>>();
 
@@ -35,11 +37,10 @@ namespace Projapocsur.Scripts
             GameMaster.Instance.ObjectPool.AssureMinimumPoolSizeForPath(ResourcePathOf.Bullet, ammoCapacity);
         }
 
-        public void FireProjectile(int distance)
+        public void FireProjectile()
         {
             if (ammo > 0)
             {
-                this.target = this.transform.up * distance;
                 this.StartOrQueueRoutine(this.ShootRoutine);
             }
             else
@@ -89,7 +90,7 @@ namespace Projapocsur.Scripts
 
                 yield return new WaitUntil(() => projectile.enabled);
 
-                projectile.PropelTowards(this.transform.parent.transform.up, projectileSpeed);
+                projectile.PropelTowards(this.transform.parent.transform.up, distance: effectiveRange, speed: projectileSpeed);
 
                 this.ammo--;
             }

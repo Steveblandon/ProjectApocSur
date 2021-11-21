@@ -14,9 +14,6 @@
         [Button(nameof(Reload))]
         private bool reload;
 
-        [SerializeField]
-        private int shootingDistance;
-
         private ProjectileLauncher launcher;
 
         void Start()
@@ -26,7 +23,7 @@
 
         private void Fire()
         {
-            this.launcher.FireProjectile(shootingDistance);
+            this.launcher.FireProjectile();
         }
 
         private void Reload()
