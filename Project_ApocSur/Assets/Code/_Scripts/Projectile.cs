@@ -7,9 +7,6 @@ namespace Projapocsur.Scripts
     [RequireComponent(typeof(Moveable))]
     public class Projectile : MonoBehaviour
     {
-        [SerializeField]
-        private float destinationOffsetMultiplier;
-
         private Moveable moveable;
         private DamageInfo damageInfo;
 
@@ -46,15 +43,7 @@ namespace Projapocsur.Scripts
             return this;
         }
 
-        public void PropelTowards(Vector3 direction, float distance, float speed)
-        {
-            if (destinationOffsetMultiplier > 0f)
-            {
-                direction *= destinationOffsetMultiplier;
-            }
-            
-            this.moveable.MoveInDirection(direction, distance: distance, speed: speed);
-        }
+        public void PropelForward(float distance, float speed) => this.moveable.MoveForward(distance: distance, speed: speed);
 
         private void OnDestinationReachedEventHandler()
         {

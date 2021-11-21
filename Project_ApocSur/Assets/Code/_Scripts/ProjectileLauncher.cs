@@ -10,7 +10,13 @@ namespace Projapocsur.Scripts
     public class ProjectileLauncher : MonoBehaviour
     {
         [SerializeField]
-        private int ammoCapacity;
+        private float accuracy;
+
+        [SerializeField]
+        private float spread;
+
+        [SerializeField]
+        private float effectiveRange;
 
         [SerializeField]
         private float reloadTime;
@@ -22,7 +28,7 @@ namespace Projapocsur.Scripts
         private float projectileSpeed;
 
         [SerializeField]
-        private float effectiveRange;
+        private int ammoCapacity;
 
         [SerializeField]
         [ReadOnly]
@@ -88,9 +94,16 @@ namespace Projapocsur.Scripts
                     .GetComponent<Projectile>()
                     .Init(this.damageInfo, this.transform.position, this.transform.rotation);
 
-                yield return new WaitUntil(() => projectile.enabled);
+                float rotation = 0;
+                if (RandomNumberGenerator.Roll() > accuracy)
+                {
+                    float spreadHalf = spread / 2;
+                    rotation = RandomNumberGenerator.Roll(-spreadHalf, spreadHalf);
+                }
 
-                projectile.PropelTowards(this.transform.parent.transform.up, distance: effectiveRange, speed: projectileSpeed);
+                yield return new WaitUntil(() => projectile.enabled);
+                projectile.transform.Rotate(0, 0, rotation);
+                projectile.PropelForward(distance: effectiveRange, speed: projectileSpeed);
 
                 this.ammo--;
             }

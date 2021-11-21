@@ -7,7 +7,7 @@ namespace Projapocsur.Scripts
     {
         None,
         MoveToDestination,
-        MoveInDirection
+        MoveForward
     }
 
     public class Moveable : MonoBehaviour
@@ -17,7 +17,6 @@ namespace Projapocsur.Scripts
 
         private Vector3 startingPoint;
         private Vector3 destination;
-        private Vector3 direction;
         private MoveDirective moveDirective;
         private float speed;
         private float distanceToTravel;
@@ -43,8 +42,8 @@ namespace Projapocsur.Scripts
                     }
 
                     break;
-                case MoveDirective.MoveInDirection:
-                    this.transform.Translate(this.direction * this.speed * Time.deltaTime, Space.World);    // NOTE: must be Space.World to have it account for rotation, otherwise it won't move in the proper direction.
+                case MoveDirective.MoveForward:
+                    this.transform.Translate(this.transform.up * this.speed * Time.deltaTime, Space.World);    // NOTE: must be Space.World to have it account for rotation, otherwise it won't move in the proper direction.
                     float distanceTravelled = Vector3.Distance(startingPoint, this.transform.position);
                     if (distanceTravelled >= distanceToTravel)
                     {
@@ -55,15 +54,14 @@ namespace Projapocsur.Scripts
             }
         }
 
-        public void MoveInDirection(Vector3 direction, float distance, float speed)
+        public void MoveForward(float distance, float speed)
         {
             this.startingPoint = this.transform.position;
             this.speed = speed;
-            this.direction = direction;
             this.distanceToTravel = distance;
-            this.moveDirective = MoveDirective.MoveInDirection;
+            this.moveDirective = MoveDirective.MoveForward;
             this.enabled = true;
-            Debug.Log($"{this.name} moving towards {this.direction}");
+            Debug.Log($"{this.name} moving forward for a distance of {distance}");
         }
 
         public void MoveToPosition(Vector3 position, float speed)
@@ -88,7 +86,6 @@ namespace Projapocsur.Scripts
             this.moveDirective = MoveDirective.None;
             this.distanceToTravel = 0;
             this.destination = this.transform.position;
-            this.direction = Vector3.zero;
             this.enabled = false;
 
             if (invokeEvent)
