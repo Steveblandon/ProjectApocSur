@@ -3,19 +3,9 @@ namespace Projapocsur.Scripts
     using Projapocsur.World;
     using UnityEngine;
 
-    public class Damageable : MonoBehaviour, IDamageable, ITargetable
+    public class Damageable : MonoBehaviour, IDamageable
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        public Vector3 Position => this.transform.position;
 
         public void TakeDamage(DamageInfo damageInfo)
         {

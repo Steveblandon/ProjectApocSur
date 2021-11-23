@@ -20,6 +20,7 @@ namespace Projapocsur.Scripts
         private MoveDirective moveDirective;
         private float speed;
         private float distanceToTravel;
+        private ITargetable target;
 
         void Start()
         {
@@ -28,17 +29,22 @@ namespace Projapocsur.Scripts
 
         void Update()
         {
+            if (this.target != null)
+            {
+                this.transform.rotation = Quaternion.LookRotation(Vector3.forward, this.target.Position - this.transform.position);
+            }
+
             switch (this.moveDirective)
             {
                 case MoveDirective.MoveToDestination:
                     this.transform.position = Vector3.MoveTowards(this.transform.position, this.destination, this.speed * Time.deltaTime);
-                    if (this.transform.position != this.destination)
-                    {
-                        this.transform.rotation = Quaternion.LookRotation(Vector3.forward, this.destination - this.transform.position);
-                    }
-                    else
+                    if (this.transform.position == this.destination)
                     {
                         this.OnDestinationReached(true);
+                    }
+                    else if (this.target == null)
+                    {
+                        this.transform.rotation = Quaternion.LookRotation(Vector3.forward, this.destination - this.transform.position);
                     }
 
                     break;
@@ -54,13 +60,16 @@ namespace Projapocsur.Scripts
             }
         }
 
+        public void TrackTarget(ITargetable target) => this.target = target;
+
+        public void DisengageTarget() => this.target = null;
+
         public void MoveForward(float distance, float speed)
         {
             this.startingPoint = this.transform.position;
             this.speed = speed;
             this.distanceToTravel = distance;
             this.moveDirective = MoveDirective.MoveForward;
-            this.enabled = true;
             Debug.Log($"{this.name} moving forward for a distance of {distance}");
         }
 
@@ -70,7 +79,6 @@ namespace Projapocsur.Scripts
             this.speed = speed;
             this.destination = position;
             this.moveDirective = MoveDirective.MoveToDestination;
-            this.enabled = true;
             Debug.Log($"{this.name} moving from {this.transform.position} to {this.destination} [current Up direction: {this.transform.up}]");
         }
 
@@ -86,7 +94,6 @@ namespace Projapocsur.Scripts
             this.moveDirective = MoveDirective.None;
             this.distanceToTravel = 0;
             this.destination = this.transform.position;
-            this.enabled = false;
 
             if (invokeEvent)
             {

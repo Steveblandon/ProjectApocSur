@@ -50,7 +50,7 @@
             {
                 foreach (var selectee in GameMaster.Instance.CharacterSelectionTracker.Selectees)
                 {
-                    selectee.EngageTarget(damageable, EngagementMode.Shoot);
+                    selectee.EngageTarget(damageable, CombatEngagementMode.Shoot);
                 }
             }
 

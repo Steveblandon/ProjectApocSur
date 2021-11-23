@@ -12,11 +12,14 @@ namespace Projapocsur.Scripts
 
         [Tooltip("will be linked to portrait below, in the future this will be managed by an instance that deals with character creation.")]
         [SerializeField]
-        private SimpleSelectable characterAvatar;
+        private SimpleSelectable testCharacterAvatar;
 
         [Tooltip("will be linked to character above, in the future this will be managed by an instance that deals with character creation.")]
         [SerializeField]
-        private SelectableUI characterPortrait;
+        private SelectableUI testCharacterPortrait;
+
+        [SerializeField]
+        private ProjectileLauncher rangedWeapon;
 
         private Character testCharacter;
 
@@ -28,15 +31,17 @@ namespace Projapocsur.Scripts
 
         void Start()
         {
-            if (this.characterAvatar == null || this.characterPortrait == null)
+            if (this.testCharacterAvatar == null || this.testCharacterPortrait == null || this.rangedWeapon == null)
             {
                 Debug.LogError($"{className}: missing character reference(s) in {this.gameObject.name}.");
             }
             else
             {
                 Body body = new Body(DefNameOf.Body.Human);
-                this.testCharacter = new Character(this.characterAvatar, this.characterPortrait, body);
+                ICoroutineHandler characterCoroutineHandler = new CoroutineHandler(this.StartCoroutine, this.StopCoroutine);
+                this.testCharacter = new Character(this.testCharacterAvatar, this.testCharacterPortrait, body, characterCoroutineHandler);
                 this.testCharacter.IsInPlayerFaction = true;
+                this.testCharacter.RangedWeapon = rangedWeapon;
             }
         }
     }

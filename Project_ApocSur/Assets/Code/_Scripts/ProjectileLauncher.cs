@@ -7,8 +7,12 @@ namespace Projapocsur.Scripts
     using Projapocsur.World;
     using UnityEngine;
 
-    public class ProjectileLauncher : MonoBehaviour
+    public class ProjectileLauncher : MonoBehaviour, IRangedWeapon
     {
+        public event Action WeaponFiredEvent;
+
+        public event Action WeaponReloadedEvent;
+
         [SerializeField]
         private float accuracy;
 
@@ -16,7 +20,7 @@ namespace Projapocsur.Scripts
         private float spread;
 
         [SerializeField]
-        private float effectiveRange;
+        private int effectiveRange;
 
         [SerializeField]
         private float reloadTime;
@@ -37,6 +41,10 @@ namespace Projapocsur.Scripts
         private DamageInfo damageInfo;
         private bool isBusy;
         private Queue<Func<IEnumerator>> queuedRoutine = new Queue<Func<IEnumerator>>();
+
+        public int Ammo => this.ammo;
+
+        public int EffectiveRange => this.effectiveRange;
 
         void Start()
         {
@@ -85,7 +93,7 @@ namespace Projapocsur.Scripts
         private IEnumerator ShootRoutine()
         {
             yield return new WaitForSeconds(aimTime);
-            if (this.ammo > 1)
+            if (this.ammo > 0)
             {
                 Projectile projectile = GameMaster
                     .Instance
@@ -104,8 +112,8 @@ namespace Projapocsur.Scripts
                 yield return new WaitUntil(() => projectile.enabled);
                 projectile.transform.Rotate(0, 0, rotation);
                 projectile.PropelForward(distance: effectiveRange, speed: projectileSpeed);
-
                 this.ammo--;
+                this.WeaponFiredEvent?.Invoke();
             }
         }
 
@@ -115,6 +123,7 @@ namespace Projapocsur.Scripts
             yield return new WaitForSeconds(reloadTime);
             ammo = ammoCapacity;
             Debug.Log($"{this.name} reloaded ({this.ammo}/{this.ammoCapacity})");
+            this.WeaponReloadedEvent?.Invoke();
         }
     }
 }

@@ -4,30 +4,31 @@ namespace Projapocsur.World
     using Projapocsur.Scripts;
     using UnityEngine;
 
-    public class Character
+    public class Character : IEventListener
     {
         public const string ClassName = nameof(Character);
 
         private Selectable avatar;
         private Selectable portrait;
-        private Moveable mover;
+        private Moveable moveable;
+        private CombatDriver combatDriver;
+        private ICoroutineHandler coroutineHandler;
         private bool _isDrafted;
 
-        public Character(SimpleSelectable avatar, SelectableUI portrait, Body body)
+        public Character(SimpleSelectable avatar, SelectableUI portrait, Body body, ICoroutineHandler coroutineHandler)
         {
             ValidationUtility.ThrowIfNull(nameof(avatar), avatar);
             ValidationUtility.ThrowIfNull(nameof(portrait), portrait);
             ValidationUtility.ThrowIfNull(nameof(body), body);
 
-            this.mover = avatar.GetComponent<Moveable>();
+            this.coroutineHandler = coroutineHandler;
+            this.moveable = avatar.GetComponent<Moveable>();
+            this.combatDriver = new CombatDriver(this.moveable, coroutineHandler);
             this.avatar = avatar;
             this.portrait = portrait;
+            this.Body = body;
             this.avatar.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
             this.portrait.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
-
-            // TODO: on character destruction make sure to unregister from all these events.
-
-            this.Body = body;
         }
 
         public static event Action<Character> OnSelectStateChangeEvent;
@@ -54,17 +55,16 @@ namespace Projapocsur.World
             }
         }
 
-        public void EngageTarget(IDamageable damageable, EngagementMode engagementMode)
-        {
-            // TBI
+        public IRangedWeapon RangedWeapon { set => this.combatDriver.RangedWeapon = value; }    // temporary direct assignment until inventory system is in place
 
-            switch(engagementMode)
-            {
-                case EngagementMode.Shoot:
-                    Debug.Log($"{this.avatar.name} shoots target");
-                    damageable.TakeDamage(null);
-                    break;
-            }
+        public void EngageTarget(IDamageable damageable, CombatEngagementMode engagementMode) => this.combatDriver.EngageTarget(damageable, engagementMode);
+
+        public void OnDestroy()
+        {
+            this.combatDriver.OnDestroy();
+            this.avatar.OnSelectStateChangeEvent -= this.OnCompSelectStateChangeEvent;
+            this.portrait.OnSelectStateChangeEvent -= this.OnCompSelectStateChangeEvent;
+            InputController.Main.OnNothingClickedEvent -= this.OnNothingClickedEvent;
         }
 
         private void OnCompSelectStateChangeEvent(Selectable simpleSelectable)
@@ -98,9 +98,9 @@ namespace Projapocsur.World
                 }
                 else if (mouseInput == KeyCode.Mouse1 && this.IsDrafted)
                 {
-                    if (this.mover != null)
+                    if (this.moveable != null)
                     {
-                        this.mover.MoveToMousePosition(3);      // TODO: change value to movement speed stat value
+                        this.moveable.MoveToMousePosition(3);      // TODO: change value to movement speed stat value
                     }
                     else
                     {
@@ -109,12 +109,5 @@ namespace Projapocsur.World
                 }
             }
         }
-    }
-
-    public enum EngagementMode
-    {
-        Shoot,
-        Melee,
-        TrackAndEliminate
     }
 }
