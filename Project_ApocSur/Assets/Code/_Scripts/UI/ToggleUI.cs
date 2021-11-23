@@ -4,7 +4,7 @@ namespace Projapocsur.Scripts
     {
         public static readonly new string CompName = nameof(ToggleUI);
 
-        public override void OnPointerLeftClick()
+        public override void OnLeftClick()
         {
             this.Toggle();
         }

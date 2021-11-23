@@ -59,14 +59,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff638ab282e92104d86633647d5daadd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: 0
-  statMinValue: 0
-  statMaxValue: 100
-  statValue: 100
-  MaxHueDeviation: 112
+  maxHueDeviation: 0
   image: {fileID: 1091599378457065070}
   background: {fileID: 1091599378550032727}
   enableBackground: 1
+  direction: 0
 --- !u!1 &1091599378457065056
 GameObject:
   m_ObjectHideFlags: 0

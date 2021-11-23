@@ -54,12 +54,25 @@ namespace Projapocsur.World
             }
         }
 
+        public void EngageTarget(IDamageable damageable, EngagementMode engagementMode)
+        {
+            // TBI
+
+            switch(engagementMode)
+            {
+                case EngagementMode.Shoot:
+                    Debug.Log($"{this.avatar.name} shoots target");
+                    damageable.TakeDamage(null);
+                    break;
+            }
+        }
+
         private void OnCompSelectStateChangeEvent(Selectable simpleSelectable)
         {
             if (this.IsSelected && !simpleSelectable.IsSelected)
             {
                 this.IsSelected = false;
-                InputController.OnNothingClickedEvent -= this.OnNothingClickedEvent;
+                InputController.Main.OnNothingClickedEvent -= this.OnNothingClickedEvent;
                 this.avatar.OnDeselect();
                 this.portrait.OnDeselect();
                 OnSelectStateChangeEvent?.Invoke(this);
@@ -67,23 +80,23 @@ namespace Projapocsur.World
             else if (!this.IsSelected && simpleSelectable.IsSelected)
             {
                 this.IsSelected = true;
-                InputController.OnNothingClickedEvent += this.OnNothingClickedEvent;
+                InputController.Main.OnNothingClickedEvent += this.OnNothingClickedEvent;
                 this.avatar.OnSelect();
                 this.portrait.OnSelect();
                 OnSelectStateChangeEvent?.Invoke(this);
             }
         }
 
-        private void OnNothingClickedEvent(InputController.MouseInput mouseInput)
+        private void OnNothingClickedEvent(KeyCode mouseInput)
         {
             if (this.IsSelected)
             {
-                if (mouseInput == InputController.MouseInput.Left)
+                if (mouseInput == KeyCode.Mouse0)
                 {
                     this.avatar.OnDeselect();
                     this.portrait.OnDeselect();
                 }
-                else if (mouseInput == InputController.MouseInput.Right && this.IsDrafted)
+                else if (mouseInput == KeyCode.Mouse1 && this.IsDrafted)
                 {
                     if (this.mover != null)
                     {
@@ -96,5 +109,12 @@ namespace Projapocsur.World
                 }
             }
         }
+    }
+
+    public enum EngagementMode
+    {
+        Shoot,
+        Melee,
+        TrackAndEliminate
     }
 }

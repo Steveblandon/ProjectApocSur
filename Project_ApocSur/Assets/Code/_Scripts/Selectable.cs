@@ -6,7 +6,7 @@ namespace Projapocsur.Scripts
     /// <summary>
     /// Abstract representation of an object that can be selected. Used to make any gameobject selectable.
     /// </summary>
-    public abstract class Selectable : MonoBehaviour, IPointerLeftClickHandler
+    public abstract class Selectable : MonoBehaviour, ILeftClickHandler, IRightClickHandler
     {
         public static readonly string CompName = nameof(Selectable);
 
@@ -48,9 +48,14 @@ namespace Projapocsur.Scripts
             Debug.Log($"{CompName}: {this.name} deselected.");
         }
 
-        public virtual void OnPointerLeftClick()
+        public virtual void OnLeftClick()
         {
             this.OnSelect();
+        }
+
+        public virtual void OnRightClick()
+        {
+            // TBI
         }
     }
 }

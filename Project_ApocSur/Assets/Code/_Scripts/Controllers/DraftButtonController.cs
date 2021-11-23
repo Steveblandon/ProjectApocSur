@@ -18,7 +18,7 @@ namespace Projapocsur.Scripts
             this.OnDraftStateChangeEvent(GameMaster.Instance.DraftTracker.SelecteesDrafted);
         }
 
-        void OnDisable()
+        void OnDestroy()
         {
             this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
             GameMaster.Instance.DraftTracker.OnDraftStateChangeEvent -= this.OnDraftStateChangeEvent;

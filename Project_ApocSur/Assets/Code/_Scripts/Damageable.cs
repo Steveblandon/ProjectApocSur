@@ -1,11 +1,9 @@
 namespace Projapocsur.Scripts
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using Projapocsur.World;
     using UnityEngine;
 
-    public class Damageable : MonoBehaviour, IDamageable
+    public class Damageable : MonoBehaviour, IDamageable, ITargetable
     {
         // Start is called before the first frame update
         void Start()
@@ -21,7 +19,7 @@ namespace Projapocsur.Scripts
 
         public void TakeDamage(DamageInfo damageInfo)
         {
-            
+            Debug.Log($"'{this.name}' took damage");
         }
     }
 }

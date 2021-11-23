@@ -29,7 +29,7 @@ namespace Projapocsur.Scripts
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                this.OnPointerLeftClick();
+                this.OnLeftClick();
             }
         }
     }
