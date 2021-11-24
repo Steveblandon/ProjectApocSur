@@ -25,14 +25,14 @@
         [XmlMember]
         protected int withinRangeBodySize;
 
-        public BodyHitBox(Range targetRange, IReadOnlyList<BodyPart> bodyParts, float bodyPartLengthMultiplier)
+        public BodyHitBox(Span targetRange, IReadOnlyList<BodyPart> bodyParts, float bodyPartLengthMultiplier)
         {
-            this.TargetRange = targetRange;
+            this.TargetSpan = targetRange;
             this.Calibrate(bodyParts, bodyPartLengthMultiplier);
         }
 
         [XmlMember]
-        public Range TargetRange { get; protected set; }
+        public Span TargetSpan { get; protected set; }
 
         [XmlMember]
         public bool IsEmpty { get; protected set; }
@@ -48,16 +48,16 @@
                 float adjustedFloorOffset = bodyPart.FloorOffset * bodyPartLengthMultiplier;
                 float adjustedFloorHeight = adjustedLength + adjustedFloorOffset;
                 float lengthWithinRange = adjustedLength;      // begin by assuming the entire length is within range
-                bool isfloorOffsetWithinBounds = this.TargetRange.IsValueWithinBounds(adjustedFloorOffset);
-                bool isHeightWithinBounds = this.TargetRange.IsValueWithinBounds(adjustedFloorHeight);
+                bool isfloorOffsetWithinBounds = this.TargetSpan.IsValueWithinBounds(adjustedFloorOffset);
+                bool isHeightWithinBounds = this.TargetSpan.IsValueWithinBounds(adjustedFloorHeight);
 
                 if (isfloorOffsetWithinBounds && !isHeightWithinBounds)
                 {
-                    lengthWithinRange = this.TargetRange.UpperBound - adjustedFloorOffset;
+                    lengthWithinRange = this.TargetSpan.UpperBound - adjustedFloorOffset;
                 }
                 else if (!isfloorOffsetWithinBounds && isHeightWithinBounds)
                 {
-                    lengthWithinRange = adjustedFloorHeight - this.TargetRange.LowerBound;
+                    lengthWithinRange = adjustedFloorHeight - this.TargetSpan.LowerBound;
                 }
                 else if (!isfloorOffsetWithinBounds && !isHeightWithinBounds)
                 {

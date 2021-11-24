@@ -23,13 +23,13 @@
             float trailingLowerBound = -rangeLength;
             float trailingUpperBound = 0;
 
-            var targetRanges = new List<Range>(hitBoxCount);
+            var targetRanges = new List<Span>(hitBoxCount);
 
             while (targetRanges.Count < targetRanges.Capacity)
             {
                 trailingLowerBound += rangeLength;
                 trailingUpperBound += rangeLength;
-                targetRanges.Add(new Range(trailingLowerBound > 0f ? trailingLowerBound : -1, trailingUpperBound));     // the lowest range with lower bound 0 is assumed to be ground level, nothing should be lower than this, but the floorOffset of something might be exactly 0, so we shift this down to -1 to make sure it fits
+                targetRanges.Add(new Span(trailingLowerBound > 0f ? trailingLowerBound : -1, trailingUpperBound));     // the lowest range with lower bound 0 is assumed to be ground level, nothing should be lower than this, but the floorOffset of something might be exactly 0, so we shift this down to -1 to make sure it fits
             }
 
             // for each stance, determine which ranges must be used, and thus whether a hitbox is neccessary or not.
@@ -63,7 +63,7 @@
             {
                 var currentHitBox = hitBoxes[hitboxIndex];
 
-                if (currentHitBox.TargetRange.IsValueWithinBounds(hit.Height))
+                if (currentHitBox.TargetSpan.IsValueWithinBounds(hit.Height))
                 {
                     var (hitBodyPart, bodyPartIndex) = currentHitBox.GetHitBodyPart(bodyParts);
                     hitBodyPart.TakeDamage(hit.Damage, hit.InjuryDefNames);

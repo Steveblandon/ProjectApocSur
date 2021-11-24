@@ -28,13 +28,13 @@
             Assert.IsNotNull(stanceHitBoxes.StanceDefRef?.Def);
             Assert.AreEqual(hitBoxCount, stanceHitBoxes.HitBoxes.Count);
             stanceHitBoxes.HitBoxes.ForEach(hitbox => Assert.IsFalse(hitbox.IsEmpty));
-            var ranges = new List<Range>() { stanceHitBoxes.HitBoxes[0].TargetRange };
+            var ranges = new List<Span>() { stanceHitBoxes.HitBoxes[0].TargetSpan };
             
             // Assert that hitbox bounds are different
             for (int index = 1; index < stanceHitBoxes.HitBoxes.Count; index++)
             {
-                Range previousRange = stanceHitBoxes.HitBoxes[index - 1].TargetRange;
-                Range currentRange = stanceHitBoxes.HitBoxes[index].TargetRange;
+                Span previousRange = stanceHitBoxes.HitBoxes[index - 1].TargetSpan;
+                Span currentRange = stanceHitBoxes.HitBoxes[index].TargetSpan;
                 Assert.AreEqual(previousRange.UpperBound, currentRange.LowerBound);
                 Assert.IsTrue(previousRange.LowerBound < currentRange.LowerBound);
                 Assert.IsTrue(currentRange.UpperBound <= height);

@@ -3,9 +3,9 @@
     using Projapocsur.Serialization;
 
     [XmlSerializable]
-    public class Range
+    public class Span
     {
-        public Range(float lowerBound, float upperBound)
+        public Span(float lowerBound, float upperBound)
         {
             this.LowerBound = lowerBound;
             this.UpperBound = upperBound;

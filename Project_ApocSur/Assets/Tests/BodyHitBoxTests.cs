@@ -30,12 +30,12 @@
 
             Assert.AreEqual(torso.FloorOffset, leg.FloorHeight);    // torso is expected to be right above leg for this test to work.
 
-            var range = new Range(leg.FloorHeight / 2, torso.FloorOffset + (torso.Length / 2));     // half of the leg and half of the torso are to be in range for test to work.
+            var range = new Span(leg.FloorHeight / 2, torso.FloorOffset + (torso.Length / 2));     // half of the leg and half of the torso are to be in range for test to work.
             var bodyParts = new List<BodyPart>() { leg, torso };
             var hitbox = new BodyHitBoxWithVisibleChances(range, bodyParts);
 
             Assert.AreEqual(bodyParts.Count, hitbox.HitChances.Count);
-            Assert.AreEqual(range, hitbox.TargetRange);
+            Assert.AreEqual(range, hitbox.TargetSpan);
             Assert.AreEqual(1, hitbox.HitChances.Sum());
 
             Assert.AreEqual(2, leg.Def.Size);       // update this if def size ever changes, this is hardcoded here to test algorithm
@@ -68,12 +68,12 @@
         {
             Assert.IsTrue(head.FloorOffset > leg.FloorHeight);      // head is expected to be higher up than leg for this test to work
 
-            var range = new Range(leg.FloorHeight, leg.FloorHeight + 0.01f);
+            var range = new Span(leg.FloorHeight, leg.FloorHeight + 0.01f);
             var bodyParts = new List<BodyPart>() { leg, head };
             var hitbox = new BodyHitBoxWithVisibleChances(range, bodyParts);
 
             Assert.AreEqual(bodyParts.Count, hitbox.HitChances.Count);
-            Assert.AreEqual(range, hitbox.TargetRange);
+            Assert.AreEqual(range, hitbox.TargetSpan);
             Assert.AreEqual(0, hitbox.HitChances.Sum());
             Assert.IsTrue(hitbox.IsEmpty);
             Assert.IsNull(hitbox.GetHitBodyPart(bodyParts).bodyPart);
@@ -84,19 +84,19 @@
         {
             Assert.IsTrue(head.FloorOffset > leg.FloorHeight);      // head is expected to be higher up than leg for this test to work
 
-            var range = new Range(0, leg.FloorHeight);
+            var range = new Span(0, leg.FloorHeight);
             var bodyParts = new List<BodyPart>() { leg, head };
             var hitbox = new BodyHitBoxWithVisibleChances(range, bodyParts);
 
             Assert.AreEqual(bodyParts.Count, hitbox.HitChances.Count);
-            Assert.AreEqual(range, hitbox.TargetRange);
+            Assert.AreEqual(range, hitbox.TargetSpan);
             Assert.AreEqual(1, hitbox.HitChances[0]);       // leg is entirely within the target range of the hitbox, but head is not, so hit chance should be 100% for the leg, even though there are 2 body parts.
             Assert.AreEqual(leg, hitbox.GetHitBodyPart(bodyParts).bodyPart);
 
-            range = new Range(leg.FloorHeight / 2, leg.FloorHeight);
+            range = new Span(leg.FloorHeight / 2, leg.FloorHeight);
             hitbox = new BodyHitBoxWithVisibleChances(range, bodyParts);
             Assert.AreEqual(bodyParts.Count, hitbox.HitChances.Count);
-            Assert.AreEqual(range, hitbox.TargetRange);
+            Assert.AreEqual(range, hitbox.TargetSpan);
             Assert.AreEqual(1, hitbox.HitChances[0]);       // body part is half within the target range of the hitbox, but is the only one in range, so hit chance should still be 100%.
             Assert.AreEqual(leg, hitbox.GetHitBodyPart(bodyParts).bodyPart);
 
@@ -113,7 +113,7 @@
             bodyParts.Add(arm);
             bodyParts.Add(torso);
 
-            var range = new Range(0, head.FloorHeight);
+            var range = new Span(0, head.FloorHeight);
             var hitbox = new BodyHitBoxWithVisibleChances(range, bodyParts);
 
             hitbox.GetHitBodyPart(bodyParts);   // this is here to see this working from breakpoint
@@ -160,7 +160,7 @@
 
             hitbox.GetHitBodyPart(bodyParts);   // this is here to see this working from breakpoint
 
-            hitbox = new BodyHitBoxWithVisibleChances(new Range(0, head.FloorHeight / 2), bodyParts);
+            hitbox = new BodyHitBoxWithVisibleChances(new Span(0, head.FloorHeight / 2), bodyParts);
 
             hitbox.GetHitBodyPart(bodyParts);   // this is here to see this working from breakpoint
         }
@@ -196,7 +196,7 @@
 
         public class BodyHitBoxWithVisibleChances : BodyHitBox
         {
-            public BodyHitBoxWithVisibleChances(Range targetRange, List<BodyPart> bodyParts, float multiplier = 1f) : base(targetRange, bodyParts, multiplier) {   }
+            public BodyHitBoxWithVisibleChances(Span targetSpan, List<BodyPart> bodyParts, float multiplier = 1f) : base(targetSpan, bodyParts, multiplier) {   }
 
             public IReadOnlyList<float> HitChances { get => this.bodyHitChances; }
 
