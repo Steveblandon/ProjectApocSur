@@ -8,7 +8,5 @@
         Coroutine StartCoroutine(IEnumerator routine);
 
         void StopCoroutine(IEnumerator routine);
-
-        WaitForSeconds WaitForSeconds(float seconds);
     }
 }

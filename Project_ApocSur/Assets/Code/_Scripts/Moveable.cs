@@ -10,10 +10,11 @@ namespace Projapocsur.Scripts
         MoveForward
     }
 
-    public class Moveable : MonoBehaviour
+    public class Moveable : MonoBehaviour, IMoveable
     {
-        public static readonly string CompName = nameof(Moveable);
-        public event Action OnDestinationReachedEvent;        
+        public event Action OnDestinationReachedEvent;
+
+        private const string CompName = nameof(Moveable);
 
         private Vector3 startingPoint;
         private Vector3 destination;
@@ -60,9 +61,9 @@ namespace Projapocsur.Scripts
             }
         }
 
-        public void TrackTarget(ITargetable target) => this.target = target;
+        public void LookAt(ITargetable target) => this.target = target;
 
-        public void DisengageTarget() => this.target = null;
+        public void StopLookingAtTarget() => this.target = null;
 
         public void MoveForward(float distance, float speed)
         {

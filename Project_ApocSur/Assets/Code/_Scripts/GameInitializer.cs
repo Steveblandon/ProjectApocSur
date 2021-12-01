@@ -21,6 +21,10 @@ namespace Projapocsur.Scripts
         [SerializeField]
         private ProjectileLauncher rangedWeapon;
 
+        [Tooltip("targets hostile to player characters, currently used for Id management until a more robust system is in place.")]
+        [SerializeField]
+        private Damageable[] hostileTargets;
+
         private Character testCharacter;
 
         void Awake()
@@ -34,15 +38,27 @@ namespace Projapocsur.Scripts
             if (this.testCharacterAvatar == null || this.testCharacterPortrait == null || this.rangedWeapon == null)
             {
                 Debug.LogError($"{className}: missing character reference(s) in {this.gameObject.name}.");
+                return;
             }
-            else
+
+            var relationsTracker = new RelationsTracker();
+
+            if (hostileTargets != null)
             {
-                Body body = new Body(DefNameOf.Body.Human);
-                ICoroutineHandler characterCoroutineHandler = new CoroutineHandler(this.StartCoroutine, this.StopCoroutine);
-                this.testCharacter = new Character(this.testCharacterAvatar, this.testCharacterPortrait, body, characterCoroutineHandler);
-                this.testCharacter.IsInPlayerFaction = true;
-                this.testCharacter.RangedWeapon = rangedWeapon;
+                int idIncrement = 0;
+                foreach (var hostileTarget in hostileTargets)
+                {
+                    string Id = "npc-hostile-" + idIncrement++;
+                    hostileTarget.UniqueID = Id;
+                    relationsTracker.HostileIndividualsById.Add(Id);
+                }
             }
+
+            Body body = new Body(DefNameOf.Body.Human);
+            ICoroutineHandler characterCoroutineHandler = new CoroutineHandler(this.StartCoroutine, this.StopCoroutine);
+            this.testCharacter = new Character("testCharacter0", this.testCharacterAvatar, this.testCharacterPortrait, body, characterCoroutineHandler, relationsTracker);
+            this.testCharacter.IsInPlayerFaction = true;
+            this.testCharacter.RangedWeapon = rangedWeapon;
         }
     }
 }

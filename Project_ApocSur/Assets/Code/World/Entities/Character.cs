@@ -11,28 +11,40 @@ namespace Projapocsur.World
         private Selectable avatar;
         private Selectable portrait;
         private Moveable moveable;
-        private CombatDriver combatDriver;
+        private IDamageable damageable;
+        private RelationsTracker relationsTracker;
+        private ProximityScanner proximityScanner;
+        private CombatProcessor combatProcessor;
         private ICoroutineHandler coroutineHandler;
         private bool _isDrafted;
 
-        public Character(SimpleSelectable avatar, SelectableUI portrait, Body body, ICoroutineHandler coroutineHandler)
+        public Character(string id, SimpleSelectable avatar, SelectableUI portrait, Body body, ICoroutineHandler coroutineHandler, RelationsTracker relationsTracker)
         {
             ValidationUtility.ThrowIfNull(nameof(avatar), avatar);
             ValidationUtility.ThrowIfNull(nameof(portrait), portrait);
             ValidationUtility.ThrowIfNull(nameof(body), body);
 
-            this.coroutineHandler = coroutineHandler;
+            this.UniqueID = id;
             this.moveable = avatar.GetComponent<Moveable>();
-            this.combatDriver = new CombatDriver(this.moveable, coroutineHandler);
+            this.damageable = avatar.GetComponent<IDamageable>();
+            this.damageable.UniqueID = id;
             this.avatar = avatar;
             this.portrait = portrait;
             this.Body = body;
+            this.coroutineHandler = coroutineHandler;
+            this.relationsTracker = relationsTracker;
+
             this.avatar.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
             this.portrait.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
+
+            this.proximityScanner = new ProximityScanner(this.damageable);
+            this.combatProcessor = new CombatProcessor(this.moveable, this.coroutineHandler, this.proximityScanner, this.relationsTracker);
         }
 
         public static event Action<Character> OnSelectStateChangeEvent;
         public static event Action<Character> OnDraftStateChangeEvent;
+
+        public string UniqueID { get; }
 
         public Body Body { get; }
 
@@ -50,18 +62,27 @@ namespace Projapocsur.World
 
                 if (valueChanged)
                 {
+                    if (value == true)
+                    {
+                        this.combatProcessor.EngageHostileTargets();
+                    }
+                    else
+                    {
+                        this.combatProcessor.Cease();
+                    }
+
                     OnDraftStateChangeEvent?.Invoke(this);
                 }
             }
         }
 
-        public IRangedWeapon RangedWeapon { set => this.combatDriver.RangedWeapon = value; }    // temporary direct assignment until inventory system is in place
+        public IRangedWeapon RangedWeapon { set => this.combatProcessor.RangedCombatDriver.RangedWeapon = value; }    // temporary direct assignment until inventory system is in place
 
-        public void EngageTarget(IDamageable damageable, CombatEngagementMode engagementMode) => this.combatDriver.EngageTarget(damageable, engagementMode);
+        public void EngageTarget(IDamageable damageable, CombatEngagementMode engagementMode) => this.combatProcessor.EngageTarget(damageable, engagementMode);
 
         public void OnDestroy()
         {
-            this.combatDriver.OnDestroy();
+            this.combatProcessor.OnDestroy();
             this.avatar.OnSelectStateChangeEvent -= this.OnCompSelectStateChangeEvent;
             this.portrait.OnSelectStateChangeEvent -= this.OnCompSelectStateChangeEvent;
             InputController.Main.OnNothingClickedEvent -= this.OnNothingClickedEvent;
