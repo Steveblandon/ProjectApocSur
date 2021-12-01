@@ -3,11 +3,19 @@ namespace Projapocsur
     using System;
     using Projapocsur.World;
 
-    public class DraftTracker
+    public class DraftTracker : IEventListener
     {
         public static readonly string className = nameof(DraftTracker);
 
-        public event Action<bool?> OnDraftStateChangeEvent;
+        public event Action<bool?> DraftStateChangedEvent;
+
+        private bool? _selecteesDrafted;
+
+        public DraftTracker()
+        {
+            Character.DraftStateChangedEvent += this.OnDraftStateChangeEvent;
+            Character.SelectStateChangedEvent += this.OnCharacterSelectStateChangeEvent;
+        }
 
         public bool? SelecteesDrafted
         {
@@ -19,35 +27,36 @@ namespace Projapocsur
 
                 if (valueChanged)
                 {
-                    OnDraftStateChangeEvent?.Invoke(value);
+                    this.DraftStateChangedEvent?.Invoke(value);
                 }
             }
         }
 
-        private bool? _selecteesDrafted;
-
-        public DraftTracker()
+        public void OnDestroy()
         {
-            Action<Character> onDraftStateChangeEvent = (character) => this.SelecteesDrafted = character.IsDrafted;
-            Character.OnDraftStateChangeEvent += onDraftStateChangeEvent;
-            Character.OnSelectStateChangeEvent += this.OnCharacterSelectStateChangeEvent;
+            Character.DraftStateChangedEvent -= this.OnDraftStateChangeEvent;
+            Character.SelectStateChangedEvent -= this.OnCharacterSelectStateChangeEvent;
         }
+
+        private void OnDraftStateChangeEvent(Character character) => this.SelecteesDrafted = character.IsDrafted;
 
         private void OnCharacterSelectStateChangeEvent(Character character)
         {
-            if (character.IsInPlayerFaction)
+            if (!character.IsInPlayerFaction)
             {
-                if (character.IsSelected)
+                return;
+            }
+
+            if (character.IsSelected)
+            {
+                if (this.SelecteesDrafted == null || this.SelecteesDrafted != null && character.IsDrafted == false)     // i.e. can go from 'null' or 'false' to 'false', but not from 'false' to 'true'
                 {
-                    if (this.SelecteesDrafted == null || this.SelecteesDrafted != null && character.IsDrafted == false)
-                    {
-                        this.SelecteesDrafted = character.IsDrafted;
-                    }
+                    this.SelecteesDrafted = character.IsDrafted;
                 }
-                else if (!character.IsSelected && GameMaster.Instance.CharacterSelectionTracker.Selectees.Count == 0)
-                {
-                    this.SelecteesDrafted = null;
-                }
+            }
+            else if (!character.IsSelected && GameMaster.Instance.CharacterSelectionTracker.Selectees.Count == 0)
+            {
+                this.SelecteesDrafted = null;
             }
         }
     }

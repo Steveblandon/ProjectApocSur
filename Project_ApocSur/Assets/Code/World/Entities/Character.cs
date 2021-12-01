@@ -41,8 +41,8 @@ namespace Projapocsur.World
             this.combatProcessor = new CombatProcessor(this.moveable, this.coroutineHandler, this.proximityScanner, this.relationsTracker);
         }
 
-        public static event Action<Character> OnSelectStateChangeEvent;
-        public static event Action<Character> OnDraftStateChangeEvent;
+        public static event Action<Character> SelectStateChangedEvent;
+        public static event Action<Character> DraftStateChangedEvent;
 
         public string UniqueID { get; }
 
@@ -71,7 +71,7 @@ namespace Projapocsur.World
                         this.combatProcessor.Cease();
                     }
 
-                    OnDraftStateChangeEvent?.Invoke(this);
+                    DraftStateChangedEvent?.Invoke(this);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace Projapocsur.World
                 InputController.Main.OnNothingClickedEvent -= this.OnNothingClickedEvent;
                 this.avatar.OnDeselect();
                 this.portrait.OnDeselect();
-                OnSelectStateChangeEvent?.Invoke(this);
+                SelectStateChangedEvent?.Invoke(this);
             }
             else if (!this.IsSelected && simpleSelectable.IsSelected)
             {
@@ -104,7 +104,7 @@ namespace Projapocsur.World
                 InputController.Main.OnNothingClickedEvent += this.OnNothingClickedEvent;
                 this.avatar.OnSelect();
                 this.portrait.OnSelect();
-                OnSelectStateChangeEvent?.Invoke(this);
+                SelectStateChangedEvent?.Invoke(this);
             }
         }
 

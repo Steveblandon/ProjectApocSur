@@ -14,14 +14,14 @@ namespace Projapocsur.Scripts
         {
             this.toggleButton = this.GetComponent<ToggleUI>();
             this.toggleButton.OnSelectStateChangeEvent += this.OnToggleStateChangeEvent;
-            GameMaster.Instance.DraftTracker.OnDraftStateChangeEvent += this.OnDraftStateChangeEvent;
+            GameMaster.Instance.DraftTracker.DraftStateChangedEvent += this.OnDraftStateChangeEvent;
             this.OnDraftStateChangeEvent(GameMaster.Instance.DraftTracker.SelecteesDrafted);
         }
 
         void OnDestroy()
         {
             this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
-            GameMaster.Instance.DraftTracker.OnDraftStateChangeEvent -= this.OnDraftStateChangeEvent;
+            GameMaster.Instance.DraftTracker.DraftStateChangedEvent -= this.OnDraftStateChangeEvent;
         }
 
         private void OnToggleStateChangeEvent(Selectable simpleSelectable)

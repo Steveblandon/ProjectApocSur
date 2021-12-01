@@ -25,7 +25,7 @@
             if (this.toggleButton.IsSelected)
             {
                 InputController.Main.RegisterCheckForTargetOnNextClick(this.OnTargetedClickEvent, skipFrameUpdate: true);    // NOTE: remember to set skipFrameUpdate to false once keyboard shortcuts are enabled... See parameter comments for further details.
-                GameMaster.Instance.DraftTracker.OnDraftStateChangeEvent += this.OnDraftStateChangeEvent;
+                GameMaster.Instance.DraftTracker.DraftStateChangedEvent += this.OnDraftStateChangeEvent;
                 this.OnDraftStateChangeEvent(GameMaster.Instance.DraftTracker.SelecteesDrafted);
             }
             else
@@ -60,7 +60,7 @@
         private void CancelTargetingAndReset()
         {
             InputController.Main.CancelCheckForTargetOnNextClick(this.OnTargetedClickEvent);
-            GameMaster.Instance.DraftTracker.OnDraftStateChangeEvent -= this.OnDraftStateChangeEvent;
+            GameMaster.Instance.DraftTracker.DraftStateChangedEvent -= this.OnDraftStateChangeEvent;
 
             if (this.toggleButton.IsSelected)
             {

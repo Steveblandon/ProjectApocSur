@@ -15,7 +15,7 @@ namespace Projapocsur
         public CharacterSelectionTracker()
         {
             this._selectees = new HashSet<Character>();
-            Character.OnSelectStateChangeEvent += this.OnCharacterSelectStateChangeEvent;
+            Character.SelectStateChangedEvent += this.OnCharacterSelectStateChangeEvent;
         }
 
         public Character MainSelelectee { get; protected set; }
