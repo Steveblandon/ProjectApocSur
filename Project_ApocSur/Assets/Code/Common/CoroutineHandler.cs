@@ -7,9 +7,9 @@
     public class CoroutineHandler : ICoroutineHandler
     {
         private Func<IEnumerator, Coroutine> startCoroutine;
-        private Action<IEnumerator> stopCoroutine;
+        private Action<Coroutine> stopCoroutine;
 
-        public CoroutineHandler(Func<IEnumerator, Coroutine> startCoroutine, Action<IEnumerator> stopCoroutine)
+        public CoroutineHandler(Func<IEnumerator, Coroutine> startCoroutine, Action<Coroutine> stopCoroutine)
         {
             this.startCoroutine = startCoroutine;
             this.stopCoroutine = stopCoroutine;
@@ -17,7 +17,7 @@
 
         public Coroutine StartCoroutine(IEnumerator routine) => this.startCoroutine(routine);
 
-        public void StopCoroutine(IEnumerator routine) => this.stopCoroutine(routine);
+        public void StopCoroutine(Coroutine routine) => this.stopCoroutine(routine);
 
         public WaitForSeconds WaitForSeconds(float seconds) => new WaitForSeconds(seconds);
     }

@@ -16,6 +16,7 @@
         private RelationsTracker relationsTracker;
         private bool isManualTargetingOverrideActive;
         private ITargetable currentTarget;
+        private Coroutine latestActiveRoutine;
 
         public CombatProcessor(IMoveable moveable, ICoroutineHandler coroutineHandler, ProximityScanner proximityScanner, RelationsTracker relationsTracker)
         {
@@ -31,12 +32,16 @@
 
         public void EngageHostileTargets()
         {
-            this.coroutineHandler.StartCoroutine(this.ScanForHostileTargetsRoutine());
+            if (this.latestActiveRoutine == null)
+            {
+                this.latestActiveRoutine = this.coroutineHandler.StartCoroutine(this.ScanForHostileTargetsRoutine());
+            }
         }
 
         public void Cease()
         {
-            this.coroutineHandler.StopCoroutine(this.ScanForHostileTargetsRoutine());
+            this.coroutineHandler.StopCoroutine(this.latestActiveRoutine);
+            this.latestActiveRoutine = null;
             this.DisengageTarget();
             this.isManualTargetingOverrideActive = false;
         }
