@@ -14,38 +14,42 @@ namespace Projapocsur.Scripts
         {
             this.toggleButton = this.GetComponent<ToggleUI>();
             this.toggleButton.OnSelectStateChangeEvent += this.OnToggleStateChangeEvent;
-            GameMaster.Instance.DraftTracker.DraftStateChangedEvent += this.OnDraftStateChangeEvent;
-            this.OnDraftStateChangeEvent(GameMaster.Instance.DraftTracker.SelecteesDrafted);
+            IProp<bool> draftedProp = GameMaster.Instance.PlayerCharacterSelection.IsDrafted;
+            draftedProp.ValueChangedEvent += this.OnDraftStateChangeEvent;
+            this.OnDraftStateChangeEvent(draftedProp);
         }
 
         void OnDestroy()
         {
             this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
-            GameMaster.Instance.DraftTracker.DraftStateChangedEvent -= this.OnDraftStateChangeEvent;
+            GameMaster.Instance.PlayerCharacterSelection.IsDrafted.ValueChangedEvent -= this.OnDraftStateChangeEvent;
         }
 
         private void OnToggleStateChangeEvent(Selectable simpleSelectable)
         {
-            if (this.toggleButton.IsSelected && GameMaster.Instance.DraftTracker.SelecteesDrafted == false)
+            bool selecteesAreDrafted = GameMaster.Instance.PlayerCharacterSelection.IsDrafted.Value;
+
+            if (this.toggleButton.IsSelected && !selecteesAreDrafted)
             {
-                foreach (Character character in GameMaster.Instance.CharacterSelectionTracker.Selectees)
+                foreach (Character character in GameMaster.Instance.PlayerCharacterSelection.All)
                 {
-                    character.IsDrafted = true;
+                    character.IsDrafted.Value = true;
                 }
             }
-            else if (!this.toggleButton.IsSelected && GameMaster.Instance.DraftTracker.SelecteesDrafted == true)
+            else if (!this.toggleButton.IsSelected && selecteesAreDrafted)
             {
-                foreach (Character character in GameMaster.Instance.CharacterSelectionTracker.Selectees)
+                foreach (Character character in GameMaster.Instance.PlayerCharacterSelection.All)
                 {
-                    character.IsDrafted = false;
+                    character.IsDrafted.Value = false;
                 }
             }
         }
 
-        private void OnDraftStateChangeEvent(bool? state)
+        private void OnDraftStateChangeEvent(IProp<bool> prop)
         {
-            if (this.toggleButton.IsSelected && (GameMaster.Instance.DraftTracker.SelecteesDrafted == false || GameMaster.Instance.DraftTracker.SelecteesDrafted == null)
-                || !this.toggleButton.IsSelected && GameMaster.Instance.DraftTracker.SelecteesDrafted == true)
+            bool selecteesAreDrafted = GameMaster.Instance.PlayerCharacterSelection.IsDrafted.Value;
+
+            if ((this.toggleButton.IsSelected && !selecteesAreDrafted) || (!this.toggleButton.IsSelected && selecteesAreDrafted))
             {
                 this.toggleButton.Toggle();
             }

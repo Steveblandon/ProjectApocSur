@@ -25,8 +25,9 @@
             if (this.toggleButton.IsSelected)
             {
                 InputController.Main.RegisterCheckForTargetOnNextClick(this.OnTargetedClickEvent, skipFrameUpdate: true);    // NOTE: remember to set skipFrameUpdate to false once keyboard shortcuts are enabled... See parameter comments for further details.
-                GameMaster.Instance.DraftTracker.DraftStateChangedEvent += this.OnDraftStateChangeEvent;
-                this.OnDraftStateChangeEvent(GameMaster.Instance.DraftTracker.SelecteesDrafted);
+                IProp<bool> draftedProp = GameMaster.Instance.PlayerCharacterSelection.IsDrafted;
+                draftedProp.ValueChangedEvent += this.OnDraftStateChangeEvent;
+                this.OnDraftStateChangeEvent(draftedProp);
             }
             else
             {
@@ -34,9 +35,11 @@
             }
         }
 
-        private void OnDraftStateChangeEvent(bool? state)
+        private void OnDraftStateChangeEvent(IProp<bool> prop)
         {
-            if (GameMaster.Instance.DraftTracker.SelecteesDrafted == null || GameMaster.Instance.DraftTracker.SelecteesDrafted == false)
+            bool selecteesAreDrafted = GameMaster.Instance.PlayerCharacterSelection.IsDrafted.Value;
+
+            if (!selecteesAreDrafted)
             {
                 this.CancelTargetingAndReset();
             }
@@ -44,11 +47,12 @@
 
         private void OnTargetedClickEvent(ITargetable target)
         {
+            bool selecteesAreDrafted = GameMaster.Instance.PlayerCharacterSelection.IsDrafted.Value;
             IDamageable damageable = target as IDamageable;
 
-            if (damageable != null && GameMaster.Instance.DraftTracker.SelecteesDrafted == true)
+            if (damageable != null && selecteesAreDrafted)
             {
-                foreach (var selectee in GameMaster.Instance.CharacterSelectionTracker.Selectees)
+                foreach (var selectee in GameMaster.Instance.PlayerCharacterSelection.All)
                 {
                     selectee.EngageTarget(damageable, CombatEngagementMode.Shoot);
                 }
@@ -60,7 +64,7 @@
         private void CancelTargetingAndReset()
         {
             InputController.Main.CancelCheckForTargetOnNextClick(this.OnTargetedClickEvent);
-            GameMaster.Instance.DraftTracker.DraftStateChangedEvent -= this.OnDraftStateChangeEvent;
+            GameMaster.Instance.PlayerCharacterSelection.IsDrafted.ValueChangedEvent -= this.OnDraftStateChangeEvent;
 
             if (this.toggleButton.IsSelected)
             {

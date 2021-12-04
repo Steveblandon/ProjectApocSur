@@ -16,7 +16,8 @@ namespace Projapocsur.World
         private ProximityScanner proximityScanner;
         private CombatProcessor combatProcessor;
         private ICoroutineHandler coroutineHandler;
-        private bool _isDrafted;
+        private ParentedProp<bool, Character> isDrafted;
+        private ParentedProp<bool, Character> isSelected;
 
         public Character(string id, SimpleSelectable avatar, SelectableUI portrait, Body body, ICoroutineHandler coroutineHandler, RelationsTracker relationsTracker)
         {
@@ -34,6 +35,9 @@ namespace Projapocsur.World
             this.coroutineHandler = coroutineHandler;
             this.relationsTracker = relationsTracker;
 
+            this.isSelected = new ParentedProp<bool, Character>(this.avatar.IsSelected && this.portrait.IsSelected, this);
+            this.isDrafted = new ParentedProp<bool, Character>(false, this, OnValueChangePriorityCallback: this.OnDraftStateChangeEvent);
+
             this.avatar.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
             this.portrait.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
 
@@ -41,40 +45,15 @@ namespace Projapocsur.World
             this.combatProcessor = new CombatProcessor(this.moveable, this.coroutineHandler, this.proximityScanner, this.relationsTracker);
         }
 
-        public static event Action<Character> SelectStateChangedEvent;
-        public static event Action<Character> DraftStateChangedEvent;
-
         public string UniqueID { get; }
 
         public Body Body { get; }
 
         public bool IsInPlayerFaction { get; set; }
-        
-        public bool IsSelected { get; protected set; }
-        
-        public bool IsDrafted 
-        { 
-            get => this._isDrafted;
-            set
-            {
-                bool valueChanged = this._isDrafted != value;
-                this._isDrafted = value;
 
-                if (valueChanged)
-                {
-                    if (value == true)
-                    {
-                        this.combatProcessor.EngageHostileTargets();
-                    }
-                    else
-                    {
-                        this.combatProcessor.Cease();
-                    }
+        public IParentedProp<bool, Character> IsSelected => this.isSelected;
 
-                    DraftStateChangedEvent?.Invoke(this);
-                }
-            }
-        }
+        public ParentedProp<bool, Character> IsDrafted => this.isDrafted;
 
         public IRangedWeapon RangedWeapon { set => this.combatProcessor.RangedCombatDriver.RangedWeapon = value; }    // temporary direct assignment until inventory system is in place
 
@@ -90,34 +69,32 @@ namespace Projapocsur.World
 
         private void OnCompSelectStateChangeEvent(Selectable simpleSelectable)
         {
-            if (this.IsSelected && !simpleSelectable.IsSelected)
+            if (this.isSelected.Value && !simpleSelectable.IsSelected)
             {
-                this.IsSelected = false;
                 InputController.Main.OnNothingClickedEvent -= this.OnNothingClickedEvent;
+                this.isSelected.Value = false;
                 this.avatar.OnDeselect();
                 this.portrait.OnDeselect();
-                SelectStateChangedEvent?.Invoke(this);
             }
-            else if (!this.IsSelected && simpleSelectable.IsSelected)
+            else if (!this.isSelected.Value && simpleSelectable.IsSelected)
             {
-                this.IsSelected = true;
                 InputController.Main.OnNothingClickedEvent += this.OnNothingClickedEvent;
+                this.isSelected.Value = true;
                 this.avatar.OnSelect();
                 this.portrait.OnSelect();
-                SelectStateChangedEvent?.Invoke(this);
             }
         }
 
         private void OnNothingClickedEvent(KeyCode mouseInput)
         {
-            if (this.IsSelected)
+            if (this.IsSelected.Value)
             {
                 if (mouseInput == KeyCode.Mouse0)
                 {
                     this.avatar.OnDeselect();
                     this.portrait.OnDeselect();
                 }
-                else if (mouseInput == KeyCode.Mouse1 && this.IsDrafted)
+                else if (mouseInput == KeyCode.Mouse1 && this.isDrafted.Value == true)
                 {
                     if (this.moveable != null)
                     {
@@ -128,6 +105,18 @@ namespace Projapocsur.World
                         Debug.Log($"{ClassName}: attempted to move to mouse position, but no {nameof(Moveable)} comp was found on {this.avatar.name}.");
                     }
                 }
+            }
+        }
+
+        private void OnDraftStateChangeEvent()
+        {
+            if (this.isDrafted.Value == true)
+            {
+                this.combatProcessor.EngageHostileTargets();
+            }
+            else
+            {
+                this.combatProcessor.Cease();
             }
         }
     }

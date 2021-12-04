@@ -38,7 +38,7 @@
         
         private void TriggerUpdate()
         {
-            GameMaster.Instance.CharacterSelectionTracker.MainSelelectee.Body.OnUpdate();
+            GameMaster.Instance.PlayerCharacterSelection.Current.Body.OnUpdate();
         }
 
         private void ApplyBruiseDamage()
@@ -61,7 +61,7 @@
 
         private void ApplyDamage(DamageInfo hitInfo)
         {
-            Character character = GameMaster.Instance.CharacterSelectionTracker.MainSelelectee;
+            Character character = GameMaster.Instance.PlayerCharacterSelection.Current;
             
             if (character != null)
             {

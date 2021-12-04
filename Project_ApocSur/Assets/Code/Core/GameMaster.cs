@@ -12,9 +12,7 @@ namespace Projapocsur
 
         public static GameMaster Init() => Instance;
 
-        public CharacterSelectionTracker CharacterSelectionTracker { get; } = new CharacterSelectionTracker();
-
-        public DraftTracker DraftTracker { get; } = new DraftTracker();
+        public CharacterSelectionTracker PlayerCharacterSelection { get; } = new CharacterSelectionTracker();
 
         public ObjectPool ObjectPool { get; } = new ObjectPool();
     }

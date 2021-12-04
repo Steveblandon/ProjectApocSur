@@ -59,6 +59,8 @@ namespace Projapocsur.Scripts
             this.testCharacter = new Character("testCharacter0", this.testCharacterAvatar, this.testCharacterPortrait, body, characterCoroutineHandler, relationsTracker);
             this.testCharacter.IsInPlayerFaction = true;
             this.testCharacter.RangedWeapon = rangedWeapon;
+
+            GameMaster.Instance.PlayerCharacterSelection.TrackCharacter(this.testCharacter);     // this should ultimately end up in whatever will be responsible for adding characters to player faction
         }
     }
 }

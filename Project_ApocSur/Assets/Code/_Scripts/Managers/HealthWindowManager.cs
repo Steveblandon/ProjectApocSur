@@ -30,19 +30,21 @@
 
             if (this.isActiveAndEnabled)
             {
-                GameMaster.Instance.CharacterSelectionTracker.OnSelectionChangeEvent += this.OnCurrentCharacterSelectChangeEventHandler;
+                GameMaster.Instance.PlayerCharacterSelection.SelectionChangedEvent += this.OnCurrentCharacterSelectChangeEventHandler;
                 this.bodyOutlineManager.OnSelectedBodyPartChangeEvent += this.OnSelectedBodyPartChangeEventHandler;
             }
         }
 
         void OnDestroy()
         {
-            GameMaster.Instance.CharacterSelectionTracker.OnSelectionChangeEvent -= this.OnCurrentCharacterSelectChangeEventHandler;
+            GameMaster.Instance.PlayerCharacterSelection.SelectionChangedEvent -= this.OnCurrentCharacterSelectChangeEventHandler;
             this.bodyOutlineManager.OnSelectedBodyPartChangeEvent -= this.OnSelectedBodyPartChangeEventHandler;
         }
 
-        private void OnCurrentCharacterSelectChangeEventHandler(Character character)
+        private void OnCurrentCharacterSelectChangeEventHandler()
         {
+            Character character = GameMaster.Instance.PlayerCharacterSelection.Current;
+
             if (this.currentCharacter != character && character != null)
             {
                 this.mainHitPointsBar.Stat = character.Body.HitPointsPercentage;
