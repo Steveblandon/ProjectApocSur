@@ -16,8 +16,9 @@ namespace Projapocsur.World
         private ProximityScanner proximityScanner;
         private CombatProcessor combatProcessor;
         private ICoroutineHandler coroutineHandler;
-        private ParentedProp<bool, Character> isDrafted;
-        private ParentedProp<bool, Character> isSelected;
+        private Prop<bool> isSelected;
+        private Prop<bool> isDrafted;
+        private Prop<bool> isAutoAttackEnabled;
 
         public Character(string id, SimpleSelectable avatar, SelectableUI portrait, Body body, ICoroutineHandler coroutineHandler, RelationsTracker relationsTracker)
         {
@@ -35,8 +36,9 @@ namespace Projapocsur.World
             this.coroutineHandler = coroutineHandler;
             this.relationsTracker = relationsTracker;
 
-            this.isSelected = new ParentedProp<bool, Character>(this.avatar.IsSelected && this.portrait.IsSelected, this);
-            this.isDrafted = new ParentedProp<bool, Character>(false, this, OnValueChangePriorityCallback: this.OnDraftStateChangeEvent);
+            this.isSelected = new Prop<bool>(this.avatar.IsSelected && this.portrait.IsSelected, this);
+            this.isDrafted = new Prop<bool>(false, this, OnValueChangePriorityCallback: this.OnDraftStateChangeEvent);
+            this.isAutoAttackEnabled = new Prop<bool>(true, this, OnValueChangePriorityCallback: this.OnAutoAttackStateChangeEvent);
 
             this.avatar.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
             this.portrait.OnSelectStateChangeEvent += this.OnCompSelectStateChangeEvent;
@@ -53,7 +55,9 @@ namespace Projapocsur.World
 
         public IParentedProp<bool, Character> IsSelected => this.isSelected;
 
-        public ParentedProp<bool, Character> IsDrafted => this.isDrafted;
+        public Prop<bool> IsDrafted => this.isDrafted;
+
+        public Prop<bool> IsAutoAttackEnabled => this.isAutoAttackEnabled;
 
         public IRangedWeapon RangedWeapon { set => this.combatProcessor.RangedCombatDriver.RangedWeapon = value; }    // temporary direct assignment until inventory system is in place
 
@@ -110,13 +114,26 @@ namespace Projapocsur.World
 
         private void OnDraftStateChangeEvent()
         {
-            if (this.isDrafted.Value == true)
+            this.OnAutoAttackStateChangeEvent();
+        }
+
+        private void OnAutoAttackStateChangeEvent()
+        {
+            if (this.isDrafted.Value && this.isAutoAttackEnabled.Value)
             {
                 this.combatProcessor.EngageHostileTargets();
             }
             else
             {
                 this.combatProcessor.Cease();
+            }
+        }
+
+        public class Prop<TValue> : ParentedProp<TValue, Character> where TValue : IComparable<TValue>
+        {
+            public Prop(TValue initialValue, Character parent, Action OnValueChangePriorityCallback = null)
+                : base(initialValue, parent, OnValueChangePriorityCallback)
+            {
             }
         }
     }

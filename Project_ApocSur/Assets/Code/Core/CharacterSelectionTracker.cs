@@ -9,31 +9,35 @@ namespace Projapocsur
         public event Action SelectionChangedEvent;
 
         private HashSet<Character> selectees;
-        private BooleanPropTracker draftTracker;
+        private BooleanPropTrackerManager propTrackersManager;
 
         public CharacterSelectionTracker()
         {
             this.selectees = new HashSet<Character>();
-            this.draftTracker = new BooleanPropTracker();
+            this.propTrackersManager = new BooleanPropTrackerManager();
+            this.propTrackersManager.AddNew(nameof(this.IsDrafted), false, character => character.IsDrafted);
+            this.propTrackersManager.AddNew(nameof(this.IsAutoAttackEnabled), true, character => character.IsAutoAttackEnabled);
         }
 
         public Character Current { get; protected set; }
 
         public IReadOnlyCollection<Character> All => this.selectees;
 
-        public IProp<bool> IsDrafted => this.draftTracker.Latest;
+        public IProp<bool> IsDrafted => this.propTrackersManager.Trackers[nameof(this.IsDrafted)].Latest;
+
+        public IProp<bool> IsAutoAttackEnabled => this.propTrackersManager.Trackers[nameof(this.IsAutoAttackEnabled)].Latest;
 
         public void TrackCharacter(Character character)
         {
+            this.propTrackersManager.Track(character);
             character.IsSelected.ValueChangedEvent += this.OnCharacterSelectStateChangeEvent;
-            draftTracker.Track(character.IsDrafted);
             this.OnCharacterSelectStateChangeEvent(character.IsSelected);
         }
 
         public void UntrackCharacter(Character character)
         {
+            this.propTrackersManager.Untrack(character);
             character.IsSelected.ValueChangedEvent -= this.OnCharacterSelectStateChangeEvent;
-            draftTracker.Untrack(character.IsDrafted);
         }
 
         private void OnCharacterSelectStateChangeEvent(IParentedProp<bool, Character> selectionProp)
@@ -44,7 +48,7 @@ namespace Projapocsur
             {
                 this.Current = this.selectees.Count == 0 ? character : null;
                 this.selectees.Add(character);
-                this.UpdatePropTrackers(character);
+                this.propTrackersManager.OnSelect(character);
                 SelectionChangedEvent?.Invoke();
             }
             else if (!character.IsSelected.Value && this.selectees.Count > 0)
@@ -59,24 +63,5 @@ namespace Projapocsur
                 SelectionChangedEvent?.Invoke();
             }
         }
-
-        private void UpdatePropTrackers(Character character)
-        {
-            if (draftTracker.Latest.Value)
-            {
-                draftTracker.Latest.Value = character.IsDrafted.Value;
-            }
-        }
-    }
-
-    public class BooleanPropTracker
-    {
-        public Prop<bool> Latest { get; private set; } = new Prop<bool>(false);
-
-        public void Track(IProp<bool> prop) => prop.ValueChangedEvent += this.OnStateChangeEvent;
-
-        public void Untrack(IProp<bool> prop) => prop.ValueChangedEvent -= this.OnStateChangeEvent;
-
-        private void OnStateChangeEvent(IProp<bool> prop) => this.Latest.Value = prop.Value;
     }
 }

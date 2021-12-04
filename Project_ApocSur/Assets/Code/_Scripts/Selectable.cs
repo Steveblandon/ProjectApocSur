@@ -1,6 +1,7 @@
 namespace Projapocsur.Scripts
 {
     using System;
+    using Projapocsur.EditorAttributes;
     using UnityEngine;
 
     /// <summary>
@@ -12,13 +13,21 @@ namespace Projapocsur.Scripts
 
         public event Action<Selectable> OnSelectStateChangeEvent;
 
-        protected ColorSwitch colorSwitch;
+        [SerializeField]
+        [ReadOnly]
+        private bool isSelected;
 
         [Tooltip("This will be the target outline's color for when this gameobject is selected. It will revert back to the outline's original color when deselected.")]
         [SerializeField]
         protected Color onSelectOutlineColor = new Color(1, 1, 1, 1);
 
-        public bool IsSelected { get; protected set; }
+        protected ColorSwitch colorSwitch;
+
+        public bool IsSelected
+        {
+            get => this.isSelected;
+            protected set => this.isSelected = value;
+        }
 
         public void OnSelect()
         {

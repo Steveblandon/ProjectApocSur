@@ -40,8 +40,12 @@
 
         public void Cease()
         {
-            this.coroutineHandler.StopCoroutine(this.latestActiveRoutine);
-            this.latestActiveRoutine = null;
+            if (this.latestActiveRoutine != null)
+            {
+                this.coroutineHandler.StopCoroutine(this.latestActiveRoutine);
+                this.latestActiveRoutine = null;
+            }
+
             this.DisengageTarget();
             this.isManualTargetingOverrideActive = false;
         }
