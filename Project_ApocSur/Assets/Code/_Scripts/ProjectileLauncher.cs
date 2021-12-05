@@ -41,6 +41,7 @@ namespace Projapocsur.Scripts
         private DamageInfo damageInfo;
         private bool isBusy;
         private Queue<Func<IEnumerator>> queuedRoutine = new Queue<Func<IEnumerator>>();
+        private Func<bool> FireProjectileCommandAborted;
 
         public int Ammo => this.ammo;
 
@@ -51,10 +52,11 @@ namespace Projapocsur.Scripts
             GameMaster.Instance.ObjectPool.AssureMinimumPoolSizeForPath(ResourcePathOf.Bullet, ammoCapacity);
         }
 
-        public void FireProjectile()
+        public void FireProjectile(Func<bool> abortCallback = null)
         {
             if (ammo > 0)
             {
+                this.FireProjectileCommandAborted = abortCallback;
                 this.StartOrQueueRoutine(this.ShootRoutine);
             }
             else
@@ -93,7 +95,9 @@ namespace Projapocsur.Scripts
         private IEnumerator ShootRoutine()
         {
             yield return new WaitForSeconds(aimTime);
-            if (this.ammo > 0)
+            bool aborted = this.FireProjectileCommandAborted != null ? this.FireProjectileCommandAborted() : false;
+
+            if (this.ammo > 0 && !aborted)
             {
                 Projectile projectile = GameMaster
                     .Instance

@@ -10,7 +10,7 @@ namespace Projapocsur.World
 
         private Selectable avatar;
         private Selectable portrait;
-        private Moveable moveable;
+        private IMoveable moveable;
         private IDamageable damageable;
         private RelationsTracker relationsTracker;
         private ProximityScanner proximityScanner;
@@ -27,7 +27,7 @@ namespace Projapocsur.World
             ValidationUtility.ThrowIfNull(nameof(body), body);
 
             this.UniqueID = id;
-            this.moveable = avatar.GetComponent<Moveable>();
+            this.moveable = avatar.GetComponent<IMoveable>();
             this.damageable = avatar.GetComponent<IDamageable>();
             this.damageable.UniqueID = id;
             this.avatar = avatar;
@@ -62,6 +62,21 @@ namespace Projapocsur.World
         public IRangedWeapon RangedWeapon { set => this.combatProcessor.RangedCombatDriver.RangedWeapon = value; }    // temporary direct assignment until inventory system is in place
 
         public void EngageTarget(IDamageable damageable, CombatEngagementMode engagementMode) => this.combatProcessor.EngageTarget(damageable, engagementMode);
+
+        public void Cease()
+        {
+            if (this.combatProcessor.IsManualTargetingOverrideActive && this.combatProcessor.HasTarget)
+            {
+                Debug.Log($"Cease acknowledged, disengaging target... [character='{this.UniqueID}'");
+                this.combatProcessor.DisengageTarget();
+                this.OnAutoAttackStateChangeEvent();    // revert to auto-attacking if that's enabled... not disabling auto-attack here allows for finer control
+            }
+            else if (this.moveable.CurrentDirective != MoveDirective.None)
+            {
+                Debug.Log($"Cease acknowledged, movement stopped... [character='{this.UniqueID}'");
+                this.moveable.CancelCurrentDirective();
+            }
+        }
 
         public void OnDestroy()
         {

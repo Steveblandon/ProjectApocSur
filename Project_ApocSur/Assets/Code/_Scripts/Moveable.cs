@@ -18,10 +18,13 @@ namespace Projapocsur.Scripts
 
         private Vector3 startingPoint;
         private Vector3 destination;
-        private MoveDirective moveDirective;
         private float speed;
         private float distanceToTravel;
         private ITargetable target;
+
+        public MoveDirective CurrentDirective { get; private set; }
+
+        public bool HasTarget => target != null;
 
         void Start()
         {
@@ -35,7 +38,7 @@ namespace Projapocsur.Scripts
                 this.transform.rotation = Quaternion.LookRotation(Vector3.forward, this.target.Position - this.transform.position);
             }
 
-            switch (this.moveDirective)
+            switch (this.CurrentDirective)
             {
                 case MoveDirective.MoveToDestination:
                     this.transform.position = Vector3.MoveTowards(this.transform.position, this.destination, this.speed * Time.deltaTime);
@@ -70,7 +73,7 @@ namespace Projapocsur.Scripts
             this.startingPoint = this.transform.position;
             this.speed = speed;
             this.distanceToTravel = distance;
-            this.moveDirective = MoveDirective.MoveForward;
+            this.CurrentDirective = MoveDirective.MoveForward;
             Debug.Log($"{this.name} moving forward for a distance of {distance}");
         }
 
@@ -79,7 +82,7 @@ namespace Projapocsur.Scripts
             this.startingPoint = this.transform.position;
             this.speed = speed;
             this.destination = position;
-            this.moveDirective = MoveDirective.MoveToDestination;
+            this.CurrentDirective = MoveDirective.MoveToDestination;
             Debug.Log($"{this.name} moving from {this.transform.position} to {this.destination} [current Up direction: {this.transform.up}]");
         }
 
@@ -92,7 +95,7 @@ namespace Projapocsur.Scripts
 
         private void OnDestinationReached(bool invokeEvent)
         {
-            this.moveDirective = MoveDirective.None;
+            this.CurrentDirective = MoveDirective.None;
             this.distanceToTravel = 0;
             this.destination = this.transform.position;
 
@@ -100,6 +103,11 @@ namespace Projapocsur.Scripts
             {
                 this.OnDestinationReachedEvent?.Invoke();
             }
+        }
+
+        public void CancelCurrentDirective()
+        {
+            this.OnDestinationReached(false);
         }
     }
 }

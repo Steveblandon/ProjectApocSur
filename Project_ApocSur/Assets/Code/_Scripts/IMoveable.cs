@@ -7,6 +7,10 @@
     {
         event Action OnDestinationReachedEvent;
 
+        MoveDirective CurrentDirective { get; }
+
+        bool HasTarget { get; }
+
         void LookAt(ITargetable target);
 
         void MoveForward(float distance, float speed);
@@ -16,5 +20,7 @@
         void MoveToPosition(Vector3 position, float speed);
 
         void StopLookingAtTarget();
+
+        void CancelCurrentDirective();
     }
 }

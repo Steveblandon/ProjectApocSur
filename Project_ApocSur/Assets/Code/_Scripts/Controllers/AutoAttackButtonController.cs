@@ -3,7 +3,7 @@
     using System;
     using Projapocsur.World;
 
-    public class AutoAttackButtonController : PlayerCharacterToggleControllerBase
+    public class AutoAttackButtonController : CharacterPropToggleControllerBase
     {
         protected override IProp<bool> TrackedProp => GameMaster.Instance.PlayerCharacterSelection.IsAutoAttackEnabled;
 

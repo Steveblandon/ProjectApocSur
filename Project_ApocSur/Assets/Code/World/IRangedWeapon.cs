@@ -12,7 +12,7 @@
 
         int EffectiveRange { get; }
 
-        void FireProjectile();
+        void FireProjectile(Func<bool> abortCallback = null);
 
         void Reload();
     }

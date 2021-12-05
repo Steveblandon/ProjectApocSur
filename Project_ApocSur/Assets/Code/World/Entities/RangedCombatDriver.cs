@@ -89,9 +89,9 @@
             {
                 this.rangedWeapon.Reload();
             }
-            else
+            else if (this.currentTarget != null)
             {
-                this.rangedWeapon.FireProjectile();
+                this.rangedWeapon.FireProjectile(() => this.currentTarget == null);
             }
         }
 

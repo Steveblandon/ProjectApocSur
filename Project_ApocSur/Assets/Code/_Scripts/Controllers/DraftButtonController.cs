@@ -3,7 +3,7 @@ namespace Projapocsur.Scripts
     using System;
     using Projapocsur.World;
 
-    public class DraftButtonController : PlayerCharacterToggleControllerBase
+    public class DraftButtonController : CharacterPropToggleControllerBase
     {
         protected override IProp<bool> TrackedProp => GameMaster.Instance.PlayerCharacterSelection.IsDrafted;
 

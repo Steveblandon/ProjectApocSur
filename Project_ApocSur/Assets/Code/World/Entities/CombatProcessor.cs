@@ -14,7 +14,6 @@
         private ICoroutineHandler coroutineHandler;
         private ProximityScanner proximityScanner;
         private RelationsTracker relationsTracker;
-        private bool isManualTargetingOverrideActive;
         private ITargetable currentTarget;
         private Coroutine latestActiveRoutine;
 
@@ -27,6 +26,10 @@
             this.RangedCombatDriver = new RangedCombatDriver(coroutineHandler, proximityScanner);
             this.RangedCombatDriver.TargetUnreachableEvent += this.OnTargetUnreachableEvent;
         }
+
+        public bool HasTarget => this.currentTarget != null;
+
+        public bool IsManualTargetingOverrideActive { get; private set; }
 
         public RangedCombatDriver RangedCombatDriver { get; }       // this shouldn't be exposed, but need it for now to assign rangedWeapon... in the future, CombatProcessor should be interfacing with inventory
 
@@ -47,13 +50,22 @@
             }
 
             this.DisengageTarget();
-            this.isManualTargetingOverrideActive = false;
         }
 
         public void EngageTarget(IDamageable damageable, CombatEngagementMode engagementMode)
         {
-            this.isManualTargetingOverrideActive = true;
+            this.Cease();
+            this.IsManualTargetingOverrideActive = true;
             this.EngageTargetInternal(damageable, engagementMode);
+        }
+
+        public void DisengageTarget()
+        {
+            this.IsManualTargetingOverrideActive = false;
+            this.currentTarget = null;
+            this.RangedCombatDriver.CurrentTarget = null;
+            this.moveable.StopLookingAtTarget();
+            Debug.Log("Target disengaged");
         }
 
         public void OnDestroy()
@@ -85,19 +97,11 @@
             Debug.Log("Target engaged");
         }
 
-        private void EngageTargetInRangedCombat(ITargetable targetable) => this.RangedCombatDriver.CurrentTarget = targetable;
-
-        private void DisengageTarget()
-        {
-            this.currentTarget = null;
-            this.RangedCombatDriver.CurrentTarget = null;
-            this.moveable.StopLookingAtTarget();
-            Debug.Log("Target disengaged");
-        }        
+        private void EngageTargetInRangedCombat(ITargetable targetable) => this.RangedCombatDriver.CurrentTarget = targetable;  
 
         private IEnumerator ScanForHostileTargetsRoutine()
         {
-            while (!this.isManualTargetingOverrideActive)
+            while (!this.IsManualTargetingOverrideActive)
             {
                 ITargetable target = proximityScanner.GetNearestTargetByIdWithinRadius(relationsTracker.HostileIndividualsById, HostileScanRadius);
 

@@ -5,9 +5,9 @@
     using UnityEngine;
 
     [RequireComponent(typeof(ToggleUI))]
-    public abstract class PlayerCharacterToggleControllerBase : MonoBehaviour
+    public abstract class CharacterPropToggleControllerBase : MonoBehaviour
     {
-        private const string CompName = nameof(PlayerCharacterToggleControllerBase);
+        protected const string CompName = nameof(CharacterPropToggleControllerBase);
 
         private ToggleUI toggleButton;
 
@@ -17,12 +17,11 @@
 
         protected virtual void Start()
         {
-            this.toggleButton = this.GetComponent<ToggleUI>();
-            this.toggleButton.OnSelectStateChangeEvent += this.OnToggleStateChangeEvent;
-
             if (!this.DisableOnMissingReference(this.TrackedProp, nameof(this.TrackedProp), CompName)
                 && !this.DisableOnMissingReference(this.AffectedCharacterProp, nameof(this.AffectedCharacterProp), CompName))
             {
+                this.toggleButton = this.GetComponent<ToggleUI>();
+                this.toggleButton.OnSelectStateChangeEvent += this.OnToggleStateChangeEvent;
                 this.TrackedProp.ValueChangedEvent += this.OnPropStateChangeEvent;
                 this.OnPropStateChangeEvent(this.TrackedProp);
             }
@@ -30,8 +29,11 @@
 
         protected virtual void OnDestroy()
         {
-            this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
-            
+            if (this.toggleButton != null)
+            {
+                this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
+            }
+
             if (this.TrackedProp != null)
             {
                 this.TrackedProp.ValueChangedEvent -= this.OnPropStateChangeEvent;
