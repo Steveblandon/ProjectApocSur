@@ -10,6 +10,9 @@ namespace Projapocsur.Scripts
     {
         public static readonly string className = nameof(GameInitializer);
 
+        [SerializeField]
+        private GameConfiguration config;
+
         [Tooltip("will be linked to portrait below, in the future this will be managed by an instance that deals with character creation.")]
         [SerializeField]
         private SimpleSelectable testCharacterAvatar;
@@ -24,13 +27,16 @@ namespace Projapocsur.Scripts
         [Tooltip("targets hostile to player characters, currently used for Id management until a more robust system is in place.")]
         [SerializeField]
         private Damageable[] hostileTargets;
-
         private Character testCharacter;
 
         void Awake()
         {
             DefinitionFinder.Init();
-            GameMaster.Init();
+
+            if (!this.DisableOnMissingReference(config, nameof(this.config), className))
+            {
+                GameMaster.Init(config);
+            }
         }
 
         void Start()

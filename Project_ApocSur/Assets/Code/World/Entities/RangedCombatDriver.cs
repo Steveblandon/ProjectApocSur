@@ -7,9 +7,12 @@
 
     public class RangedCombatDriver : IEventListener
     {
+        #region Unity editor configurable variables
+        private float TargetInRangeScanInterval => GameMaster.Instance.Config.TargetInRangeScanInterval;
+        private int MaxTargetInRangeScans => GameMaster.Instance.Config.MaxTargetInRangeScans;
+        #endregion
+
         public event Action TargetUnreachableEvent;
-        private const float SecondsToWaitForTargetToComeWithinFiringRange = 1;
-        private const int WaitIntervalsBeforeGivingUpOnOutOfRangeTarget = 10;
         
         private ICoroutineHandler coroutineHandler;
         private IRangedWeapon rangedWeapon;
@@ -102,12 +105,12 @@
 
             while (this.CurrentTarget == preWaitCurrentTarget 
                 && !this.proximityScanner.IsTargetWithinDistance(this.CurrentTarget, this.rangedWeapon.EffectiveRange)
-                && waitIntervals++ < WaitIntervalsBeforeGivingUpOnOutOfRangeTarget)
+                && waitIntervals++ < MaxTargetInRangeScans)
             {
-                yield return new WaitForSeconds(SecondsToWaitForTargetToComeWithinFiringRange);
+                yield return new WaitForSeconds(TargetInRangeScanInterval);
             }
 
-            if (waitIntervals >= WaitIntervalsBeforeGivingUpOnOutOfRangeTarget)
+            if (waitIntervals >= MaxTargetInRangeScans)
             {
                 this.TargetUnreachableEvent?.Invoke();
             }

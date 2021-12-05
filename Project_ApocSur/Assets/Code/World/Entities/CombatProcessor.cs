@@ -7,8 +7,10 @@
 
     public class CombatProcessor : IEventListener
     {
-        private const float HostileScanRadius = 10f;
-        private const float HostileScanInterval = 1f;
+        #region Unity editor configurable variables
+        private float HostileScanRadius => GameMaster.Instance.Config.HostileScanRadius;
+        private float HostileScanInterval => GameMaster.Instance.Config.HostileScanInterval;
+        #endregion
 
         private IMoveable moveable;
         private ICoroutineHandler coroutineHandler;
