@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b5df0ff77979d64d8eda348eea091df, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  someField: 0
+  hostileScanRadius: 10
+  hostileScanInterval: 0.5
+  targetInRangeScanInterval: 0.5
+  maxTargetInRangeScans: 10

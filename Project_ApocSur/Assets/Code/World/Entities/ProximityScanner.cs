@@ -12,9 +12,9 @@
             this.origin = origin;
         }
 
-        public ITargetable GetNearestTargetByIdWithinRadius(ISet<string> idsToLookFor, float scanRadius)
+        public ITargetable GetNearestTargetByIdWithinRadius(ISet<string> idsToLookFor, float scanRadius, string[] layerMasks = null)
         {
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(this.origin.Position, scanRadius, Vector2.zero);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(this.origin.Position, scanRadius, Vector2.zero, Mathf.Infinity, LayerMask.GetMask(layerMasks ?? LayerMasks.DefaultArray));
             ITargetable nearestTarget = null;
             float nearestTargetDistance = float.MaxValue;
 
@@ -24,6 +24,7 @@
                 {
                     // NOTE: since the cast is stationary (no direction), hits won't actually be sorted by distance
                     // because in this case everything is at a distance of zero. Therefore we have to do our own distance checking.
+                    // it is therefore important to reduce the number of capturable targets by using layermasks when possible.
                     float targetDistance = Vector3.Distance(origin.Position, target.Position);
                     
                     if (targetDistance < nearestTargetDistance)

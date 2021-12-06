@@ -37,6 +37,8 @@ namespace Projapocsur.Scripts
             {
                 GameMaster.Init(config);
             }
+
+            LayerMasks.Validate();
         }
 
         void Start()
