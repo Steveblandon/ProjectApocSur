@@ -7,9 +7,11 @@ namespace Projapocsur.Scripts
     {
         None,
         MoveToDestination,
-        MoveForward
+        MoveForward,
+        FollowTarget
     }
 
+    [RequireComponent(typeof(SpriteRenderer))]
     public class Moveable : MonoBehaviour, IMoveable
     {
         public event Action OnDestinationReachedEvent;
@@ -21,6 +23,10 @@ namespace Projapocsur.Scripts
         private float speed;
         private float distanceToTravel;
         private ITargetable target;
+        private float maxDistanceFromTarget;
+        private SpriteRenderer spriteRenderer;
+
+        public bool IsTargetWithinDistance { get; private set; }
 
         public MoveDirective CurrentDirective { get; private set; }
 
@@ -28,6 +34,7 @@ namespace Projapocsur.Scripts
 
         void Start()
         {
+            this.spriteRenderer = this.GetComponent<SpriteRenderer>();
             this.OnDestinationReached(false);
         }
 
@@ -41,25 +48,13 @@ namespace Projapocsur.Scripts
             switch (this.CurrentDirective)
             {
                 case MoveDirective.MoveToDestination:
-                    this.transform.position = Vector3.MoveTowards(this.transform.position, this.destination, this.speed * Time.deltaTime);
-                    if (this.transform.position == this.destination)
-                    {
-                        this.OnDestinationReached(true);
-                    }
-                    else if (this.target == null)
-                    {
-                        this.transform.rotation = Quaternion.LookRotation(Vector3.forward, this.destination - this.transform.position);
-                    }
-
+                    this.MoveToDestinationUpdate();
                     break;
                 case MoveDirective.MoveForward:
-                    this.transform.Translate(this.transform.up * this.speed * Time.deltaTime, Space.World);    // NOTE: must be Space.World to have it account for rotation, otherwise it won't move in the proper direction.
-                    float distanceTravelled = Vector3.Distance(startingPoint, this.transform.position);
-                    if (distanceTravelled >= distanceToTravel)
-                    {
-                        this.OnDestinationReached(true);
-                    }
-
+                    this.MoveForwardUpdate();
+                    break;
+                case MoveDirective.FollowTarget:
+                    this.FollowTargetUpdate();
                     break;
             }
         }
@@ -68,8 +63,18 @@ namespace Projapocsur.Scripts
 
         public void StopLookingAtTarget() => this.target = null;
 
+        public void FollowTarget(ITargetable target, float speed, float distance)
+        {
+            this.CancelCurrentDirective();
+            this.maxDistanceFromTarget = (this.spriteRenderer.bounds.size.x + target.Size.x) / 2 + distance;
+            this.target = target;
+            this.speed = speed;
+            this.CurrentDirective = MoveDirective.FollowTarget;
+        }
+
         public void MoveForward(float distance, float speed)
         {
+            this.CancelCurrentDirective();
             this.startingPoint = this.transform.position;
             this.speed = speed;
             this.distanceToTravel = distance;
@@ -79,6 +84,7 @@ namespace Projapocsur.Scripts
 
         public void MoveToPosition(Vector3 position, float speed)
         {
+            this.CancelCurrentDirective();
             this.startingPoint = this.transform.position;
             this.speed = speed;
             this.destination = position;
@@ -93,10 +99,16 @@ namespace Projapocsur.Scripts
             this.MoveToPosition(worldPoint, speed);
         }
 
+        public void CancelCurrentDirective()
+        {
+            this.OnDestinationReached(false);
+        }
+
         private void OnDestinationReached(bool invokeEvent)
         {
             this.CurrentDirective = MoveDirective.None;
             this.distanceToTravel = 0;
+            this.maxDistanceFromTarget = 0;
             this.destination = this.transform.position;
 
             if (invokeEvent)
@@ -105,9 +117,44 @@ namespace Projapocsur.Scripts
             }
         }
 
-        public void CancelCurrentDirective()
+        private void MoveToDestinationUpdate()
         {
-            this.OnDestinationReached(false);
+            this.transform.position = Vector3.MoveTowards(this.transform.position, this.destination, this.speed * Time.deltaTime);
+
+            if (this.transform.position == this.destination)
+            {
+                this.OnDestinationReached(true);
+            }
+            else if (this.target == null)
+            {
+                this.transform.rotation = Quaternion.LookRotation(Vector3.forward, this.destination - this.transform.position);
+            }
+        }
+
+        private void MoveForwardUpdate()
+        {
+            this.transform.Translate(this.transform.up * this.speed * Time.deltaTime, Space.World);    // NOTE: must be Space.World to have it account for rotation, otherwise it won't move in the proper direction.
+            float distanceTravelled = Vector3.Distance(startingPoint, this.transform.position);
+            
+            if (distanceTravelled >= distanceToTravel)
+            {
+                this.OnDestinationReached(true);
+            }
+        }
+
+        private void FollowTargetUpdate()
+        {
+            float distanceFromTarget = Vector3.Distance(this.transform.position, this.target.Position);
+
+            if (distanceFromTarget > this.maxDistanceFromTarget)
+            {
+                this.transform.position = Vector3.MoveTowards(this.transform.position, this.target.Position, this.speed * Time.deltaTime);
+                this.IsTargetWithinDistance = false;
+            }
+            else
+            {
+                this.IsTargetWithinDistance = true;
+            }
         }
     }
 }

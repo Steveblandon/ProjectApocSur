@@ -1,10 +1,12 @@
 ﻿namespace Projapocsur.Scripts
 {
-    using Projapocsur.World;
     using UnityEngine;
 
+    /// <summary>
+    /// Allows target selection only when currently selected characters are drafted.
+    /// </summary>
     [RequireComponent(typeof(ToggleUI))]
-    public class ShootButtonController : MonoBehaviour
+    public abstract class TargetSelectButtonControllerBase : MonoBehaviour
     {
         private ToggleUI toggleButton;
 
@@ -19,6 +21,8 @@
             this.toggleButton.OnSelectStateChangeEvent -= this.OnToggleStateChangeEvent;
             this.CancelTargetingAndReset();
         }
+
+        protected abstract void OnTargetedClickEvent(ITargetable target);
 
         private void OnToggleStateChangeEvent(Selectable simpleSelectable)
         {
@@ -45,23 +49,7 @@
             }
         }
 
-        private void OnTargetedClickEvent(ITargetable target)
-        {
-            bool selecteesAreDrafted = GameMaster.Instance.PlayerCharacterSelection.IsDrafted.Value;
-            IDamageable damageable = target as IDamageable;
-
-            if (damageable != null && selecteesAreDrafted)
-            {
-                foreach (var selectee in GameMaster.Instance.PlayerCharacterSelection.All)
-                {
-                    selectee.EngageTarget(damageable, CombatEngagementMode.Shoot);
-                }
-            }
-
-            this.CancelTargetingAndReset();
-        }
-
-        private void CancelTargetingAndReset()
+        protected void CancelTargetingAndReset()
         {
             InputController.Main.CancelCheckForTargetOnNextClick(this.OnTargetedClickEvent);
             GameMaster.Instance.PlayerCharacterSelection.IsDrafted.ValueChangedEvent -= this.OnDraftStateChangeEvent;

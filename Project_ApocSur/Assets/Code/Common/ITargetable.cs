@@ -9,5 +9,7 @@
         string FactionID { get; set; }
 
         Vector3 Position { get; }
+
+        Vector3 Size { get; }
     }
 }

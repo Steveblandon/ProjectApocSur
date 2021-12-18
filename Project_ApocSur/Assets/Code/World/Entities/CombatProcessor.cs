@@ -1,5 +1,6 @@
 ﻿namespace Projapocsur.World
 {
+    using System;
     using System.Collections;
     using Projapocsur;
     using Projapocsur.Scripts;
@@ -10,6 +11,7 @@
         #region Unity editor configurable variables
         private float HostileScanRadius => GameMaster.Instance.Config.HostileScanRadius;
         private float HostileScanInterval => GameMaster.Instance.Config.HostileScanInterval;
+        private float TouchingDistance => GameMaster.Instance.Config.TouchingDistance;
         #endregion
 
         private IMoveable moveable;
@@ -84,15 +86,19 @@
             }
 
             this.currentTarget = damageable;
-            this.moveable.LookAt(damageable);
 
             switch (engagementMode)
             {
                 case CombatEngagementMode.Shoot:
+                    this.moveable.LookAt(damageable);
                     this.EngageTargetInRangedCombat(damageable);
                     break;
                 case CombatEngagementMode.Melee:
-                    // TBI
+                    this.moveable.FollowTarget(damageable, 3, this.TouchingDistance);
+                    break;
+                default:
+                    Debug.Log($"'{Enum.GetName(typeof(CombatEngagementMode), engagementMode)}' combat processing not implemented yet.");
+                    this.Cease();
                     break;
             }
 
@@ -112,7 +118,7 @@
                     this.OnHostileTargetAcquired(target as IDamageable);
                 }
                 
-                yield return new WaitForSeconds(HostileScanInterval);
+                yield return new WaitForSeconds(this.HostileScanInterval);
             }
         }
 

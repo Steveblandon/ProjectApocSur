@@ -23,6 +23,9 @@
         [SerializeField]
         [Tooltip("number of times to scan for target within the held weapon's effective range. Once the max is reached, target is disengaged.")]
         private int maxTargetInRangeScans;
+
+        [SerializeField]
+        private float touchingDistance;
         #endregion
         #endregion
 
@@ -32,6 +35,7 @@
         public float HostileScanInterval => this.hostileScanInterval;
         public float TargetInRangeScanInterval => this.targetInRangeScanInterval;
         public int MaxTargetInRangeScans => this.maxTargetInRangeScans;
+        public float TouchingDistance => this.touchingDistance;
         #endregion
         #endregion
     }
