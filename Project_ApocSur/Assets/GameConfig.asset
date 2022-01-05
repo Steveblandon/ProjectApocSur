@@ -16,3 +16,4 @@ MonoBehaviour:
   hostileScanInterval: 0.5
   targetInRangeScanInterval: 0.5
   maxTargetInRangeScans: 10
+  touchingDistance: 1.21

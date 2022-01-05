@@ -2,12 +2,11 @@ namespace Projapocsur.Scripts
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using Projapocsur.EditorAttributes;
     using Projapocsur.World;
     using UnityEngine;
 
-    public class ProjectileLauncher : MonoBehaviour, IRangedWeapon
+    public class ProjectileLauncher : QueuedRoutineExecutor, IRangedWeapon
     {
         public event Action WeaponFiredEvent;
 
@@ -39,9 +38,6 @@ namespace Projapocsur.Scripts
         private int ammo;
 
         private DamageInfo damageInfo;
-        private bool isBusy;
-        private Queue<Func<IEnumerator>> queuedRoutine = new Queue<Func<IEnumerator>>();
-        private Func<bool> FireProjectileCommandAborted;
 
         public int Ammo => this.ammo;
 
@@ -56,8 +52,7 @@ namespace Projapocsur.Scripts
         {
             if (ammo > 0)
             {
-                this.FireProjectileCommandAborted = abortCallback;
-                this.StartOrQueueRoutine(this.ShootRoutine);
+                this.StartOrQueueRoutine(this.ShootRoutine, abortCallback);
             }
             else
             {
@@ -65,37 +60,15 @@ namespace Projapocsur.Scripts
             }
         }
 
-        public void Reload()
+        public void Reload(Func<bool> abortCallback = null)
         {
-            this.StartOrQueueRoutine(this.ReloadRoutine);
+            this.StartOrQueueRoutine(this.ReloadRoutine, abortCallback);
         }
 
-        private void StartOrQueueRoutine(Func<IEnumerator> coroutine)
-        {
-            this.queuedRoutine.Enqueue(coroutine);
-
-            if (!this.isBusy)
-            {
-                this.StartCoroutine(this.RunQueuedRoutines());
-            }
-        }
-
-        private IEnumerator RunQueuedRoutines()
-        {
-            this.isBusy = true;
-
-            while (this.queuedRoutine.Count > 0)
-            {
-                yield return this.StartCoroutine(this.queuedRoutine.Dequeue()());
-            }
-
-            this.isBusy = false;
-        }
-
-        private IEnumerator ShootRoutine()
+        private IEnumerator ShootRoutine(Func<bool> abortCallback)
         {
             yield return new WaitForSeconds(aimTime);
-            bool aborted = this.FireProjectileCommandAborted != null ? this.FireProjectileCommandAborted() : false;
+            bool aborted = abortCallback != null ? abortCallback() : false;
 
             if (this.ammo > 0 && !aborted)
             {
@@ -121,13 +94,18 @@ namespace Projapocsur.Scripts
             }
         }
 
-        private IEnumerator ReloadRoutine()
+        private IEnumerator ReloadRoutine(Func<bool> abortCallback)
         {
             Debug.Log($"{this.name} reloading...");
             yield return new WaitForSeconds(reloadTime);
-            ammo = ammoCapacity;
-            Debug.Log($"{this.name} reloaded ({this.ammo}/{this.ammoCapacity})");
-            this.WeaponReloadedEvent?.Invoke();
+            bool aborted = abortCallback != null ? abortCallback() : false;
+
+            if (!aborted)
+            {
+                ammo = ammoCapacity;
+                Debug.Log($"{this.name} reloaded ({this.ammo}/{this.ammoCapacity})");
+                this.WeaponReloadedEvent?.Invoke();
+            }
         }
     }
 }

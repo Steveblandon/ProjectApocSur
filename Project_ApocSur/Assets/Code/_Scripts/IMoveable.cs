@@ -11,11 +11,13 @@
 
         bool HasTarget { get; }
 
+        bool IsTargetWithinDistance { get; }
+
         void LookAt(ITargetable target);
 
         void StopLookingAtTarget();
 
-        void FollowTarget(ITargetable target, float speed, float distance);
+        void FollowTarget(ITargetable target, float speed);
 
         void MoveForward(float distance, float speed);
 

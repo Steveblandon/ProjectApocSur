@@ -14,6 +14,6 @@
 
         void FireProjectile(Func<bool> abortCallback = null);
 
-        void Reload();
+        void Reload(Func<bool> abortCallback = null);
     }
 }

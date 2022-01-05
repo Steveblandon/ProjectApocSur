@@ -4,7 +4,7 @@ namespace Projapocsur.World
     using Projapocsur.Scripts;
     using UnityEngine;
 
-    public class Character : IEventListener
+    public class Character : IDisposable
     {
         public const string ClassName = nameof(Character);
 
@@ -59,7 +59,9 @@ namespace Projapocsur.World
 
         public Prop<bool> IsAutoAttackEnabled => this.isAutoAttackEnabled;
 
-        public IRangedWeapon RangedWeapon { set => this.combatProcessor.RangedCombatDriver.RangedWeapon = value; }    // temporary direct assignment until inventory system is in place
+        public IRangedWeapon RangedWeapon { set => this.combatProcessor.RangedCombatDriver.Weapon = value; }    // temporary direct assignment until inventory system is in place
+
+        public IMeleeWeapon MeleeWeapon { set => this.combatProcessor.MeleeCombatDriver.Weapon = value; }    // temporary direct assignment until inventory system is in place
 
         public void EngageTarget(IDamageable damageable, CombatEngagementMode engagementMode) => this.combatProcessor.EngageTarget(damageable, engagementMode);
 
@@ -78,9 +80,9 @@ namespace Projapocsur.World
             }
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
-            this.combatProcessor.OnDestroy();
+            this.combatProcessor.Dispose();
             this.avatar.OnSelectStateChangeEvent -= this.OnCompSelectStateChangeEvent;
             this.portrait.OnSelectStateChangeEvent -= this.OnCompSelectStateChangeEvent;
             InputController.Main.OnNothingClickedEvent -= this.OnNothingClickedEvent;
@@ -117,6 +119,12 @@ namespace Projapocsur.World
                 {
                     if (this.moveable != null)
                     {
+                        if (this.combatProcessor.IsManualTargetingOverrideActive)
+                        {
+                            this.combatProcessor.Cease();
+                            this.OnAutoAttackStateChangeEvent();
+                        }
+                        
                         this.moveable.MoveToMousePosition(3);      // TODO: change value to movement speed stat value
                     }
                     else

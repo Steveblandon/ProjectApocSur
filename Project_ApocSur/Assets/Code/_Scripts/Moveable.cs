@@ -35,7 +35,7 @@ namespace Projapocsur.Scripts
         void Start()
         {
             this.spriteRenderer = this.GetComponent<SpriteRenderer>();
-            this.OnDestinationReached(false);
+            this.CancelCurrentDirective();
         }
 
         void Update()
@@ -63,10 +63,10 @@ namespace Projapocsur.Scripts
 
         public void StopLookingAtTarget() => this.target = null;
 
-        public void FollowTarget(ITargetable target, float speed, float distance)
+        public void FollowTarget(ITargetable target, float speed)
         {
             this.CancelCurrentDirective();
-            this.maxDistanceFromTarget = (this.spriteRenderer.bounds.size.x + target.Size.x) / 2 + distance;
+            this.maxDistanceFromTarget = (this.spriteRenderer.bounds.size.x + target.Size.x) / 2 + GameMaster.Instance.Config.TouchingDistance;
             this.target = target;
             this.speed = speed;
             this.CurrentDirective = MoveDirective.FollowTarget;
@@ -101,20 +101,10 @@ namespace Projapocsur.Scripts
 
         public void CancelCurrentDirective()
         {
-            this.OnDestinationReached(false);
-        }
-
-        private void OnDestinationReached(bool invokeEvent)
-        {
             this.CurrentDirective = MoveDirective.None;
             this.distanceToTravel = 0;
             this.maxDistanceFromTarget = 0;
             this.destination = this.transform.position;
-
-            if (invokeEvent)
-            {
-                this.OnDestinationReachedEvent?.Invoke();
-            }
         }
 
         private void MoveToDestinationUpdate()
@@ -123,7 +113,8 @@ namespace Projapocsur.Scripts
 
             if (this.transform.position == this.destination)
             {
-                this.OnDestinationReached(true);
+                this.CancelCurrentDirective();
+                this.OnDestinationReachedEvent?.Invoke();
             }
             else if (this.target == null)
             {
@@ -138,7 +129,8 @@ namespace Projapocsur.Scripts
             
             if (distanceTravelled >= distanceToTravel)
             {
-                this.OnDestinationReached(true);
+                this.CancelCurrentDirective();
+                this.OnDestinationReachedEvent?.Invoke();
             }
         }
 
@@ -153,7 +145,13 @@ namespace Projapocsur.Scripts
             }
             else
             {
+                bool hasTargetJustBeenReached = this.IsTargetWithinDistance == false;
                 this.IsTargetWithinDistance = true;
+
+                if (hasTargetJustBeenReached)
+                {
+                    this.OnDestinationReachedEvent?.Invoke();
+                }
             }
         }
     }

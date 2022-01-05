@@ -3,37 +3,40 @@
     using System;
     using System.Collections;
     using Projapocsur;
+    using Projapocsur.Scripts;
     using UnityEngine;
 
-    public class RangedCombatDriver : IEventListener
+    public class RangedCombatDriver : IDisposable
     {
         #region Unity editor configurable variables
         private float TargetInRangeScanInterval => GameMaster.Instance.Config.TargetInRangeScanInterval;
         private int MaxTargetInRangeScans => GameMaster.Instance.Config.MaxTargetInRangeScans;
         #endregion
 
-        public event Action TargetUnreachableEvent;
-        
+        private IMoveable moveable;
         private ICoroutineHandler coroutineHandler;
         private IRangedWeapon rangedWeapon;
         private ITargetable currentTarget;
         private ProximityScanner proximityScanner;
 
-        public RangedCombatDriver(ICoroutineHandler coroutineHandler, ProximityScanner proximityScanner)
+        public RangedCombatDriver(ICoroutineHandler coroutineHandler, ProximityScanner proximityScanner, IMoveable moveable)
         {
             this.coroutineHandler = coroutineHandler;
             this.proximityScanner = proximityScanner;
+            this.moveable = moveable;
         }
+
+        public event Action TargetUnreachableEvent;
 
         /// <summary>
         /// once the inventory system is in place, this class will be able to interact with it to pull up a weapon, but until then it must be assigned.
         /// </summary>
-        public IRangedWeapon RangedWeapon 
+        public IRangedWeapon Weapon 
         {
             get => this.rangedWeapon;
             set
             {
-                if (this.RangedWeapon != null)
+                if (this.rangedWeapon != null)
                 {
                     this.rangedWeapon.WeaponFiredEvent -= this.OnWeaponFiredEvent;
                     this.rangedWeapon.WeaponReloadedEvent -= this.OnWeaponReloadedEvent;
@@ -59,19 +62,28 @@
 
                 if (this.currentTarget != null)
                 {
+                    this.moveable.LookAt(value);
                     this.FireAtTargetWhenInRange();
+                }
+                else
+                {
+                    this.moveable.StopLookingAtTarget();
                 }
             }
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
-            if (this.RangedWeapon != null)
+            if (this.rangedWeapon != null)
             {
-                this.RangedWeapon.WeaponFiredEvent -= this.OnWeaponFiredEvent;
+                this.rangedWeapon.WeaponFiredEvent -= this.OnWeaponFiredEvent;
                 this.rangedWeapon.WeaponReloadedEvent -= this.OnWeaponReloadedEvent;
             }
         }
+
+        private void OnWeaponReloadedEvent() => this.FireAtTargetWhenInRange();
+
+        private void OnWeaponFiredEvent() => this.FireAtTargetWhenInRange();
 
         private void FireAtTargetWhenInRange()
         {
@@ -105,12 +117,12 @@
 
             while (this.CurrentTarget == preWaitCurrentTarget 
                 && !this.proximityScanner.IsTargetWithinDistance(this.CurrentTarget, this.rangedWeapon.EffectiveRange)
-                && waitIntervals++ < MaxTargetInRangeScans)
+                && waitIntervals++ < this.MaxTargetInRangeScans)
             {
-                yield return new WaitForSeconds(TargetInRangeScanInterval);
+                yield return new WaitForSeconds(this.TargetInRangeScanInterval);
             }
 
-            if (waitIntervals >= MaxTargetInRangeScans)
+            if (waitIntervals >= this.MaxTargetInRangeScans)
             {
                 this.TargetUnreachableEvent?.Invoke();
             }
@@ -119,9 +131,5 @@
                 this.ShootAtCurrentTarget();
             }
         }
-
-        private void OnWeaponReloadedEvent() => this.FireAtTargetWhenInRange();
-
-        private void OnWeaponFiredEvent() => this.FireAtTargetWhenInRange();
     }
 }

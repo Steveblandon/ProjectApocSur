@@ -25,6 +25,7 @@
         private int maxTargetInRangeScans;
 
         [SerializeField]
+        [Tooltip("Distance to be considered within touching distance between two objects. At zero, the objects touch, but don't clip onto each other.")]
         private float touchingDistance;
         #endregion
         #endregion

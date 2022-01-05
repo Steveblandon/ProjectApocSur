@@ -6,15 +6,13 @@
     using Projapocsur.Scripts;
     using UnityEngine;
 
-    public class CombatProcessor : IEventListener
+    public class CombatProcessor : IDisposable
     {
         #region Unity editor configurable variables
         private float HostileScanRadius => GameMaster.Instance.Config.HostileScanRadius;
         private float HostileScanInterval => GameMaster.Instance.Config.HostileScanInterval;
-        private float TouchingDistance => GameMaster.Instance.Config.TouchingDistance;
         #endregion
 
-        private IMoveable moveable;
         private ICoroutineHandler coroutineHandler;
         private ProximityScanner proximityScanner;
         private RelationsTracker relationsTracker;
@@ -23,12 +21,12 @@
 
         public CombatProcessor(IMoveable moveable, ICoroutineHandler coroutineHandler, ProximityScanner proximityScanner, RelationsTracker relationsTracker)
         {
-            this.moveable = moveable;
             this.coroutineHandler = coroutineHandler;
             this.proximityScanner = proximityScanner;
             this.relationsTracker = relationsTracker;
-            this.RangedCombatDriver = new RangedCombatDriver(coroutineHandler, proximityScanner);
+            this.RangedCombatDriver = new RangedCombatDriver(coroutineHandler, proximityScanner, moveable);
             this.RangedCombatDriver.TargetUnreachableEvent += this.OnTargetUnreachableEvent;
+            this.MeleeCombatDriver = new MeleeCombatDriver(moveable);
         }
 
         public bool HasTarget => this.currentTarget != null;
@@ -36,6 +34,8 @@
         public bool IsManualTargetingOverrideActive { get; private set; }
 
         public RangedCombatDriver RangedCombatDriver { get; }       // this shouldn't be exposed, but need it for now to assign rangedWeapon... in the future, CombatProcessor should be interfacing with inventory
+
+        public MeleeCombatDriver MeleeCombatDriver { get; }       // this shouldn't be exposed, but need it for now to assign meleeWeapon... in the future, CombatProcessor should be interfacing with inventory
 
         public void EngageHostileTargets()
         {
@@ -68,14 +68,15 @@
             this.IsManualTargetingOverrideActive = false;
             this.currentTarget = null;
             this.RangedCombatDriver.CurrentTarget = null;
-            this.moveable.StopLookingAtTarget();
+            this.MeleeCombatDriver.CurrentTarget = null;
             Debug.Log("Target disengaged");
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
             this.RangedCombatDriver.TargetUnreachableEvent -= this.OnTargetUnreachableEvent;
-            this.RangedCombatDriver.OnDestroy();
+            this.RangedCombatDriver.Dispose();
+            this.MeleeCombatDriver.Dispose();
         }
 
         private void EngageTargetInternal(IDamageable damageable, CombatEngagementMode engagementMode)
@@ -90,11 +91,10 @@
             switch (engagementMode)
             {
                 case CombatEngagementMode.Shoot:
-                    this.moveable.LookAt(damageable);
-                    this.EngageTargetInRangedCombat(damageable);
+                    this.RangedCombatDriver.CurrentTarget = damageable;
                     break;
                 case CombatEngagementMode.Melee:
-                    this.moveable.FollowTarget(damageable, 3, this.TouchingDistance);
+                    this.MeleeCombatDriver.CurrentTarget = damageable;
                     break;
                 default:
                     Debug.Log($"'{Enum.GetName(typeof(CombatEngagementMode), engagementMode)}' combat processing not implemented yet.");
@@ -105,13 +105,11 @@
             Debug.Log("Target engaged");
         }
 
-        private void EngageTargetInRangedCombat(ITargetable targetable) => this.RangedCombatDriver.CurrentTarget = targetable;  
-
         private IEnumerator ScanForHostileTargetsRoutine()
         {
             while (!this.IsManualTargetingOverrideActive)
             {
-                ITargetable target = proximityScanner.GetNearestTargetByIdWithinRadius(relationsTracker.HostileIndividualsById, HostileScanRadius);
+                ITargetable target = proximityScanner.GetNearestTargetByIdWithinRadius(relationsTracker.HostileIndividualsById, this.HostileScanRadius);
 
                 if (target != null)
                 {

@@ -24,6 +24,9 @@ namespace Projapocsur.Scripts
         [SerializeField]
         private ProjectileLauncher rangedWeapon;
 
+        [SerializeField]
+        private MeleeWeapon meleeWeapon;
+
         [Tooltip("targets hostile to player characters, currently used for Id management until a more robust system is in place.")]
         [SerializeField]
         private Damageable[] hostileTargets;
@@ -43,7 +46,7 @@ namespace Projapocsur.Scripts
 
         void Start()
         {
-            if (this.testCharacterAvatar == null || this.testCharacterPortrait == null || this.rangedWeapon == null)
+            if (this.testCharacterAvatar == null || this.testCharacterPortrait == null || this.rangedWeapon == null || this.meleeWeapon == null)
             {
                 Debug.LogError($"{className}: missing character reference(s) in {this.gameObject.name}.");
                 return;
@@ -67,6 +70,7 @@ namespace Projapocsur.Scripts
             this.testCharacter = new Character("testCharacter0", this.testCharacterAvatar, this.testCharacterPortrait, body, characterCoroutineHandler, relationsTracker);
             this.testCharacter.IsInPlayerFaction = true;
             this.testCharacter.RangedWeapon = rangedWeapon;
+            this.testCharacter.MeleeWeapon = meleeWeapon;
 
             GameMaster.Instance.PlayerCharacterSelection.TrackCharacter(this.testCharacter);     // this should ultimately end up in whatever will be responsible for adding characters to player faction
         }
