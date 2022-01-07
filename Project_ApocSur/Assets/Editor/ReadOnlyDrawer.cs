@@ -1,9 +1,9 @@
-﻿namespace Projapocsur.Editor
+﻿namespace Projapocsur.Engine.Editor
 {
     using UnityEngine;
     using UnityEditor;
     using System;
-    using Projapocsur.EditorAttributes;
+    using Projapocsur.Engine.EditorAttributes;
 
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer

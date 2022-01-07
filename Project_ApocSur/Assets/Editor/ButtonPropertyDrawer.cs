@@ -1,9 +1,9 @@
-﻿namespace Projapocsur.Editor
+﻿namespace Projapocsur.Engine.Editor
 {
     using UnityEngine;
     using UnityEditor;
     using System.Reflection;
-    using Projapocsur.EditorAttributes;
+    using Projapocsur.Engine.EditorAttributes;
 
     [CustomPropertyDrawer(typeof(ButtonAttribute))]
     public class ButtonPropertyDrawer : PropertyDrawer
