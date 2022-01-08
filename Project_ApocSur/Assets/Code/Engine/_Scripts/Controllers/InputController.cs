@@ -11,7 +11,7 @@ namespace Projapocsur.Engine
     /// </summary>
     public class InputController : MonoBehaviour
     {
-        public event Action<KeyCode> OnNothingClickedEvent;
+        public event Action<MouseButton> OnNothingClickedEvent;
 
         private const string CompName = nameof(InputController);
 
@@ -80,7 +80,7 @@ namespace Projapocsur.Engine
                     }
                     else
                     {
-                        this.OnNothingClickedEvent?.Invoke(keyCode);
+                        this.OnNothingClickedEvent?.Invoke(keyCode.ConvertToMouseButton());
                     }
 
                     this.lastHitCollider = null;

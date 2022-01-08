@@ -2,7 +2,6 @@ namespace Projapocsur.World
 {
     using System;
     using Projapocsur.Engine;
-    using UnityEngine;
 
     public class Character : IDisposable
     {
@@ -106,16 +105,16 @@ namespace Projapocsur.World
             }
         }
 
-        private void OnNothingClickedEvent(KeyCode mouseInput)
+        private void OnNothingClickedEvent(MouseButton mouseInput)
         {
             if (this.IsSelected.Value)
             {
-                if (mouseInput == KeyCode.Mouse0)
+                if (mouseInput == MouseButton.Left)
                 {
                     this.avatar.OnDeselect();
                     this.portrait.OnDeselect();
                 }
-                else if (mouseInput == KeyCode.Mouse1 && this.isDrafted.Value == true)
+                else if (mouseInput == MouseButton.Right && this.isDrafted.Value == true)
                 {
                     if (this.moveable != null)
                     {
