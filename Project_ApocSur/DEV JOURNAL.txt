@@ -1,0 +1,714 @@
+1/7/2021 - completed:
+	- refactored inputController to avoid using UnityEngine.KeyCode and remove Character dependency on UnityEngine.
+
+next steps:
+	- Move auto attack behavior out of combat processor into its own driver.
+	- refactor drivers to have a common interface (engage(target), stop)... though not all engage calls would have a target... Might need to allow drivers to make use of functionality
+	of other drivers... Start with auto-attack and see where it goes from there.
+	- track and eliminate target. Should basically be a follow, but either shoot or melee based on primary weapon.
+		- inventory class, to keep track of current active item and primary/secondary slots.
+	- track and eliminate any target. Like the other, except this one scans and automatically targets the nearest threat.
+
+	redesign of combat processor....
+	CombatProcessor -> instantiates combatDrivers and contains a switch method to determine what CombatDriver to use based on what CombatEngagementMode, one for ISingleTargetCombatDriver and another for ITargetAreaCombatDriver
+		- create driver when needed and cache it for future usage.
+		- rather than having all combat modes in one enum, separate them into two enums to make type designation easier to deal with. One for the SingleTarget* modes and the other for TargetArea* modes.
+		- Combat processor controls driver usage triggered externally or via any default mechanism (e.g. as such might be the case for NPC AI... at the very least its providing dependency inversion to Character from
+		all the driver types).
+	ICombatDriver { Stop() } 
+		- > ISingleTargetCombatDriver { EngageTargetWith(target, activeWeapon) }
+			- > MeleeCombatDriver
+			- > RangedCombatDriver
+			- > FollowAndAttackCombatDriver
+		- > ITargetAreaCombatDriver { EngageWith(activeWeapon) }
+			- > AttackNearestCombatDriver
+			- > SearchAndDestroyCombatDriver
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+1/6/2021 - completed:
+	- refactored code structure along the lines of having unityEngine-specific code separate from Game code. The Game code can interface with our custom classes, but not with
+	any Unity specific engines. This should facilitate switching engines in the future if that's an objective.
+
+next steps:
+	- Character class still depends on UnityEngine, mainly because of InputController's exposure of the KeyCode enum. Need to come up with an alternate design.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+1/5/2021 - completed:
+	- completed melee logic via a new combat driver and additional hooks to trigger engagement via melee target button.
+
+next steps:
+	- refactor codebase to make sure that UnityEngine-dependant code is not in the same namespace as game-specific code to facilitate any future engine changes.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+12/17/2021 - completed:
+	- added a melee button to engage target with melee (melee logic TBA).
+	- added a follow target directive to the moveable class. Once set, it will look at and follow the target.
+	- wrapped up some experimental prototyping on pathing with collision avoidance. The conclusion being that it's going to take some time to sit down and study properly to better 
+	understand it and come up with a solution. The prototyping included Astar pathfinding and graph updates (takes a bit of time (1-2s) for the path to update). Steering techniques
+	handle simple collision avoidance, but gets stuck on simple maze... Astar pathfinding will be needed. Tested grid-based setup by creating a grid sector with surrounding target 
+	logic... So far the algorithm to run a circular cell search which allows for finding an available spot to move to. The whole idea sounds a bit expensive and is difficult to wrap
+	mind around to fully complete... Thus putting this in the backburner for now and sticking to simple pathing with no collision avoidance logic for now. In this future we'll need
+	to take some time to properly study our options, maybe read a book on AI, no rush.
+
+next steps:
+	- melee driver for combat processor.
+	- check milestones.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+12/5/2021 - completed:
+	- added editor-configurable variables for latest hardcoded constants to a ScriptableObject. This creates the basis for a way of exposing configs that can be adjusted from the editor 
+	in either edit or play mode without having to recompile code.
+	- updated proximityScanner to use layerMask. Moving forward it can be fine-tuned so that the number of scannable objects is reduced.
+	- researched pathfinding... narrowed down on Astar pathfinding by Aron-something-berg. Multiple references lead back to it, so it seems the most reliable option for quickly putting
+	something together without having to implement my own A* / Djistra algorithms and what not.
+
+next steps:
+	- pick next milestone item, see how the pathfinding package can help make that happen.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+12/4/2021 - completed:
+	- completed auto-attack toggle button.
+	- completed cease button. If character is engaged with a manual target it will stop attacking. If there are no targets, but character is moving it will stop. Thus multiple clicks
+	of cease will iterate through any active actions until idle. Auto-attack is left untouched, since if player wanted to turn it off, there is already a button for it.
+
+next steps:
+	- move all global configurable variables that might require further in-game fine-tuning (such as those in Config.cs) to a ScriptableObject for easier modification.
+
+ongoing debt:
+	These are to-do's that will need to be done eventually but not necessarily right now [copy and paste this onto new entries to avoid duplicates].
+	- [content expansion + balancing prereq.] need to add serialization support for inheritance, ability to use ParentName attribute such as that on postLoad of defs we're able to look up
+	a def by name and copy its values over for anything that wasn't set (will need this to tidy up the XML and avoid duplicate configs).
+	- [game save prereq] need to add serialization support for .NET Dictionary (used by Body type, will be needed when save system is implemented).
+	- [game save prereq] need to add serialization support for .NET Queue (used by BodyPart type, will be needed when save system is implemented).
+	- [game save prereq] need to add serialization support for enums.
+	- [game save needed] Id creator, keeps a dictionary of string to List<long> keyValuePairs in which string represents a defName (or def-derived instance name)
+	and the long represents a counter. The counter is set up as a list so that if the max is reached, a new counter can be started... or to simplify Id uniqueness
+	we just use Guids, have each item that needs a unique Id generate one and store it.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+12/1/2021 - completed:
+	- refactored Draft functionality to use Prop type.
+	- refactored Trackers to be unified under CharacterSelectionTracker, in the sense that the things we care about are relative to the selected characters only. So, draftTracker
+	functionality has been moved into CharacterSelectionTracker. With the use of Prop types and a new minimal PropTracker, the logic is generic enough to work within 
+	CharacterSelectionTracker. This should be easily extendible to any other binary character props that need to be tracked. It will need some more work to have it work with enums.
+	- fixed small bug in that undrafted character continued to auto-target and shoot. I.e. Cease() function wasn't fully working as it wasn't stopping the coroutine.
+
+next steps:
+	- latest draft functionality seems to work fine. Next, try to see if all this refactoring does actually allow for a re-usuable draft-like button controller for binaries like auto-shoot.
+	- auto-attack toggle button.
+	- cease button.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/30/2021 - completed:
+	- added logic for automated engagement of hostile targets. Once character is drafted they will automatically start scanning for threats. Character will lock on to the 
+	nearest threat and start shooting at it. Manually selecting a target via the "shoot" button cancels the auto-targeting for the remainder of the draft session. Currently,
+	the only way to re-enable the auto-targeting is to undraft and re-draft.
+	- added a more robust type 'Prop' to handle variables that should be published when they change, and therefore listeners can be registered to it, similar to the Stat type. So far 
+	the IsSelected property has been revamped to work in this manner. Furthermore, the CharacterSelectionTracker and DraftTracker have been refactored to track registerable characters
+	as opposed to just registering with a static event in Character, which is now being deprecated. This all ultimately leads to creating more abstract trackers to more easily extend the
+	DraftButtonController functionality to new buttons without having to copy and paste much code.
+
+next steps:
+	- continue refactoring code to use Props, so far Character.IsSelected seems to work fine, now update and test Character.IsDrafted.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/23/2021 - completed:
+	- added engagement logic to shoot button. Once target is picked selectee "locks" onto target. It will shoot at the target if within range with a loaded ranged weapon. If 
+	weapon is out of ammo, selectee automatically reloads it (in the future this would be preceded by a quick inventory ammo check/consumption). If target is not within range
+	the selectee will wait sometime before disengaging.
+
+next steps:
+	- check milestones, move onto next item... melee button?
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/22/2021 - completed:
+	- resolved the issue of switching to targeting mode when shoot button is clicked. This ultimately led to a whole revamp of the inputController, but now its also more streamlined
+	for later additions of additional input polling. The problem was resolved by distancing the inputController as much as possible from the EventSystem by using the EventSystem's property
+	for detecting if there is UI under the cursor. With it, we're able to detect clicks on UI (no matter if its interactable or not), which was the pain point up 
+	to this point - to disable targeting mode. The race condition was ultimately resolved by simply skipping an update on InputController so that the click that enabled targeting mode (i.e. the click on the shoot button)
+	doesn't also get processed by InputController which would have immediately disabled it.
+
+next steps:
+	- now that the shoot button is functional we can focus on the actual engagement logic.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/21/2021 - completed:
+	- added additional working gun stats for effective range, accuracy, and spread. The accuracy is treated as a minimum chance value to for a bullseye shot. If rolled value
+	is greater than the accuracy, then projectile rotation is adjusted by a random value with max deviation equal to half of the spread value prior to being propelled forward.
+	Effective range indicates a distance at which the projectile deactivates if nothing has been hit.
+
+next steps:
+	- prototyped a shoot button. Some complications arise from it. The button gives the notion that things can now be left clicked, but that shouldn't trigger a selection.
+	Current solution is to allow input controller to have 2 different modes, one for selection, one for targetting. The problem is that all SelectableUIs get instantly deselected
+	when shoot button is toggled on. This is because there is 2 takes on input, one from EventSystem with IPointerClickHandler and the other with InputController. Who gets notified first
+	might be a matter of transient concern, but in the case that EventSystem gets priority, which it likely is given recent test results, then by the time InputController registers the input
+	the shoot button would have already switched the inputController's mode to target... which causes inputController to raycast on the same click that toggled on the shoot button. And since
+	shoot button is not a targetable, the onNothingClickedEvent gets triggered, so everything that relies on it to unselect, gets notified... We need a centralized input controller (which, should
+	really be named manager since other controllers are communicating with it). That way all input is going through it and we don't have such race conditions. That however means we'll need to implement
+	the graphic raycasting recursive type casting and in the future it might get unwieldly to rewrap keyboard presses and mouse hovers... So put some time into thinking of a clean solution
+	for handling this rather than just going headfirst into it as we've done so far. Given the back and forth so far, this piece is one of those that will require proper designing rather than prototyping.
+	.... Perhaps google for opinions/alternatives.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/20/2021 - completed:
+	- Created a gun prototype that can fire projectiles in the direction its facing (currently gun is made a child of character gameObject for the free movement and rotation).
+	Current fully working stats on the gun are reload time, aim time, ammo capacity, ammo, and projectile speed. The stats are however editor values for initial testing, they 
+	will eventually need to be hooked up to actual stat instances once weapon defs are created.
+	- implemented a generic object pool that currently is used for bullet instance reuse, but it's abstract enough that it can be used for other future scenarios (e.g. it should
+	be used for the injuries list in the health window) - accessible from GameMaster.
+	- slightly formalized more the Temp_JumpStarter class into GameInitializer, furthermore adding a init call to GameMaster from it so that it's initialized as soon as possible.
+	Previously, it was only being initialized when the first call to its instance was made.
+
+next steps:
+	- add weapon effective range stat and bullet max distance travelled limit so that it deactivates if nothing is hit.
+	- review milestones or refactor damageInfo and dependents to use the multi-type damage system.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/8/2021 - completed:
+	- fully wired health window to currently selected character tested. added a damage applier test trigger which can apply damage to the currently selected character. 
+	The damage is applied to the body rather than a bodypart directly, so it ventures into the semi-randomized height-based body hit processing. The result after testing 
+	is a flawlessly wired mechanism, which completes the current iteration of the health system. Logic working as the following: Health Window manager gets currently selected 
+	character from gameMaster, it then passes body parts to the body outline manager, hitpoints and blood loss stats to the health bar controllers, and sets itself up to listen 
+	to body outline manager for bodypart selections. When a bodypart is selected, health window manager gets notified by the body outline manager, and then it communicates that 
+	to the body part info manager (a.k.a the info panel), which then populates the info panel with body part label for title, body part hitpoints bar and injuries list. All of 
+	this is event driven, so it doesn't continously poll for updates, but rather actions get triggered as soon as states change. 
+
+next steps:
+	- review design doc to re-prioritize.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/7/2021 - completed:
+	- finished logic for human body parts manager, its parent body outline manager, and its parent the health window manager. Additionally, character has been updated and
+	wired up to have a body. 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/6/2021 - completed:
+	- added functionality for single injury additions to injuryViewManager, which covers the scenario in which a currently selected character gets 
+	injured. The previous coverage was only for the scenario of selecting a new character in which existing injuries are attached to.
+	- refactored statBar component to hook onto a stat rather than on values specified in the editor. The editor values were instead moved to a 
+	test trigger that then updates the hooked on stat's values, which then trigger state change events for the stat and the statController acts accordingly.
+	- added bodyPart info display hooks such as that the info panel in the health window shows the selected body part's label in the title, the stat bar is attached
+	to the hitpoints stat, and the injuries manager is set up to update on existing or new injuries. A trigger was also created to test for all this behavior... the
+	test allowed for switching between 2 different body parts and punching the body part to apply damage for HP bar and injuries view visual feedback.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+11/4/2021 - completed:
+	- added test trigger to insert test injury data and allow for manual update calls for injuries. Within this scaffold, asserted that injuryViews 
+	are removed once injuries heal. Bleeding icon dissapears once the injury is no longer bleeding.
+	- updated injury logic to stop bleeding when it reaches a certain threshold rather than when the injury is fully healed. The concept being that
+	the wound will still cause some pain until fully healed, but the bleeding stops before the injury is fully healed.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/31/2021 - completed:
+	- updated stat so it invokes event when its value, min, and/or max properties changes.
+	- updated stat so it calculates the value as a percentage of the span from its min to max.
+	- prototyped a visually complete iteration of the health panel's diagnostic info pane (i.e. body part info pane).
+		- completed work of the injuries scrollview with injuryView prefabs. Each injuryView has a controller to attach it to an injury.
+		While the whole list of injuryViews has a manager that is responsible for creating the injuryViews per injuries, as well as clean
+		up once the injury is healed. -- tested scrollview + injuryView listing within the scrollview.. Working flawlessly.
+		- injuries display blood icon when bleeding.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/30/2021 - completed:
+	- completed statbar prototype by making background optional + making it a prefab. 
+	- Re-used statbar prefab to make blood loss bar, combining both hitpoints stat bar and blood loss stat bar into a health bar.
+	- body part changes color like a stat bar to indicate the hit points left once a threshold is hit.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+
+10/29/2021 - completed:
+	- created stat bar component / UI game object prototype that can hook stat (min, max, current) values onto the transform
+	of an image and thus changing the size of the image as the stat changes. The module allows for specifying:
+		- direction in which the bar grows.
+		- max hue deviation for color alteration as stat reaches min value (can get a nice green to red effect for HP bar).
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/26/2021 - 10/27/2021:
+	- worked on UI design for health panel.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/25/2021 - completed:
+	- completed written design of body hit processing. That marks the completion of documenting the work that has been accomplished backstage - with the
+	exception of the defs system as that is not really game-specific but as a means of enabling game-specific logic.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/24/2021 - completed:
+	- completed written design of latest hit points sub-system for the health system, as well as refactoring the code to represent the latest design.
+	Mainly, that the body hitpoints is a percentage as opposed to an aggregate quantity of body parts' hit points. The percentage can represent one of
+	3 things, it's either percentage of life left until the body bleeds to death, all body parts are destroyed, or a vital part is destroyed. Thus, this
+	system helps to better represent a body part health system that will require less micromanagement (i.e. constant pausing to view character health tabs)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/23/2021 - completed:
+	- update design doc health system section to reflect what has been implemented, along with clear emphasis on what still needs to be done.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/20/2021 - completed:
+	- added test coverage for body bleeding on part loss, body destroyed on vital part loss, body damage amplification on vital hits.
+	- the test coverage this iteration marks the completion of the body system (encompassing healing, damage and bleeding processing 
+	& effect, injury recovery, hitpoints and hitpoints overview, body part destruction, and ultimately body destruction).
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/20/2021 - completed:
+	- added unit test for bleeding scenario to validate the effect of blood loss on max hitpoints recovery.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/17/2021 - completed:
+	- designed and completed logic for natural body healing, which includes injury recovery, body part hit points recovery, and body hit points recovery.
+	The logic has been written in the design doc, but in a nutshell, how it works is that the body hitpoints is an aggregate of the body parts hit points.
+	Everytime the body parts recover hit points, so does the body, thus leaving body parts as still being the focal point of healing. Healing is stunted 
+	when either blood loss or the average injury healed amount reduces the max hitpoints threshold. Depending on how low the hitpoints threshold is lowered,
+	the body part will either recover no hitpoints, partial, or full. Once injuries heal and blood loss is zero, the body parts can heal and essentially
+	recover lost hit points at the body's full healing rate.
+	- test coverage has been added to cover a non-bleeding scenario.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/16/2021 - completed:
+	- split up accumulated changes into multiple commits.
+	- added test coverage for body constructor and take damage logic.
+	- added test coverage for a random number generator with a simple built-in gaussian-distribution-based roll (optional), which helps to work out values like height
+	that should be close to the normal in general, but have a chance of deviation (perks are expected for short and tall characters).
+	- refactored private setters to protected setters to avoid possibly future errors with serializing extended classes.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/15/2021 - completed:
+	- added additional test coverage for body hit processor, primarily that proper ranges were being created based on height and hitBoxCount... That the right number
+	of hitboxes were being assigned per stance based on whether its empty or not... hit processing... recalibration after parts are destroyed. 
+	- in addition to test coverage I did an audit (as in breakpoint visual step-through) of the hitboxes generated for each stance... the results are flawless, larger
+	things like legs and torso have higher hit chances... things that you would expect to be more likely to be hit on different stances are as expected (e.g. while 
+	crouching legs and torso are more likely to be hit, for prone is head and torso, for sitting is legs and torso... certain ranges that normally indicate character 
+	is behind cover like crouching and sitting on ground have head more exposed in its own range with 100% hit chance which automatically balances out the fact that 
+	the rest of the body is behind cover).
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/14/2021 - completed:
+	- added additional test coverage for bodyHitBox, primarily on calibration hitChance validation by running calculations on unit test as well for cross-checking, 
+	new lengthMultiplier adjustment on hit chances, and size of hitbox (sum of body part within range sizes) - which now actually takes into account if the length
+	of the body part is within range (it wasn't previously).
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/10/2021 - completed:
+	- refactored height logic. Height stat is no longer determined from bodyDef, instead we look at a bodyPart's floor height (which is the sum of it's floor offset
+	and length (previously known as height)). The greatest floor height determines the body's height stat. The heightRange property of the BodyDef has been renamed to
+	maxHeightDeviationFactor and is now considered to be half of the possible deviation factor. The calculated deviation is based on a gaussian RNG function which then 
+	determines by how much the body's part shrink or grow and subsequently the body's own height. Height will ultimately help determine the likelihood of something being 
+	hit, specially if it's behind cover. Thus, smaller heights are often more beneficial in ranged combat, (to balance this out one thing to add for taller bodies is to 
+	give movement, HP, and base strength bonuses).
+	- bodyHitProcessor and bodyHitBox have been updated according to new height logic as well as bugs.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/9/2021 - completed:
+	- not much.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/8/2021 - completed:
+	- wrote body's TakeDamage logic, most of it has been encapsulated within a bodyHitProcessor. The body just takes care of removing the body part if destroyed.
+	- refactored stances to defs, in the process adding stance capabilities and default stance to body.
+	- refactored DefRef to link def automatically when something externally attempts to reference the Def property. This way we avoid possible future bugs where we've
+	forgotten to link a def in a postLoad call. It does however mean that any naming typos will only be caught when def-dependant things are instantiated/tested.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/7/2021 - completed:
+	- instantiation of body.
+
+next steps:
+	- write body's takeDamage logic, create a BodyHitProcessor to encapsulate logic or control logic inside Body class?
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/4/2021 - completed:
+	- unit tested bodyHitBox. Covered several logical scenarios based on expected chance. Stepped through random-picking logic to verify it for varying body parts and
+	different ranges. Ultimately, it works flawlessly now that some quinks have been worked out / fixed. The bigger the body parts relative to each other in a body, 
+	the higher the chance they will be hit. Furthermore, the closer a range is to containing a body part entirely, the higher the chance that part will be hit.
+
+next steps:
+	- implement body logic.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/3/2021 - completed:
+	- unit testing bodypart. In conclusion to the problem of how to store injuries such as that there is no conflict from removal of injuries once they're healed
+	I've implemented a Queue system. During update, all injuries are dequeue, called update on, and destroy if healed. Any unhealed injuries are added to a queue
+	that lives on the stack / method to allow the loop to finish. After which all unhealed injuries are added back to the main queue. So as to not interrupt an update
+	loop, new injuries are added to a separate queue. After adding unhealed injuries back to the main queue, new injuries are then added to the main queue. This means
+	that new injuries won't get an update if there is one already going on, but rather will get notified on the next update.
+	- wrote logic for bodyHitBox.
+
+next steps:
+	- unit test bodyHitBox, mainly, aside from making sure all functions work as expected, walk through at least one to make sure the calculations going on are correct.
+	Difficult to write unit test to test values since hit chances are random. Perhaps make hit chances protected then create a child class that exposes hit chances via 
+	a property. This would then allow us to write a unit test with expected chance values.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/2/2021 - completed:
+	- unit testing takeDamage function of bodyPart.
+
+next steps:
+	- currently facing the dilemma of how to store injuries. Roadblocks:
+		- a .NET LinkedList doesn't allow the removal of exact nodes while traversing the list.
+		- a queue would affect the order of injuries if new are added while processing injury updates.
+		- a custom made linked list optimized for removal would need custom handling during serialization to make up for the fact that if there is a single node or 2, 
+		that the First, Current, and Last pointers would point to the same thing so we would need to make sure that instances aren't duplicated during deserialization.
+		- making a new list on each update would be more optimal than removing injuries from a list incase there are multiple that need to be removed during an update.
+		However, this might cause a memory leak by the frequent trashing of the main injuries list. Anything referencing the list externally would soon be pointing to
+		an outdated instance.
+
+		... best solution to not go further into a rabbit hole would be to use lists. To avoid having to trash lists into the heap on every update, add unhealed injuries
+		to a new list created in the method, clear the main injuries list after processing, then add the unhealed injuries via list.AddRange(). This keeps the main list 
+		reference the same, keeps new list instances in the stack, and maintains order of when injuries are added.
+		... there is still the issue of concurrency in that a new injury might get added while doing updates.... we could handle this by adding a queue. After processing
+		injury updates, process the queue to add new injuries to the list.
+		... for the view panel we can have it focus less on the inconsistency of the injuries list by using events for when injuries are added, removed, and updated.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+10/1/2021 - completed:
+	- completed implementing logic of bodyPart.
+
+next steps:
+	- unit test bodyPart logic, mainly, make sure takeDamage creates the right injuries with the expected severity levels. Secondly, test the linkedList usage for
+	injuries, that is, if there are 3 injuries and the second one during its update becomes fully healed can it be removed from the linkedList during the loop or will 
+	that throw an error?
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/30/2021 - completed:
+	- wrote unit test for no bleeding scenario (bruise).
+	- wrote unit test for severity effects + related bug fixes.
+	- spotted issue with reuse of context among tests, added more copying logic and in the process made Def more accessible for things. More specifically, when linking
+	a def to a refDef, the type to look up the def by needs to be correct, otherwise it looks up in the wrong index. So by having all def linking be done in the abstract
+	class Thing, all look ups were being done in the Def index, which would be empty. So to fix this, the Thing class has been made generic and the derived child classes
+	can specify the Def type to be used at construct time.
+
+next steps:
+	- continue to implement the missing functionality for BodyPart, after which we could move to BodyHit logic.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/22/2021 - completed:
+	- wrote unit test to test laceration, but fundamentally it serves to test the core logic behind injuries i.e. instantiation,
+	initial symptoms (onStart(context) call), and ongoing symptoms (onUpdate(context) call). Tests the natural/default healing process, 
+	i.e. reduction in pain and bleeding rate. Tests increasing blood loss. Tests loss of pain upon injury being fully healed.
+
+next steps:
+	- write unit test for no bleeding scenario (bruise).
+	- write unit test for no healing (truly neligible healing) scenario (severe fracture).
+	- write unit test for severity effects.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/22/2021 - completed:
+	- wrote logic for injury institantiation and healing, as well as starter defs for injury and associated stats.
+
+next steps:
+	- unit test the injury logic to make sure defs are being loaded and linked properly, as well as expected stat modifications.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/21/2021 - completed:
+	- wrote some unit tests for DefinitionFinder to in the process test Def schemas. Tested both writing a template with mostly 
+	empty/default values and manually adding custom values to a separate xml file using the previously generated template for 
+	the StorageUtility/DefinitionFinder to consume.
+
+next steps:
+	- implement entity construction logic and onUpdate handling. Now that the definitions system is in place, we can begin defining
+	some initial data for use with the health panel, but before that continue implementing the damage taking logic.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/19/2021 - completed:
+	- updated Defs, DefinitionFinder, and StorageUtility to use the custom XmlSerializer.
+
+next steps:
+	- write some unit tests for DefinitionFinder to in the process test Def schemas.
+	- implement entity construction logic and onUpdate handling.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/18/2021 - completed:
+	- added robust unit tests for Xml serialization/deserialization. It took most of the day, but we caught some good issues
+	for which fixes were needed. The rest of the fixes here come from spotting them through these tests.
+	- made XmlSerializableMember more flexible, not only does it work by taking in a fieldInfo or PropertyInfo instance to start from,
+	but it can also work by either receiving a value or type to work with.
+	- schema creation has also been made more flexible by adding object instantiation inside XmlSerializableMember with logic that 
+	will default to ref type if a value is null and thus value type is missing. This means that no unnecessary default values are 
+	needed anymore when attempting to make fields/properties serializable. However, it might still be needed in cases of ambiguity
+	such as when the ref type is an abstract type or an interface. In such cases, the exception thrown is informative enough to fix
+	the issue.
+	- nested lists inside of lists will have no variable name, thus defaulting to type name. However, type name for a list looks
+	something like List`1, the ` is an illegal character for Xml names. To simplify this, a similar approach to generic list items
+	has been taken in which <li> is used. In this case, generic nameless lists are tagged as <list>.
+	- unit tests showed that inherited values work right out of the box. As long as parent classes have to-be-serialized fields/props 
+	marked with the XmlMemberAttribute, they'll get serialized. Curiously enough, inheritance bypasses the need for parent classes to
+	have the XmlSerializableAttribute. Though I suppose it's not something that needs fixing since the parent class itself won't be
+	serializable (i.e. if referenced directly elsewhere for serialization at that point it will fail).
+
+overall, I wasn't very happy spending an extra day to add unit tests for the Xml serialization. However, not only did it catch things
+that needed to be resolved, and thus made the system more flexible and robust, but now there is peace of mind for any future adjustments.
+That is, we have a suite of tests to make sure the core functionality still works as expected in case changes are made in a future 
+where I've forgotten mosty how the serializer works internally. The idea ultimately is to set it and forget it anyways so we can
+move onto game-specific workloads. This custom Xml serializer can now serve as the foundation for various purposes like 
+non-hardcoded configs, definitions, and game saves. Then in the case we have to make performance improvements in the future, 
+the XmlSerializer has unit tests and comments in key places to help with easing back into it.
+
+next steps will:
+	- refactor StorageUtility to use the custom Xml Serializer.
+	- write unit tests for the definition finder (revise it's logic, see what makes sense to still have. For example, could we use 
+	one generic list instead of multiple def lists?).
+	- implement health defs as per latest designs in UML diagrams.
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/17/2021 - completed:
+	- add deserialization support for lists.
+
+after roughly 8-10 hour/day 4 days, I've finally completed the custom xml serializer/deserializer to the point where it can be used to 
+replace the .NET's XMLSerializer. It's capable of serializing primitives, lists, and custom classes just like the .NET XmlSerializer,
+but with the benefit of retaining encapsulation.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/16/2021 - completed:
+	- review and commit current changes, only removing things that are no longer neccessary, additional refactoring will be in a separate
+	commit.
+	- refactor and break apart XmlProcessor into the constituents listed out above the class' summary. Organize files into appropriate
+	directories/namespaces.
+	- added serialization support for List, not enumerable since it can't be instantiated. It's less complicated to work with value types instead
+	of the reference types. For one there is no ambiguity on value type and no need to instantiate complex types by making sure no
+	nulls are used.
+
+renamed XMLProcessor back to XmlSerializer, but the deserialization, member, and member creation code has been put into their 
+own classes. 
+
+next steps will be:
+	- add deserialization support for lists.
+	- look into unity's test framework or consider using a regular one. The serializer/deserializer has plenty that ought to have
+	unit tests for future modification.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/15/2021 - xml deserialization code is complete. Did some preliminary refactoring of the XmlSerializer class into XmlProcessor
+and update Member class into a type that better serves as a holder of the information needed by the XmlProcessor. Member class has
+also been renamed to XmlSerializableMember to better indicate its purpose.
+
+next steps will be:
+	- review and commit current changes, only removing things that are no longer neccessary, additional refactoring will be in a separate
+	commit.
+	- refactor and break apart XmlProcessor into the constituents listed out above the class' summary. Organize files into appropriate
+	directories/namespaces.
+	- add support for IEnumerable.
+	- review UML designs to get back into implementing game-specific logic.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/14/2021 - finished designing def and def-dependent system for basic definition and tracking of body, bodyparts, injuries, and stats. Now needs
+to be implemented.
+However, I've taken a bit of a detour to write a custom XML serializer. Having looked at public options, none were too satisfying:
+	- XMLSerializer (.NET), breaks OOP encapsulation by having to make all serializable fields/properties public.
+	- DataContractSerializer (.NET), XML output is much more redundantly verbose than regular xml. Doesn't support attribute tags.
+	- ExtendedXMlSerializer (open source), unable to get cloned enlistment to build. Unclear if private fields are supported.
+Progress so far is a nice and easy serializer that so far is able to serialize custom classes marked with a custom serializable class attribute. 
+Any primitive field or property inside the class, no matter what the access level is then serializable if marked with a custom serializable 
+member attribute. Additionally, any field/property that is a complex type marked with the custom serializable class attribute will also received
+nested serialization. Lastly, any primitive field/property can be marked as an attribute tag.
+
+next steps will to be implement the deserialization into instances and add some additional support for built-in types like IEnumerable.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/11/2021 - further expanded on the DefinitionFinder to make it more flexible. Now it allows for either defining all defs inside 
+a single xml file or for better organization to group them by file. Either way the DefinitionFinder will parse and attempt to 
+deserialize everything in a designated folder.
+- some additional progress was made in how setting up initial def schemas.
+- a DefRef <T> was added to help with inter-def referencing. This way a def doesn't end up entirely defining a new def when trying
+to just reference an existing one defined elsewhere. This does create a second layer of string-based dependencies, but at least they're 
+all tagged to the same variable. In the future a def rename would have to occur at the Name and DefRefName attributes, so it could easily
+be done with a 'Replace' operation within a folder (e.g. using Visual Studio Code). Within code though any additional references should
+go by constants.
+
+next steps will be to continue to further refine the models that will be used within the health system. So far, the defs are mostly all
+set up, now need the actual objects that will be instantiated at runtime using the defs as blueprints like Injury, Body, etc. making sure
+they're also serializable since eventually info like it will need to be saved.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/10/2021 - played around with the feasibility of using XML to define injuries, body templates, body parts... but in general for all
+definitions. The result is:
+	- some groundwork on workflow. I've put together some custom Inspector utilities to help with viewing, editing, and creating XML
+	files bound to the schemas defined in code from easily constructed SerializedObjects which allow for inspector window-wide usage.
+	- in addition to the above I've created a test trigger button that allows for a quick execution of some code without needing to 
+	run the game scene via the "play" button. The trigger button class is a ScriptableObject that allows for quick editing to point
+	to the code that should execute when the button is triggered from the inspector.
+	- lastly some progress was made with how we transitions all the XML definitions into actual objects at runtime. A fairly solid 
+	solution has been accomplished with DefinitionFinder. The class wholely encapsulates the complexity of storing all definitions 
+	in memory at runtime so that other objects can reference it. The goal being that multiple instances of the same type e.g. A 
+	fracture injury would all point to the same fractureDef. There was concern with having all these xml schemas end up with public
+	fields, but its the best approach for flexibility in terms of XMLSerializer and Unity Inspector usage which visibly improve workflow.
+
+	next step will be to test further the feasibility of having the various fields of the Defs type inside separate files for simpler
+	organization and still be able to read them all into the same instance. Worst case scenario, we read them into individual instances
+	and then we just store them directly into the definition indices.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/6/2021 - refactored code:
+	- renamed PlayerCharacter back to Character. Determination of whether its in player faction now decided by a boolean in the Character.
+	- refactored CharacterMovement to Moveable. It is now a generic component that any gameObject can use for coordinate-based movement.
+	- renamed SimpleSelectable to Selectable and SelectableWorldObject to SimpleSelectable to avoid having to use "WorldObject" suffix
+	as it doesn't make sense for that to be a behavior.
+	- moved away from EventManager usage to instead having each thing that publishes event be the thing that exposes them for registration.
+	The expectation is that if some event is instance-agnostic we can make it static, making it easier to subscribers to subscribe. It also
+	helps avoid having a class of event types. With this move the EventType and EventManager classes have been deprecated.
+	- refactored DraftTracker to make it solely a monitor of global character draft state. Functionality to draft and undraft current
+	selectees has been moved to the thing that instigates it, that is, the DraftButtonController.
+	- added a CharacterSelectionTracker to keep track of character selection given that it's not a game object.
+	- added a GameManager to keep track of the trackers for the time being, helps with avoiding to have to create static references to
+	the trackers. With this there is just one. Moving forward the GameManager can serve as a single static point for references to 
+	game-wide information (i.e. things that need to be accessible from anywhere in the codebase, but don't make use of monobehaviours
+	so there wouldn't be a straightforward way of accessing it).
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/3/2021 - created a canvas group management system in which various UI elements could be grouped under a panel with a canvas group and
+displayed/hidden at the command of a controller. This makes the displaying/hiding encapsulated purely inside the
+CanvasGroupController (which can be dropped on any UIElement with a SelectableUI that should act as a trigger) and the singleton CanvasGroupViewer
+which takes care of making sure the canvas group is displayed properly.
+With this system it will be more straightforward to add more interfaces. For starters CharacterPortrait triggers -> draft button + health panel button,
+and health panel button triggers -> health panel view.
+
+next step will be to populate the health panel view itself, see milestones for exact functionality expected.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+9/2/2021 - after putting current classes into a UML diagram and spending 2-3 sessions on just reviewing, brainstorming, and
+redesigning on there, it became easier to come up with a design I was comfortable with and that enabled our next steps. Moving
+forward whenever making any new changes that involve code changes it will be good to consider this within UML to better see the
+whole picture and more easily make and track changes. Making changes on UML while going through the design/brainstorming process
+is simpler than the code changes. It also lets get a better idea of how everything fits.
+
+next step will be to pick up where I left off in the design docs milestone... Mainly speaking the addition of the health panel button
+and health panel view.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+8/29/2021 - experimenting... try to figure out the best way to make a selectable component that is reusable. Ended up with a 
+reworked version of SimpleSelectible which in terms of the CharacterManager, it would need Character type to define its own
+event fields. Furthermore, Character as a child of SimpleSelectible doesn't have the customEditor functionality, so can't 
+select target outline... meaning we would need to revert back to having Character having a SimpleSelectible field... which
+doesn't make sense in terms of OOD since Character IS a Selectible, not Character HAS A selectible. Having selectible as a
+component of Character also makes updates from CharacterManager more odd as CharacterManager goes through Character to update
+character's simpleSelectible, and simpleSelectible then unnecessarily notifies Character of the change. Which Character would
+forward... eh.. this is just getting overly complex. Need to take a step back and re-think this. This thing can't possibly 
+be this overly-complicated this early on and considering what we're trying to do here is relatively simple.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+8/28/2021 - In an effort to reuse code/behavior and decouple oddly coupled classes some refactoring has been carried out:
+	- DraftAction has been split from dealing with Draft button toggle-like behavior and instead that behavior has been passed
+	to SimpleToggle. 
+	- SimpleToggle takes care of the click event handling, toggle behavior, on state, and dealing with visual cues of its state.
+	- ColorSwitch and its derivatives have been made none-MonoBehaviour components so that SimpleToggle can instead instantiate it
+	and use it internally without needing to assign the component to the gameObject.
+	- DraftAction registers a callback for when SimpleToggle changes state and for when CharacterManager's selectees change. With both
+	of these listeners, the DraftAction is able to carry out its drafting/undrafting purpose. Meanwhile CharacterManager and 
+	SimpleToggle get to be decoupled from DraftAction by not having to reference it directly.
+	- Since DraftAction has been refactored in this manner its also been split from SimpleSelectable.
+
+	next step will be to refactor CharacterPortrait and Character in a similar manner. Mainly speaking, the highlighting and selection
+	aspect of them should be kept separate from the core logic so as to make it easier to re-use the same highlight-on-select behavior 
+	elsewhere. As such will be the case with the OnCharacterSelected menu options like the health panel tab button.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+8/25/2021 - Draft button implemented, the following behavior has been implemented and tested:
+	- character moves to right-clicked coordinate if no UI and no WO was selected and character was selected and drafted.
+	- draft button only lights up if selected characters are drafted (determined by Character Manager) or it was off and
+	then it was clicked.
+	- draft button only turns off (no highlight) if selected characters are undrafted (determined by Character Manager) or it was on and
+	then it was clicked.
+	- draft button is only visible if there are characters selected (directed by character manager rather than event since it requires
+	the draft button gameObject to be disabled... in the future a action buttons manager could be the one controlling this and therefore
+	events could be used to decouple character manager from draft button).
+
+next step is to revise design doc on next objective. Some thought should further be given on direction for project (continue with
+rimworld-like clone or introduce more friendly/relaxing gameplay like stardew valley?).
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+8/24/2021 - The CharacterManager has been created to control the coupling of character to characterPortrait. Since whenever
+Character and portrait are selected the selector has direct access, its left up to the character and portrait to notify 
+the characterManager. The characterManager will then take care of making sure that character and portrait selection is
+in sync and deselect them all when nothing is clicked (i.e. background click). Therefore, character and portrait no longer register
+for events that trigger their own deslection. That has been abstracted out to the characterManager.
+
+next step is to create the draft functionality.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+8/13/2021 - The EventManager is complete and its working flawlessly. The following behaviors below all work as expected:
+	- while selected, character portrait only unselects if no UI element is selected/being hovered over when there is a pointer click.
+	- while selected, character only unselects if there is no WorldObject element selected, meaning the ground was clicked.
+	- character / world objects are only selectable if there is no UI blocking the click (InputController.. which also responsible for
+	firing events that character and character portrait rely on).
+	- upon unregistering, listeners no longer receive notifications (tested).
+Overall, with the EventManager system and the EventType class in place it makes it much simpler to communicate between objects without
+direct references.
+Additionally the UIElementSelector has been deprecated and the CharacterSelector has been removed. In their place a InputController
+has been created that is capable of detecting UI element blocking, no world object selection, and world object selections via pointer
+click. Since its able to detect these events, its also responsible for firing them off through the EventManager. UI interactions has
+been left off to the EventSystem, so any UI that needs to be interacted with will need the Unity Selectable component.
+
+next step is to still create the CharacterManager so it can control both Character and Character Portrait.
+ - CharacterManager needs to make sure that when Character gets selected, so does Character Portrait, and vice versa.
+ - When draft button is clicked and its toggled on, CharacterManager needs to update the Drafted state of all selected characters.
+ - When draft button is clicked and its toggled off, (the same as above, but undraft).
+ - draft button needs to somehow know from CharacterManager if it should be toggled on/off based on whether the selected characters
+ are all drafted (turn on) or partially/not (turned off)... If partial, we want it to be off so that toggling it drafts the selectees
+ that are undrafted.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+8/10/2021 - revamped colorToggle (colorSwitch), Character and CharacterPortrait code to be cleaner (minimal duplicate code) with proper 
+encapsulation of logic. Furthermore these have been changed to be leaf objects that only interact with their own gameObject and that 
+gameobject's children/components (e.g. CharacterPortrait -> ImageColorSwitch -> Image, all within the Character Portrait game object).
+So no more cross talk between Character and CharacterPortrait.
+
+next will be to refactor the selector code, here we're mainly to look at the feasibility of reusing the EventSystems:
+1. if we can use EventSystems to select both GUI elements and worldObjects, we could continue with it.
+2. otherwise, combine selectors so that we can have ordered raycasting, that is,
+first graphic raycaster to detect GUI, second physics raycaster (if first failed) to detect world objects.
+
+after this we can introduce the CharacterManager, EventManager, and draft button handling logic.
